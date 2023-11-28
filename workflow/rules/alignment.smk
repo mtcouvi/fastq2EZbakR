@@ -38,9 +38,7 @@ rule align:
         reads_per_gene=lambda wc: "GeneCounts" in config["star_align_params"],
         chim_junc=lambda wc: "--chimOutType Junctions" in config["star_align_params"],
         idx=lambda wc, input: input.index,
-        extra="{} {}".format(
-            SJ_DB_GTF, STAR_EXTRA
-        ),
+        extra=STAR_EXTRA,
         out_reads_per_gene="results/align/{sample}-ReadsPerGene.out.tab",
         out_chim_junc="results/align/{sample}-Chimeric.out.junction",
     conda:
