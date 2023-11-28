@@ -1,3 +1,4 @@
+# Flatten annotation with DEXseq script
 rule flatten:
     input:
         gtf=config["annotation"],
@@ -9,8 +10,9 @@ rule flatten:
         "../envs/flatten.yaml"
     threads: 1
     script:
-        "../scripts/dexseq_prepare_annotation.py"
+        "../scripts/flatten/dexseq_prepare_annotation.py"
 
+# Add exon ID to flattened annotation
 rule add_exon:
     input:
         "results/raw_flattened/flat_genome.gtf",
@@ -19,7 +21,7 @@ rule add_exon:
     log:
         "logs/add_exon.log",
     params:
-        shellscript=workflow.source_path("../scripts/exon_ID.sh")
+        shellscript=workflow.source_path("../scripts/flatten/exon_ID.sh")
     conda:
         "../envs/full.yaml",
     threads: 1

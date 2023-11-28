@@ -11,6 +11,12 @@
 !pipeline_env.yaml
 !README.md
 !workflow/scripts/*
+!workflow/scripts/alignment/*
+!workflow/scripts/bam2bakR/*
+!workflow/scripts/flatten/*
+!workflow/scripts/preprocess/*
+!workflow/scripts/rsem/*
+!workflow/scripts/rsem_plus/*
 !workflow/envs/*
 !workflow/rules/*
 !docs/*

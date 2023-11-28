@@ -14,7 +14,7 @@ if is_gz:
             "../envs/pigz.yaml"
         threads: 1
         script:
-            "../scripts/pigz.py"
+            "../scripts/preprocess/pigz.py"
 
 ## Trim adapters
 if config["PE"]:

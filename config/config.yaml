@@ -124,6 +124,15 @@ hisat2_index_base: ""
 
 
 
+##### RSEM PARAMETERS #####
+
+# Optional parameters to set for RSEM indexing
+rsem_index_params: ""
+
+# Optional parameters to set for RSEM quantification
+rsem_quant_params: ""
+
+
 ##### LINKS TO SNAKEMAKE WRAPPERS USED #####
   # Can be useful to see how optional parameters get passed to these tools
 

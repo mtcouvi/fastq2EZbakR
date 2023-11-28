@@ -45,7 +45,7 @@ rule align:
         "../envs/star.yaml"
     threads: 24
     script: 
-        "../scripts/star-align.py"
+        "../scripts/alignment/star-align.py"
 
 
 
