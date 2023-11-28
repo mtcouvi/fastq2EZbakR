@@ -12,15 +12,6 @@ count_script=$8
 flattened=$9
 
 
-if [ "$strand" = "F" ]; then
-
-    strand="yes"
-
-else
-
-    strand="reverse"
-
-fi
 
     # Will create the ./results/htseq
     touch "$output2"

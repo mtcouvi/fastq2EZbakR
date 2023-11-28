@@ -19,7 +19,7 @@ if config["bam2bakr"]:
             conda:
                 "../envs/full.yaml"
             script:
-                "../scripts/remove_tags.py"
+                "../scripts/bam2bakR/remove_tags.py"
 
         # Filter out multi-mappers and sort reads
         rule sort_filter:
@@ -32,7 +32,7 @@ if config["bam2bakr"]:
             log:
                 "logs/sort_filter/{sample}.log"
             params: 
-                shellscript=workflow.source_path("../scripts/sort_filter.sh")
+                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
             threads: 8
             conda:
                 "../envs/full.yaml"
@@ -55,7 +55,7 @@ if config["bam2bakr"]:
             log:
                 "logs/sort_filter/{sample}.log"
             params: 
-                shellscript=workflow.source_path("../scripts/sort_filter.sh")
+                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
             threads: 8
             conda:
                 "../envs/full.yaml"
@@ -79,7 +79,7 @@ else:
         log:
             "logs/sort_filter/{sample}.log"
         params: 
-            shellscript=workflow.source_path("../scripts/sort_filter.sh")
+            shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
         threads: 8
         conda:
             "../envs/full.yaml"
@@ -106,8 +106,8 @@ if config["flattened"]:
             "results/htseq/{sample}_tl.bam",
             temp("results/htseq/{sample}_check.txt")
         params: 
-            shellscript=workflow.source_path("../scripts/htseq.sh"),
-            pythonscript=workflow.source_path("../scripts/count_triple.py"),
+            shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
+            pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
             strand=config["strandedness"],
             flattened=config["flattened"],
         log:
@@ -132,8 +132,8 @@ else:
             "results/htseq/{sample}_tl.bam",
             temp("results/htseq/{sample}_check.txt")
         params: 
-            shellscript=workflow.source_path("../scripts/htseq.sh"),
-            pythonscript=workflow.source_path("../scripts/count_triple.py"),
+            shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
+            pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
             strand=config["strandedness"],
             flattened=config["flattened"],
         log:
@@ -160,7 +160,7 @@ if NORMALIZE:
         log:
             "logs/normalize/normalize.log"
         params:
-            rscript=workflow.source_path("../scripts/normalize.R"),
+            rscript=workflow.source_path("../scripts/bam2bakR/normalize.R"),
             spikename=config["spikename"]
         threads: 1
         conda:
@@ -199,7 +199,7 @@ rule index:
     conda:
         "../envs/index.yaml"
     script:
-        "../scripts/genome-faidx.py"
+        "../scripts/bam2bakR/genome-faidx.py"
 
 ## TO-DO
 # 1) Allow users to provide custom SNP file
@@ -210,7 +210,7 @@ rule call_snps:
         expand("results/htseq/{ctl}_tl.bam", ctl = CTL_NAMES)
     params:
         nctl = nctl,
-        shellscript = workflow.source_path("../scripts/call_snps.sh"),
+        shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
         fasta = config["genome_fasta"],
     output:
         "results/snps/snp.txt",
@@ -239,9 +239,9 @@ rule cnt_muts:
         minqual = config["minqual"],
         mut_tracks = config["mut_tracks"],
         strand = config["strandedness"],
-        shellscript = workflow.source_path("../scripts/mut_call.sh"),
-        pythonscript = workflow.source_path("../scripts/mut_call.py"),
-        awkscript = workflow.source_path("../scripts/fragment_sam.awk")
+        shellscript = workflow.source_path("../scripts/bam2bakR/mut_call.sh"),
+        pythonscript = workflow.source_path("../scripts/bam2bakR/mut_call.py"),
+        awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk")
     output:
         "results/counts/{sample}_counts.csv.gz",
         temp("results/counts/{sample}_check.txt")
@@ -274,7 +274,7 @@ if config["transcripts_cB"]:
             "../envs/full.yaml"
         threads: 1
         script:
-            "../scripts/count_transcriptome.py"
+            "../scripts/bam2bakR/count_transcriptome.py"
 
     # Sort transcript mapping table
     # to facilitate memory efficient joining later
@@ -286,7 +286,7 @@ if config["transcripts_cB"]:
         log:
             "logs/sort_transcripts_table/{sample}.log"
         params:
-            script = workflow.source_path("../scripts/cheap_sort.sh"),
+            script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
             lines = config["chunk_size"],
         conda:
             "../envs/full.yaml"
@@ -307,7 +307,7 @@ if config["transcripts_cB"]:
         log:
             "logs/sort_counts/{sample}.log"
         params:
-            script = workflow.source_path("../scripts/cheap_sort.sh"),
+            script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
             lines = config["chunk_size"],
         conda:
             "../envs/full.yaml"
@@ -328,7 +328,7 @@ if config["transcripts_cB"]:
             "../envs/full.yaml"
         threads: 1
         script:
-            "../scripts/noram_join.py"
+            "../scripts/bam2bakR/noram_join.py"
 
     rule compress_counts:
         input:
@@ -349,7 +349,7 @@ if config["transcripts_cB"]:
         output:
             "results/cB/cB.csv.gz"
         params:
-            shellscript = workflow.source_path("../scripts/master.sh"),
+            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
             keepcols = config["keepcols"]
         log:
             "logs/makecB/master.log"
@@ -372,7 +372,7 @@ else:
         output:
             "results/cB/cB.csv.gz"
         params:
-            shellscript = workflow.source_path("../scripts/master.sh")
+            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh")
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -395,8 +395,8 @@ rule maketdf:
         temp("results/tracks/{sample}_success.txt"),
         expand("results/tracks/{{sample}}.{mut}.{id}.{strand}.tdf", mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min'])
     params:
-        shellscript = workflow.source_path("../scripts/tracks.sh"),
-        pythonscript = workflow.source_path("../scripts/count_to_tracks.py")
+        shellscript = workflow.source_path("../scripts/bam2bakR/tracks.sh"),
+        pythonscript = workflow.source_path("../scripts/bam2bakR/count_to_tracks.py")
     log:
         "logs/maketdf/{sample}.log"
     threads: 20
