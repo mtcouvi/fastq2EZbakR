@@ -1,2 +1,2 @@
 # fastq2EZbakR
-I know what this is...
+Just playing around with getting better at Snakemake.
