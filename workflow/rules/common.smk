@@ -219,7 +219,14 @@ def get_index_name():
 
 
 # PE or SE? 
-FORMAT = config['FORMAT']
+
+if config["PE"]:
+
+    FORMAT = "PE"
+
+else:
+
+    FORMAT = "SE"
 
 
 # Calculate scale factors for tracks?

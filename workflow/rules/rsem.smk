@@ -37,4 +37,4 @@ rule RSEM:
         "../envs/rsem.yaml"
     threads: 20
     script:
-        "../scripts/rsem-calc.py"
+        "../scripts/rsem/rsem-calc.py"

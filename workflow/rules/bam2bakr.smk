@@ -1,6 +1,13 @@
+### BIG PICTURE TO-DO
+## 1) Make compatible with new config parameter names
 
+### TO-DO
+## 1) Clean up sort/filter function; maybe reduce number of output files
 if config["bam2bakr"]:
+
     if config["remove_tags"]:
+        
+        # Remove tags from bam files that can break HTSeq
         rule remove_tags:
             input:
                 input_bam=get_input_bams,
@@ -35,6 +42,7 @@ if config["bam2bakr"]:
                 """
 
     else:
+
         # Filter out multi-mappers and sort reads
         rule sort_filter:
             input:
@@ -58,10 +66,11 @@ if config["bam2bakr"]:
 
 
 else:
+
     # Filter out multi-mappers and sort reads
     rule sort_filter:
         input:
-            "results/bams/{sample}Aligned.out.bam"
+            "results/align/{sample}.bam"
         output:
             "results/sf_reads/{sample}.s.sam",
             "results/sf_reads/{sample}_fixed_mate.bam",
@@ -81,7 +90,10 @@ else:
 
 
 
-# Use custom htseq script to quanity features 
+### TO-DO:
+## 1) Chunking and parallel processing of bam files
+## 2) Allow users to specify various parameters
+# Use custom htseq script to quantify features 
 # Also creates bam files with tag designating feature that each read was mapped to; useful during mutation counting
 if config["flattened"]:
 
@@ -135,7 +147,8 @@ else:
             {params.shellscript} {threads} {wildcards.sample} {input.sam} {output} {input.annotation} {params.strand} {params.pythonscript} {params.flattened} 1> {log} 2>&1
             """
 
-
+### TO-DO
+## 1) Properly log standard out
 # Calculate normalization scale factor to be applied to tracks        
 if NORMALIZE:
     rule normalize:
@@ -187,6 +200,8 @@ rule index:
     script:
         "../scripts/genome-faidx.py"
 
+## TO-DO
+# 1) Allow users to provide custom SNP file
 # Identify SNPs to be accounted for when counting mutations
 rule call_snps:
     input:
@@ -211,6 +226,8 @@ rule call_snps:
         {params.shellscript} {threads} {params.nctl} {output} {params.fasta} {input} 1> {log} 2>&1
         """
 
+# TO-DO:
+# 1) Add mutation position optimizations and functionality
 # Count mutations 
 rule cnt_muts:
     input:
