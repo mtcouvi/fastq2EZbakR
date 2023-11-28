@@ -1,5 +1,6 @@
 ### BIG PICTURE TO-DO
 ## 1) Make compatible with new config parameter names
+## 2) Change names of rules and output directories to make more sense
 
 ### TO-DO
 ## 1) Clean up sort/filter function; maybe reduce number of output files
