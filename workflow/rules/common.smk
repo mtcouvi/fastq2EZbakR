@@ -268,3 +268,7 @@ def get_target_input():
     if config["aligner"] == "star":
 
         target.append(expand("results/rsem/{SID}.isoforms.results", SID = SAMP_NAMES))
+
+
+### Chunk size for what I eventually realized to be useless
+CHUNK_SIZE = 25000

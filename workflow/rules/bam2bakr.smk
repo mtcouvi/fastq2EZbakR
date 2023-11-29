@@ -214,7 +214,7 @@ rule call_snps:
     params:
         nctl = nctl,
         shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
-        fasta = config["genome_fasta"],
+        fasta = config["genome"],
     output:
         "results/snps/snp.txt",
         "results/snps/snp.vcf",
@@ -238,7 +238,7 @@ rule cnt_muts:
         "results/htseq/{sample}_tl.bam",
         "results/snps/snp.txt"
     params:
-        format = config["FORMAT"],
+        format = FORMAT,
         minqual = config["minqual"],
         mut_tracks = config["mut_tracks"],
         strand = config["strandedness"],
@@ -290,7 +290,7 @@ if config["strategies"]["Transcripts"]:
             "logs/sort_transcripts_table/{sample}.log"
         params:
             script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
-            lines = config["chunk_size"],
+            lines = CHUNK_SIZE,
         conda:
             "../envs/full.yaml"
         threads: 1
@@ -311,7 +311,7 @@ if config["strategies"]["Transcripts"]:
             "logs/sort_counts/{sample}.log"
         params:
             script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
-            lines = config["chunk_size"],
+            lines = CHUNK_SIZE,
         conda:
             "../envs/full.yaml"
         threads: 1
