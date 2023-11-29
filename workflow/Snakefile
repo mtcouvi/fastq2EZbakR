@@ -29,16 +29,15 @@ container: "docker://continuumio/miniconda3"
 
 ##### load rules #####
 
-if config["bam2bakr"]:
-    include: "rules/common.smk"
-    include: "rules/bam2bakr.smk"
-else:
-    include: "rules/common.smk"
+include: "rules/common.smk"
+include: "rules/bam2bakr.smk"
+
+
+if not config["bam2bakr"]:
     include: "rules/alignment.smk"
-    include: "rules/bam2bakr.smk"
     include: "rules/rsem_plus.smk"
 
-if config["flattened"]:
+if config["strategies"]["FlatStacks"]:
     include: "rules/flatten.smk"
 
 
@@ -48,4 +47,4 @@ if config["flattened"]:
 input:
     "results/cB/cB.csv.gz",
     expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min']),
-    get_other_output
+    get_other_output()

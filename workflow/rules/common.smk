@@ -213,7 +213,7 @@ nsamps = len(SAMP_NAMES)
 
 # Name for genome index
 def get_index_name():
-    genome = config["genome_fasta"]
+    genome = config["genome"]
     index = str(genome) + ".fai"
     return index
 
@@ -254,6 +254,12 @@ def get_pold(wildcards):
 def get_target_input():
 
     target = []
+
+    # cB file always gets made
+    target.append("results/cB/cB.csv.gz")
+
+    # Tracks always get made
+    target.append(expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min']))
 
     if config["strategies"]["RSEM+"]:
 
