@@ -281,6 +281,8 @@ def get_other_output():
 
         target.append(expand("results/rsem/{SID}.isoforms.results", SID = SAMP_NAMES))
 
+    return target
+
 
 ### Chunk size for what I eventually realized to be useless
 CHUNK_SIZE = 25000
