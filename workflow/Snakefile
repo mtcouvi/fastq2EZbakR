@@ -44,7 +44,6 @@ if config["strategies"]["FlatStacks"]:
 
 ##### target rules #####
 
-input:
-    "results/cB/cB.csv.gz",
-    expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min']),
-    get_other_output()
+rule all:
+    input:
+        get_other_output()

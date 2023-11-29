@@ -32,14 +32,15 @@ if config["bam2bakr"]:
             log:
                 "logs/sort_filter/{sample}.log"
             params: 
-                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
+                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
+                format=FORMAT
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {config[FORMAT]} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
                 """
 
     else:
@@ -55,14 +56,15 @@ if config["bam2bakr"]:
             log:
                 "logs/sort_filter/{sample}.log"
             params: 
-                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
+                shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
+                format=FORMAT
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {config[FORMAT]} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
                 """
 
 
@@ -79,14 +81,15 @@ else:
         log:
             "logs/sort_filter/{sample}.log"
         params: 
-            shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh")
+            shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
+            format=FORMAT
         threads: 8
         conda:
             "../envs/full.yaml"
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {wildcards.sample} {input} {output} {config[FORMAT]} 1> {log} 2>&1
+            {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
             """
 
 
@@ -350,7 +353,8 @@ if config["strategies"]["Transcripts"]:
             "results/cB/cB.csv.gz"
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols = config["keepcols"]
+            keepcols = config["keepcols"],
+            mut_tracks=config["mut_tracks"]
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -359,7 +363,7 @@ if config["strategies"]["Transcripts"]:
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {output} {params.keepcols} {config[mut_tracks]} ./results/merge_counts TRUE 1> {log} 2>&1
+            {params.shellscript} {threads} {output} {params.keepcols} {params.mut_tracks} ./results/merge_counts TRUE 1> {log} 2>&1
             """
 
 
@@ -372,7 +376,9 @@ else:
         output:
             "results/cB/cB.csv.gz"
         params:
-            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh")
+            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
+            keepcols=config["keepcols"],
+            mut_tracks=config["mut_tracks"]
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -381,7 +387,7 @@ else:
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {output} {config[keepcols]} {config[mut_tracks]} ./results/counts FALSE 1> {log} 2>&1
+            {params.shellscript} {threads} {output} {params.keepcols} {params.mut_tracks} ./results/counts FALSE 1> {log} 2>&1
             """
 
 
@@ -396,7 +402,11 @@ rule maketdf:
         expand("results/tracks/{{sample}}.{mut}.{id}.{strand}.tdf", mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min'])
     params:
         shellscript = workflow.source_path("../scripts/bam2bakR/tracks.sh"),
-        pythonscript = workflow.source_path("../scripts/bam2bakR/count_to_tracks.py")
+        pythonscript = workflow.source_path("../scripts/bam2bakR/count_to_tracks.py"),
+        mut_tracks=config["mut_tracks"],
+        genome=config["genome"],
+        WSL=config["WSL"],
+        normalize=config["normalize"]
     log:
         "logs/maketdf/{sample}.log"
     threads: 20
@@ -406,6 +416,6 @@ rule maketdf:
         """
         chmod +x {params.shellscript}
         chmod +x {params.pythonscript}
-        {params.shellscript} {threads} {wildcards.sample} {input} {config[mut_tracks]} {config[genome_fasta]} {config[WSL]} {config[normalize]} {params.pythonscript} {output} 1> {log} 2>&1
+        {params.shellscript} {threads} {wildcards.sample} {input} {params.mut_tracks} {params.genome} {params.WSL} {params.normalize} {params.pythonscript} {output} 1> {log} 2>&1
         """
 
