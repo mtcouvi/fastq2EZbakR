@@ -248,3 +248,17 @@ def get_pold(wildcards):
     return config["polds"][wildcards.sample]
 
 
+
+### Target rule input
+
+def get_target_input():
+
+    target = []
+
+    if config["strategies"]["RSEM+"]:
+
+        target.append("results/transcript_fn/RSEM_plus.csv")
+
+    if config["aligner"] == "star":
+
+        target.append(expand("results/rsem/{SID}.isoforms.results", SID = SAMP_NAMES))

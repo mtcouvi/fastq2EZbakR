@@ -96,7 +96,7 @@ else:
 ## 2) Allow users to specify various parameters
 # Use custom htseq script to quantify features 
 # Also creates bam files with tag designating feature that each read was mapped to; useful during mutation counting
-if config["flattened"]:
+if config["strategies"]["FlatStacks"]:
 
     rule htseq_cnt:
         input:
@@ -109,7 +109,7 @@ if config["flattened"]:
             shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
             pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
             strand=config["strandedness"],
-            flattened=config["flattened"],
+            flattened=config["strategies"]["FlatStacks"],
         log:
             "logs/htseq_cnt/{sample}.log"
         threads: 3
@@ -135,7 +135,7 @@ else:
             shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
             pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
             strand=config["strandedness"],
-            flattened=config["flattened"],
+            flattened=config["strategies"]["FlatStacks"],
         log:
             "logs/htseq_cnt/{sample}.log"
         threads: 3
@@ -261,7 +261,7 @@ rule cnt_muts:
 ### Get the set of transcripts that a read aligned to
 ### and combine that info with mutation counting on genome
 ### aligned bams
-if config["transcripts_cB"]:
+if config["strategies"]["Transcripts"]:
 
     rule read_to_transcripts:
         input:
