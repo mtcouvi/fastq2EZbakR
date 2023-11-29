@@ -241,7 +241,7 @@ rule cnt_muts:
         format = FORMAT,
         minqual = config["minqual"],
         mut_tracks = config["mut_tracks"],
-        strand = config["strandedness"],
+        strand = STRAND,
         shellscript = workflow.source_path("../scripts/bam2bakR/mut_call.sh"),
         pythonscript = workflow.source_path("../scripts/bam2bakR/mut_call.py"),
         awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk")

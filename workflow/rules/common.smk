@@ -284,5 +284,15 @@ def get_other_output():
     return target
 
 
+### Strandedness parameter to pass to mutation counting
+if config["strandedness"] == "reverse":
+
+    STRAND = 'R'
+
+else:
+
+    STRAND = 'F'
+
+
 ### Chunk size for what I eventually realized to be useless
 CHUNK_SIZE = 25000
