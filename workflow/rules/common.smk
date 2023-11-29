@@ -8,8 +8,19 @@ import os
 # and to aid in defining wildcards
 SAMP_NAMES = list(config['samples'].keys())
 
+
 # Directory containing index; used in case of certain aligners
 INDEX_DIR = config["indices"]
+
+
+# Make life easier for users and catch if they add a '/' at the end of their path
+# to alignment indices. If so, remove it to avoid double '/' 
+if config["indices"].endswith('/'):
+    INDEX_PATH = str(config["indices"])
+    INDEX_PATH = INDEX_PATH[:-1]
+else:
+    INDEX_PATH = str(config["indices"])
+
 
 # Determine how many fastqs to look for
 if config["PE"]:
@@ -24,6 +35,7 @@ def get_input_fastqs(wildcards):
     fastq_path = config["samples"][wildcards.sample]
     fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
     return fastq_files
+
 
 # Check if fastq files are gzipped
 fastq_paths = config["samples"]
