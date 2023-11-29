@@ -191,13 +191,13 @@ else:
             """
 
 # Index genome fasta file for snp calling
-rule index:
+rule genome_index:
     input:
         str(config["genome"])
     output:
         get_index_name()
     log:
-        "logs/genome-faidx.log",
+        "logs/genome_index/genome-faidx.log",
     threads: 1
     conda:
         "../envs/index.yaml"
