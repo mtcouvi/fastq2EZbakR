@@ -215,6 +215,31 @@ rsem_index_params: ""
 rsem_quant_params: ""
 
 
+
+##### RSEM+ parameters #####
+
+# New read mutation rates
+# If set to -1, then rates will be estimated by model
+# Set rate to 0 if -s4U sample
+pnews:
+  WT_1: 0.05 
+  WT_2: 0.05
+  WT_ctl: 0
+  KO_1: 0.05
+  KO_2: 0.05
+  KO_ctl: 0
+
+# Old read mutation rates
+# If set to -1, then rates will be estimated by model
+# Set rate to 0 if -s4U sample
+polds:
+  WT_1: 0.001
+  WT_2: 0.001
+  WT_ctl: 0
+  KO_1: 0.001
+  KO_2: 0.001
+  KO_ctl: 0
+
 ##### LINKS TO SNAKEMAKE WRAPPERS USED #####
   # Can be useful to see how optional parameters get passed to these tools
 
