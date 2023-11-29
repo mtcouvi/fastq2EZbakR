@@ -263,7 +263,7 @@ def get_pold(wildcards):
 
 ### Target rule input
 
-def get_target_input():
+def get_other_output():
 
     target = []
 
