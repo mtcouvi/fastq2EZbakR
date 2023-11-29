@@ -209,12 +209,12 @@ rule genome_index:
 # Identify SNPs to be accounted for when counting mutations
 rule call_snps:
     input:
+        str(config["genome"]),
         get_index_name(),
         expand("results/htseq/{ctl}_tl.bam", ctl = CTL_NAMES)
     params:
         nctl = nctl,
         shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
-        fasta = config["genome"],
     output:
         "results/snps/snp.txt",
         "results/snps/snp.vcf",
@@ -227,7 +227,7 @@ rule call_snps:
     shell:
         """
         chmod +x {params.shellscript}
-        {params.shellscript} {threads} {params.nctl} {output} {params.fasta} {input} 1> {log} 2>&1
+        {params.shellscript} {threads} {params.nctl} {output} {input} 1> {log} 2>&1
         """
 
 # TO-DO:

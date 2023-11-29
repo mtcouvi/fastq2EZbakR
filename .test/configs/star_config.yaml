@@ -92,7 +92,7 @@ strandedness: "reverse"
 strategies:
   Transcripts: False
   FlatStacks: False
-  RSEM+: False
+  RSEMp: False
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######

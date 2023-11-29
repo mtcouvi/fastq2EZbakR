@@ -89,13 +89,13 @@ strandedness: "reverse"
   # FlatStacks:
     # Flatten annotation with DEXSeq and have a column in the final cB correspond to assignment of reads to exonic
     # bins. Useful to identify certain isoform-specific effects.
-  # RSEM+:
-    # Onloy compatible with STAR alignment.
+  # RSEMp:
+    # Only compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
   Transcripts: False
   FlatStacks: False
-  RSEM+: False
+  RSEMp: False
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######

@@ -273,7 +273,7 @@ def get_other_output():
     # Tracks always get made
     target.append(expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min']))
 
-    if config["strategies"]["RSEM+"]:
+    if config["strategies"]["RSEMp"]:
 
         target.append("results/transcript_fn/RSEM_plus.csv")
 
