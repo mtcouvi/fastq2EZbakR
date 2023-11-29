@@ -134,23 +134,23 @@ else:
     args.extend(["--quantMode"] + list(quant_mode))
 
 # Force --outSAMtype to be BAM SortedByCoordinate
-if "--outSAMType" in args:
+if "--outSAMtype" in args:
     
-    index = args.index("--outSAMType")
+    index = args.index("--outSAMtype")
 
-    # Replace the existing outSAMType values with the desired ones
+    # Replace the existing outSAMtype values with the desired ones
     args[index + 1:index + 3] = ["BAM", "SortedByCoordinate"]
 
 else:
     
-    args.extend(["--outSAMType", "BAM", "SortedByCoordinate"])
+    args.extend(["--outSAMtype", "BAM", "SortedByCoordinate"])
 
 # Force --sjdbGTFfile to be the provided annotation
 if "--sjdbGTFfile" in args:
     
     index = args.index("--sjdbGTFfile")
 
-    # Replace the existing outSAMType values with the desired ones
+    # Replace the existing outSAMtype values with the desired ones
     args[index + 1:index + 3] = [str(config["annotation"])]
 
 else:
