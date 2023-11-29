@@ -193,7 +193,7 @@ else:
 # Index genome fasta file for snp calling
 rule index:
     input:
-        str(config["genome_fasta"])
+        str(config["genome"])
     output:
         get_index_name()
     log:
