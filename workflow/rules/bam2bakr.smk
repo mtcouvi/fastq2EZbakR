@@ -268,7 +268,7 @@ if config["strategies"]["Transcripts"]:
 
     rule read_to_transcripts:
         input:
-            bam="results/bams/{sample}-Aligned.toTranscriptome.out.bam",
+            bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
         output:
             table=temp("results/read_to_transcripts/{sample}.csv")
         log:
