@@ -34,8 +34,11 @@ include: "rules/bam2bakr.smk"
 
 
 if not config["bam2bakr"]:
+    include: "rules/preprocess.smk"
     include: "rules/alignment.smk"
+    include: "rules/rsem.smk"
     include: "rules/rsem_plus.smk"
+    
 
 if config["strategies"]["FlatStacks"]:
     include: "rules/flatten.smk"
