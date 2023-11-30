@@ -84,6 +84,13 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
                                               --strandedness $strand \
                                               --reads $format" ::: ./results/counts/*_"$sample"_frag.bam \
 
+    # check out some files
+    head ./results/counts/*_"$sample"_frag_counts.csv
+
+    samtools view ./results/counts/1_"$sample"_frag.bam | head
+
+    # Raise an error so that I can see the log files
+    exit 125
 
 
     echo "** Mutations called for sample $sample"
