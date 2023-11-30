@@ -68,6 +68,11 @@ if(opt$pold != -1 & opt$pold < 0){
 
 ### Load csvs 
 counts <- fread(opt$counts)
+
+# Print column names to debug
+colnames(counts)
+nrow(counts)
+
 rsem <- fread(opt$rsem)
 
 ### Only keep relevant columns in counts.csv
