@@ -110,7 +110,7 @@ fastp_adapters: ""
 # Path to flattened annotation 
 # Will be created if not already present
 # Only relevant if using FlatStacks
-flat_annotation: ""
+flat_annotation: "data/annotation/flat.gtf"
 
 
 # Normalize sequencing tracks?
