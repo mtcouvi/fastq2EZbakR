@@ -17,7 +17,7 @@ jobs:
       with:
         directory: .test
         snakefile: workflow/Snakefile
-        args: "--configfile .test/configs/star_config.yaml --lint"
+        args: "--configfile .test/configs/transcript_config.yaml --lint"
 
   run-workflow:
     runs-on: ubuntu-latest
