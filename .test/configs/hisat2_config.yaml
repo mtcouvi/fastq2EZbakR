@@ -91,7 +91,7 @@ strandedness: "reverse"
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
   Transcripts: False
-  FlatStacks: False
+  FlatStacks: True
   RSEMp: False
 
 
@@ -105,6 +105,12 @@ strategies:
   # For paired-end data with widely used Illumina TruSeq adapters, this could be: 
   # "--adapter_sequence AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 fastp_adapters: ""
+
+
+# Path to flattened annotation 
+# Will be created if not already present
+# Only relevant if using FlatStacks
+flat_annotation: ""
 
 
 # Normalize sequencing tracks?

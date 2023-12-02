@@ -114,6 +114,11 @@ fastp_adapters: ""
 normalize: True
 
 
+# Path to flattened annotation 
+# Will be created if not already present
+# Only relevant if using FlatStacks
+flat_annotation: ""
+
 
 # Types of mutations to make tracks for otherwise
   # Comma separated string of mutation type
