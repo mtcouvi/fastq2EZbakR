@@ -171,7 +171,7 @@ if NORMALIZE:
         shell:
             r"""
             chmod +x {params.rscript}
-            {params.rscript} --dirs ./results/htseq/ --spikename {params.spikename}
+            {params.rscript} --dirs ./results/htseq/ --spikename {params.spikename} 1> {log} 2>&1
             mv scale {output}
             """
 else:
@@ -330,6 +330,8 @@ if config["strategies"]["Transcripts"]:
         conda:
             "../envs/full.yaml"
         threads: 1
+        log:
+            "logs/merge_counts/{sample}.log"
         script:
             "../scripts/bam2bakR/noram_join.py"
 
@@ -341,6 +343,8 @@ if config["strategies"]["Transcripts"]:
         conda:
             "../envs/full.yaml"
         threads: 8
+        log:
+            "logs/compress_counts/{sample}.log"
         shell:
             "pigz -p {threads} -c {input} > {output}"
 
