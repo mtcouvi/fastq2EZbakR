@@ -281,6 +281,10 @@ def get_other_output():
 
         target.append(expand("results/rsem/{SID}.isoforms.results", SID = SAMP_NAMES))
 
+    if config["mutpos"]:
+
+        target.append()
+
     return target
 
 
@@ -292,6 +296,30 @@ if config["strandedness"] == "reverse":
 else:
 
     STRAND = 'F'
+
+
+### Transcript cB helpers
+
+if config["strategies"]["Transcripts"]:
+
+    COUNTS_DIR = "merge_counts"
+
+    COUNTS_DIR_RELATIVE = "./results/merge_counts"
+
+else:
+
+    COUNTS_DIR = "counts"
+
+    COUNTS_DIR_RELATIVE = "./results/counts"
+
+
+
+
+
+### Site-specific mutational analysis helpers
+
+if config["mut_pos"]
+
 
 
 ### Chunk size for what I eventually realized to be useless

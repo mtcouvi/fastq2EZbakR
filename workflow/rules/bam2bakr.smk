@@ -350,16 +350,27 @@ if config["strategies"]["Transcripts"]:
             "pigz -p {threads} -c {input} > {output}"
 
 
+
+
+if config["mutpos"]:
+
     # Make cB file that will be input to bakR
     rule makecB:
         input:
-            expand("results/merge_counts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
+            expand("results/{directory}/{sample}_counts.csv.gz", directory = COUNTS_DIR, sample=SAMP_NAMES)
         output:
-            "results/cB/cB.csv.gz"
+            cB = "results/cB/cB.csv.gz"
+            mutpos = "results/cB/mutpos.csv.gz",
+            mutposfilter = "results/cB/mutpos_filtered.csv.gz"
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
             keepcols = config["keepcols"],
-            mut_tracks=config["mut_tracks"]
+            mut_tracks = config["mut_tracks"],
+            mut_pos = config["mut_pos"],
+            min_pos_coverage = config["min_pos_coverage"],
+            max_pos_coverage = config["max_pos_coverage"],
+            relative_counts_dir = COUNTS_DIR_RELATIVE,
+            transcript_bool = config["strategies"]["Transcripts"]
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -368,22 +379,26 @@ if config["strategies"]["Transcripts"]:
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {output} {params.keepcols} {params.mut_tracks} ./results/merge_counts TRUE 1> {log} 2>&1
+            {params.shellscript} {threads} {output.cB} {params.keepcols} {params.mut_tracks} \
+            {params.relative_counts_dir} {params.transcript_bool} {params.mut_pos} {params.min_pos_coverage} {output.mutpos} \
+            {output.mutposfilter} {params.max_pos_coverage} 1> {log} 2>&1
             """
-
 
 else:
 
     # Make cB file that will be input to bakR
     rule makecB:
         input:
-            expand("results/counts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
+            expand("results/merge_counts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
         output:
-            "results/cB/cB.csv.gz"
+            cB = "results/cB/cB.csv.gz"
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols=config["keepcols"],
-            mut_tracks=config["mut_tracks"]
+            keepcols = config["keepcols"],
+            mut_tracks = config["mut_tracks"],
+            mut_pos = config["mut_pos"],
+            relative_counts_dir = COUNTS_DIR_RELATIVE,
+            transcript_bool = config["strategies"]["Transcripts"]
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -392,7 +407,8 @@ else:
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {output} {params.keepcols} {params.mut_tracks} ./results/counts FALSE 1> {log} 2>&1
+            {params.shellscript} {threads} {output.cB} {params.keepcols} {params.mut_tracks} \
+            {params.relative_counts_dir} {params.transcript_bool} {params.mut_pos} 1> {log} 2>&1
             """
 
 

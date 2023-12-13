@@ -7,7 +7,16 @@ keepcols=$3
 mut_tracks=$4
 directory=$5
 transcripts=$6
+mut_pos=$7
 
+if [ "$mut_pos" = "True" ]; then
+
+    pos_cutoff=$8
+    mutposout=$9
+    mutposfilter=${10}
+    high_cutoff=${11}
+
+fi
 
 
 #day=$(date +"%y%m%d")
@@ -25,7 +34,7 @@ base=$(echo $mut_tracks | awk -v OFS="," '
                                }')
 
 
-if [ "$transcripts" = "TRUE" ]; then
+if [ "$transcripts" = "True" ]; then
     
     keepcols=${keepcols}","${base}","${mut_tracks}",transcripts"
 
@@ -129,3 +138,38 @@ echo "** cB file created: cB.csv.gz"
 
 # Clean up files
 rm -f 0
+
+
+# Read all _cU.csv.gz files and save them as cU-DATE.csv.gz
+if [ "$mut_pos" = "True" ]; then
+    parallel -j 1 --plus "cat <(echo Filename:{1%_cU.csv.gz}) <(pigz -d -k -c -p $cpus {1})" ::: ./results/counts/*_cU.csv.gz \
+        | awk -v OFS="," '
+                $1 ~ /Filename/ {
+                    split($1, sample, ":")
+                    next
+                }
+                NR == 2 {
+                    header = $0
+                    print "sample", $0
+                    next
+                }
+                $0 == header { 
+                    next
+                }
+                {
+                    print sample[2], $0
+                }' \
+        | awk '{ if (NR > 1) {$1 = substr($1, 18); print } else print }' \
+        | pigz -p $cpus > "$mutposout"
+
+
+   pigz -d -p $cpus -c "$mutposout" \
+	| awk -F "," \
+	      -v cutoff="$pos_cutoff" \
+          -v upper="$high_cutoff" \
+	      'NR == 1 || $(NF-1) >= cutoff && $(NF-1) <= upper { print}' | pigz -p $cpus >  "$mutposfilter"
+
+
+echo "**  site-specific mutation file created: mutpos.csv.gz"
+
+fi
