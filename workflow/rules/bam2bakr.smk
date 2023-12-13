@@ -359,9 +359,9 @@ if config["mutpos"]:
         input:
             expand("results/{directory}/{sample}_counts.csv.gz", directory = COUNTS_DIR, sample=SAMP_NAMES)
         output:
-            cB = "results/cB/cB.csv.gz"
+            cB = "results/cB/cB.csv.gz",
             mutpos = "results/cB/mutpos.csv.gz",
-            mutposfilter = "results/cB/mutpos_filtered.csv.gz"
+            mutposfilter = "results/cB/mutpos_filtered.csv.gz",
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
             keepcols = config["keepcols"],
