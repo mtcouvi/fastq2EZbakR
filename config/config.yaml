@@ -19,7 +19,7 @@ bam2bakr: False
 # path to directory containing fastq files if bam2bakr is False
   # fastq files can be either gzipped or unzipped
   # Each set of fastq files must be in a different directory
-# path to bam files if bam2bakr is True
+# path to individual bam files if bam2bakr is True
 samples:
   WT_1: data/fastq/WT_1
   WT_2: data/fastq/WT_2
@@ -28,14 +28,14 @@ samples:
   KO_2: data/fastq/KO_2
   KO_ctl: data/fastq/KO_ctl
 
-## example of what samples will look like for fastq input
+## example of what samples will look like for bam file input
 # samples:
-#   WT_1: data/fastq/WT_1
-#   WT_2: data/fastq/WT_2
-#   WT_ctl: data/fastq/WT_ctl
-#   KO_1: data/fastq/KO_1
-#   KO_2: data/fastq/KO_2
-#   KO_ctl: data/fastq/KO_ctl
+#   WT_1: data/bams/WT_1.bam
+#   WT_2: data/bams/WT_2.bam
+#   WT_ctl: data/bams/WT_ctl.bam
+#   KO_1: data/bams/KO_1.bam
+#   KO_2: data/bams/KO_2.bam
+#   KO_ctl: data/bams/KO_ctl.bam
 
 
 # -s4U control sample IDs
