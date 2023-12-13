@@ -1,3 +1,12 @@
+
+### 
+
+
+
+
+
+### PROCESSING PARAMETERS PASSED BY USER
+
 str = "--outSAMattributes NH HI AS jI --outSAMtype BAM SortedByCoordinate --quantMode TranscriptomeSAM GeneCounts"
 
 # Add necessary tags and change other settings as necessary

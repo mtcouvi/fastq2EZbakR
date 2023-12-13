@@ -244,7 +244,8 @@ rule cnt_muts:
         strand = STRAND,
         shellscript = workflow.source_path("../scripts/bam2bakR/mut_call.sh"),
         pythonscript = workflow.source_path("../scripts/bam2bakR/mut_call.py"),
-        awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk")
+        awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk"),
+        mutpos = config["mutpos"]
     output:
         "results/counts/{sample}_counts.csv.gz",
         temp("results/counts/{sample}_check.txt")
@@ -258,7 +259,7 @@ rule cnt_muts:
         chmod +x {params.shellscript}
         chmod +x {params.pythonscript}
         chmod +x {params.awkscript}
-        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.minqual} {params.mut_tracks} {params.format} {params.strand} {params.pythonscript} {params.awkscript} 1> {log} 2>&1
+        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.minqual} {params.mut_tracks} {params.format} {params.strand} {params.pythonscript} {params.awkscript} {params.mut_pos} 1> {log} 2>&1
         """
 
 ### Get the set of transcripts that a read aligned to

@@ -120,6 +120,10 @@ normalize: True
 flat_annotation: "data/annotation/flat.gtf"
 
 
+# Track site-specific mutational content
+mutpos: False
+
+
 # Types of mutations to make tracks for otherwise
   # Comma separated string of mutation type
   # Examples:
