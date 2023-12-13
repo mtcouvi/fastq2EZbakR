@@ -320,7 +320,6 @@ else:
 
 ### Site-specific mutational analysis helpers
 
-if config["mut_pos"]
 
 
 
