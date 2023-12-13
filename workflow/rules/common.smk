@@ -281,10 +281,6 @@ def get_other_output():
 
         target.append(expand("results/rsem/{SID}.isoforms.results", SID = SAMP_NAMES))
 
-    if config["mutpos"]:
-
-        target.append()
-
     return target
 
 
