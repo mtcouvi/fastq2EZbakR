@@ -366,7 +366,7 @@ if config["mutpos"]:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
             keepcols = config["keepcols"],
             mut_tracks = config["mut_tracks"],
-            mut_pos = config["mut_pos"],
+            mut_pos = config["mutpos"],
             min_pos_coverage = config["min_pos_coverage"],
             max_pos_coverage = config["max_pos_coverage"],
             relative_counts_dir = COUNTS_DIR_RELATIVE,
@@ -396,7 +396,7 @@ else:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
             keepcols = config["keepcols"],
             mut_tracks = config["mut_tracks"],
-            mut_pos = config["mut_pos"],
+            mut_pos = config["mutpos"],
             relative_counts_dir = COUNTS_DIR_RELATIVE,
             transcript_bool = config["strategies"]["Transcripts"]
         log:
