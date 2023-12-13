@@ -1,4 +1,7 @@
 # fastq2EZbakR
+
+**fastq2EZbakR is under active development and should not be considered a stable distribution yet**
+
 Reimplementation of the bam2bakR Snakemake workflow that makes several important improvements:
 
 1. Better and more configurable preprocessing and alignment of fastq files
