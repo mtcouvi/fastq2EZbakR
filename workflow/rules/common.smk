@@ -263,6 +263,10 @@ def get_pold(wildcards):
 
 ### Target rule input
 
+# Get mutation types to track
+MutTypes = config['mut_tracks']
+Mutation_Types = MutTypes.split(',')
+
 def get_other_output():
 
     target = []
@@ -271,7 +275,7 @@ def get_other_output():
     target.append("results/cB/cB.csv.gz")
 
     # Tracks always get made
-    target.append(expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=config["mut_tracks"], id=[0,1,2,3,4,5], strand = ['pos', 'min']))
+    target.append(expand("results/tracks/{sample}.{mut}.{id}.{strand}.tdf", sample = SAMP_NAMES, mut=Mutation_Types, id=[0,1,2,3,4,5], strand = ['pos', 'min']))
 
     if config["strategies"]["RSEMp"]:
 
