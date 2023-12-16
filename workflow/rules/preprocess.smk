@@ -27,7 +27,7 @@ if config["PE"]:
             input:
                 sample=expand("results/unzipped/{{sample}}.{read}.fastq", read = READS),
             output:
-                trimmed=["results/trimmed/{sample}.1.fastq", "results/trimmed/{sample}.2.fastq"],
+                trimmed=temp(["results/trimmed/{sample}.1.fastq", "results/trimmed/{sample}.2.fastq"]),
                 # Unpaired reads separately
                 unpaired1="results/trimmed/{sample}.u1.fastq",
                 unpaired2="results/trimmed/{sample}.u2.fastq",
@@ -50,7 +50,7 @@ if config["PE"]:
             input:
                 sample=get_input_fastqs,
             output:
-                trimmed=["results/trimmed/{sample}.1.fastq", "results/trimmed/{sample}.2.fastq"],
+                trimmed=temp(["results/trimmed/{sample}.1.fastq", "results/trimmed/{sample}.2.fastq"]),
                 # Unpaired reads separately
                 unpaired1="results/trimmed/{sample}.u1.fastq",
                 unpaired2="results/trimmed/{sample}.u2.fastq",

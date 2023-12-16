@@ -135,7 +135,7 @@ if config["aligner"] == "hisat2":
             reads=expand("results/trimmed/{{sample}}.{read}.fastq", read = READS),
             idx=config["indices"],
         output:
-            "results/align/{sample}.bam",
+            temp("results/align/{sample}.bam"),
         log:
             "logs/align/{sample}_hisat2.log",
         params:
