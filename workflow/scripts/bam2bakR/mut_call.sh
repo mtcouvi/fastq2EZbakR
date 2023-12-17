@@ -20,7 +20,26 @@ touch "$output2"
 
 # Infer a decent fragment size
 num_reads=$(samtools view -@ "$cpus" -c "$input")
-fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
+
+if [ "$mutpos" = "True" ]; then
+
+    # Get the available RAM in MB and convert it to GB
+    available_ram=$(free -m | awk '/^Mem:/{print $7}') # Memory in MB
+    available_ram=$(echo "$available_ram / 1024" | bc) # Convert to GB
+
+    # Calculate fragment_size
+        # 20 million reads use roughly 1 TB of RAM in mutation counting
+        # script when mutpos is True, so plan accordingly
+    fragment_size=$(echo "scale=0; $available_ram / ($cpus * 0.00005)" | bc)
+
+
+else
+
+    fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
+
+fi
+
+# Make sure fragment size isn't 0, though if it were, you probably have bigger problems on your hand...
 (( fragment_size++ ))
 
 
@@ -54,6 +73,26 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
     done &&
 
 
+    # If running mutation position counting, get bam file roughly coordinate sorted to 
+    # try and get all reads covering a particular base close together, so as to reduce
+    # disk space and RAM usage when running the mutation counting script.
+if [ "$mutpos" = "True" ]; then
+
+    samtools sort @ "$cpus" "$input" | samtools sort -n @ "$cpus" - | samtools view - \
+    	| awk \
+    		-v fragment_size="$newFragmentSize" \
+    		-v sample="$sample" \
+    		-f "$awkscript" &&
+
+    for f in $(seq 1 $newFragmentNumber); do
+        samtools view -@ "$cpus" -o ./results/counts/"$f"_"$sample"_frag.bam ./results/counts/"$f"_"$sample".sam
+        rm ./results/counts/"$f"_"$sample".sam
+    done &&
+
+    echo "* Aligned .sam file fragmented for sample $sample"
+
+else
+
     samtools view "$input" \
     	| awk \
     		-v fragment_size="$newFragmentSize" \
@@ -67,6 +106,7 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
 
     echo "* Aligned .sam file fragmented for sample $sample"
 
+fi
 
 # remove any remaining sam files:
 

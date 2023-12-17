@@ -98,13 +98,15 @@ myfile = open(inputName + '_counts.csv', 'w', newline='')
 wr = csv.writer(myfile)
 wr.writerow(header)
 
-# Initialize cU file
-if args.mutPos:
-    wr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
-
-    mycU = open(inputName + '_cU.csv', 'w', newline='')
-    cUwr = csv.writer(mycU)
-    cUwr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
+# NO LONGER WRITING TO CU AS I ITERATE OVER BAM FILE
+# TO SAVE ON DISK SPACE.
+# # Initialize cU file
+# if args.mutPos:
+#     wr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
+#
+#     mycU = open(inputName + '_cU.csv', 'w', newline='')
+#     cUwr = csv.writer(mycU)
+#     cUwr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
 
 
 
@@ -239,16 +241,19 @@ for r in samfile:
             r_info.extend( [ '|'.join(gmutloc), '|'.join(tp) ] )
         wr.writerow(r_info)
 
-        # Write to cU file
-        if args.mutPos:
-
-            for position, counts in cU.items():
-                row = position.split(':')
-                row[1] = int(row[1]) + 1                        # adjust position because we are 0-based
-                row.extend(counts)
-                cUwr.writerow(row)
-            
-            cU = {}
+        # Was doing this to save on RAM
+        # Realized this inflated disk space usage tremendously
+        # Will save here for posterity's sake
+        # # Write to cU file
+        # if args.mutPos:
+        #
+        #     for position, counts in cU.items():
+        #         row = position.split(':')
+        #         row[1] = int(row[1]) + 1                        # adjust position because we are 0-based
+        #         row.extend(counts)
+        #         cUwr.writerow(row)
+        # 
+        #     cU = {}
 
         # Save read name to track files
         if args.tracks:
@@ -265,9 +270,25 @@ print('end: ' + str(datetime.datetime.now()))
 ##### Close files ######
 myfile.close()
 
+### saving cU.rds file
+if args.mutPos:
+    with open(inputName + '_cU.csv', 'w', newline='') as myfile:
+        wr = csv.writer(myfile)
+        wr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
+        for position, counts in cU.items():
+            row = position.split(':')
+            row[1] = int(row[1]) + 1                        # adjust position because we are 0-based
+            row.extend(counts)
+            wr.writerow(row)
+
+    del cU
+print('cU: ' + str(datetime.datetime.now()))
+
+
 if args.mutPos:
     mycU.close()
 
 if args.tracks:
     for f in fs:
         f.close()
+
