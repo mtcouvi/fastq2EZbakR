@@ -251,7 +251,7 @@ rule cnt_muts:
         temp("results/counts/{sample}_check.txt")
     log:
         "logs/cnt_muts/{sample}.log"
-    threads: 64
+    threads: 32
     conda:
         "../envs/full.yaml"
     shell:
