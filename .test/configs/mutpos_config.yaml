@@ -114,7 +114,7 @@ flat_annotation: "data/annotation/flat.gtf"
 
 
 # Track site-specific mutational information
-mutpos: False
+mutpos: True
 
 
 # Normalize sequencing tracks?
