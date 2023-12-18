@@ -96,7 +96,7 @@ fi
     # disk space and RAM usage when running the mutation counting script.
 if [ "$mutpos" = "True" ]; then
 
-    samtools sort @ "$cpus" "$input" | samtools sort -n @ "$cpus" - | samtools view - \
+    samtools sort -@ "$cpus" "$input" | samtools sort -n -@ "$cpus" - | samtools view - \
     	| awk \
     		-v fragment_size="$newFragmentSize" \
     		-v sample="$sample" \
