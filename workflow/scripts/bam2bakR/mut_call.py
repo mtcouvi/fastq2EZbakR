@@ -285,8 +285,6 @@ if args.mutPos:
 print('cU: ' + str(datetime.datetime.now()))
 
 
-if args.mutPos:
-    mycU.close()
 
 if args.tracks:
     for f in fs:
