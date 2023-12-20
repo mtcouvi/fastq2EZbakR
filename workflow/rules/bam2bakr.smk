@@ -132,7 +132,7 @@ else:
             sam="results/sf_reads/{sample}.s.sam",
             annotation=config["annotation"]
         output:
-            "results/htseq/{sample}_tl.bam,
+            "results/htseq/{sample}_tl.bam",
             temp("results/htseq/{sample}_check.txt")
         params: 
             shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
