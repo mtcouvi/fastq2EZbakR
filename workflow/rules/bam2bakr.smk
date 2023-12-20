@@ -106,7 +106,7 @@ if config["strategies"]["FlatStacks"]:
             sam="results/sf_reads/{sample}.s.sam",
             flatstack=config["flat_annotation"]
         output:
-            temp("results/htseq/{sample}_tl.bam"),
+            "results/htseq/{sample}_tl.bam",
             temp("results/htseq/{sample}_check.txt")
         params: 
             shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
@@ -132,7 +132,7 @@ else:
             sam="results/sf_reads/{sample}.s.sam",
             annotation=config["annotation"]
         output:
-            temp("results/htseq/{sample}_tl.bam"),
+            "results/htseq/{sample}_tl.bam
             temp("results/htseq/{sample}_check.txt")
         params: 
             shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
@@ -247,7 +247,7 @@ rule cnt_muts:
         awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk"),
         mutpos = config["mutpos"]
     output:
-        temp("results/counts/{sample}_counts.csv.gz"),
+        "results/counts/{sample}_counts.csv.gz",
         temp("results/counts/{sample}_check.txt")
     log:
         "logs/cnt_muts/{sample}.log"
