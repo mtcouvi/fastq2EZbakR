@@ -261,6 +261,77 @@ def get_pold(wildcards):
 
 
 
+### FEATURECOUNTS HELPERS
+
+# Get strandedness parameter
+if config["strandedness"] == "reverse":
+
+    FC_STRAND = 2
+
+elif config["strandedness"] == "yes":
+
+    FC_STRAND = 1
+
+else:
+
+    FC_STRAND = 0
+
+
+## Get extra parameters for gene calling
+
+# Things I am on the fence about:
+    # 1) What to do with multi-mappers?
+        # 
+
+# Base parameters
+FC_GENES_PARAMS = " -R -f -g gene_id -t transcript"
+    # Should watch out for fact that I need to add a gene type to 
+    # certain annotations (e.g., CHESS)
+    # Could also add full-gene transcript to annotation like I do in NRsim
+
+# Add paired-end status
+if config["PE"]:
+
+    FC_GENES_PARAMS = FC_GENES_PARAMS + " -p --countReadPairs"
+
+
+## Get extra parameters for transcript calling
+
+# Base parameters
+FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t transcript -O"
+
+
+# Add paired-end status
+if config["PE"]:
+
+    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+
+
+## Get extra parameters for exon bin calling
+
+# Base parameters
+FC_EXONBIN_PARAMS= " -R -f -g exon_id -t exonic_part -O"
+
+
+# Add paired-end status
+if config["PE"]:
+
+    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+
+
+## Get extra parameters for exon calling
+
+# Base parameters
+FC_EXON_PARAMS= " -R -g gene_id -J"
+
+
+# Add paired-end status
+if config["PE"]:
+
+    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+
+
+
 ### Target rule input
 
 # Get mutation types to track

@@ -75,9 +75,9 @@ else:
         input:
             "results/align/{sample}.bam"
         output:
-            temp("results/sf_reads/{sample}.s.sam"),
-            temp("results/sf_reads/{sample}_fixed_mate.bam"),
-            temp("results/sf_reads/{sample}.f.sam"),
+            "results/sf_reads/{sample}.s.sam",
+            "results/sf_reads/{sample}_fixed_mate.bam",
+            "results/sf_reads/{sample}.f.sam",
         log:
             "logs/sort_filter/{sample}.log"
         params: 
@@ -94,70 +94,13 @@ else:
 
 
 
-### TO-DO:
-## 1) Chunking and parallel processing of bam files
-## 2) Allow users to specify various parameters
-# Use custom htseq script to quantify features 
-# Also creates bam files with tag designating feature that each read was mapped to; useful during mutation counting
-if config["strategies"]["FlatStacks"]:
-
-    rule htseq_cnt:
-        input:
-            sam="results/sf_reads/{sample}.s.sam",
-            flatstack=config["flat_annotation"]
-        output:
-            "results/htseq/{sample}_tl.bam",
-            temp("results/htseq/{sample}_check.txt")
-        params: 
-            shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
-            pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
-            strand=config["strandedness"],
-            flattened=config["strategies"]["FlatStacks"],
-        log:
-            "logs/htseq_cnt/{sample}.log"
-        threads: 3
-        conda:
-            "../envs/full.yaml"
-        shell:
-            """
-            chmod +x {params.shellscript}
-            chmod +x {params.pythonscript}
-            {params.shellscript} {threads} {wildcards.sample} {input.sam} {output} {input.flatstack} {params.strand} {params.pythonscript} {params.flattened} 1> {log} 2>&1
-            """
-
-else:
-
-    rule htseq_cnt:
-        input:
-            sam="results/sf_reads/{sample}.s.sam",
-            annotation=config["annotation"]
-        output:
-            "results/htseq/{sample}_tl.bam",
-            temp("results/htseq/{sample}_check.txt")
-        params: 
-            shellscript=workflow.source_path("../scripts/bam2bakR/htseq.sh"),
-            pythonscript=workflow.source_path("../scripts/bam2bakR/count_triple.py"),
-            strand=config["strandedness"],
-            flattened=config["strategies"]["FlatStacks"],
-        log:
-            "logs/htseq_cnt/{sample}.log"
-        threads: 3
-        conda:
-            "../envs/full.yaml"
-        shell:
-            """
-            chmod +x {params.shellscript}
-            chmod +x {params.pythonscript}
-            {params.shellscript} {threads} {wildcards.sample} {input.sam} {output} {input.annotation} {params.strand} {params.pythonscript} {params.flattened} 1> {log} 2>&1
-            """
-
 ### TO-DO
 ## 1) Properly log standard out
 # Calculate normalization scale factor to be applied to tracks        
 if NORMALIZE:
     rule normalize:
         input:
-            expand("results/htseq/{sample}_tl.bam", sample = SAMP_NAMES)
+            expand("results/sf_reads/{sample}.f.sam", sample = SAMP_NAMES)
         output:
             "results/normalization/scale"
         log:
@@ -177,7 +120,7 @@ if NORMALIZE:
 else:
     rule normalize:
         input:
-            expand("results/htseq/{sample}_tl.bam", sample = SAMP_NAMES)
+            expand("results/sf_reads/{sample}.f.sam", sample = SAMP_NAMES)
         output:
             "results/normalization/scale"
         log:
@@ -211,7 +154,7 @@ rule call_snps:
     input:
         str(config["genome"]),
         get_index_name(),
-        expand("results/htseq/{ctl}_tl.bam", ctl = CTL_NAMES)
+        expand("results/sf_reads/{ctl}.f.sam", ctl = CTL_NAMES)
     params:
         nctl = nctl,
         shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
@@ -235,7 +178,7 @@ rule call_snps:
 # Count mutations 
 rule cnt_muts:
     input:
-        "results/htseq/{sample}_tl.bam",
+        "results/sf_reads/{sample}.f.sam",
         "results/snps/snp.txt"
     params:
         format = FORMAT,
@@ -262,102 +205,40 @@ rule cnt_muts:
         {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.minqual} {params.mut_tracks} {params.format} {params.strand} {params.pythonscript} {params.awkscript} {params.mutpos} 1> {log} 2>&1
         """
 
-### Get the set of transcripts that a read aligned to
-### and combine that info with mutation counting on genome
-### aligned bams
-if config["strategies"]["Transcripts"]:
+# Merge mutation counts with feature assignment
+rule merge_features_and_muts:
+    input:
+        MERGE_INPUT
+    output:
+        "results/merge_features_and_muts/{sample}_counts.csv.gz"
+    params:
+        genes_included = config["features"]["genes"],
+        exons_included = config["features"]["exons"],
+        exonbins_included = config["features"]["exonbins"],
+        transcripts_included = config["features"]["transcripts"],
+        rscript = workflow.source_path("../scripts/bam2bakr/merge_features_and_muts.R")
+    log:
+        "logs/merge_features_and_muts/{sample}.log"
+    threads: 1
+    conda: 
+        "../envs/full.yaml"
+    shell:
+        """
+        chmod +x {params.rscript}
 
-    rule read_to_transcripts:
-        input:
-            bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
-        output:
-            table=temp("results/read_to_transcripts/{sample}.csv")
-        log:
-            "logs/read_to_transcripts/{sample}.log"
-        conda:
-            "../envs/full.yaml"
-        threads: 1
-        script:
-            "../scripts/bam2bakR/count_transcriptome.py"
+        {params.rscript} -g {params.gene_included} -e {params.exons_included} -b {params.exonbins_included} \
+        -t {params.transcripts_included} -o ./results/merge_features_and_muts/{wildcards.sample}_counts.csv 1> {log} 2>&1
 
-    # Sort transcript mapping table
-    # to facilitate memory efficient joining later
-    rule sort_transcripts_table:
-        input:
-            transcripts="results/read_to_transcripts/{sample}.csv",
-        output:
-            sorted="results/read_to_transcripts/{sample}_sorted.csv"
-        log:
-            "logs/sort_transcripts_table/{sample}.log"
-        params:
-            script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
-            lines = CHUNK_SIZE,
-        conda:
-            "../envs/full.yaml"
-        threads: 1
-        shell:
-            """
-            chmod +x {params.script}
-            {params.script} {input} {output} 1 {params.lines} FALSE ./results/read_to_transcripts {wildcards.sample}
-            """
-    
-    # Sort mutation counts
-    # to facilitate memory efficient joining later
-    rule sort_counts:
-        input:
-            counts="results/counts/{sample}_counts.csv.gz",
-        output:
-            sorted="results/sort_counts/{sample}_sorted.csv"
-        log:
-            "logs/sort_counts/{sample}.log"
-        params:
-            script = workflow.source_path("../scripts/bam2bakR/cheap_sort.sh"),
-            lines = CHUNK_SIZE,
-        conda:
-            "../envs/full.yaml"
-        threads: 1
-        shell:
-            """
-            chmod +x {params.script}
-            {params.script} {input} {output} 1 {params.lines} TRUE ./results/sort_counts {wildcards.sample}
-            """
-
-    rule merge_counts:
-        input:
-            muts="results/sort_counts/{sample}_sorted.csv",
-            transcripts="results/read_to_transcripts/{sample}_sorted.csv"
-        output:
-            merged=temp("results/merge_counts/{sample}_counts.csv")
-        conda:
-            "../envs/full.yaml"
-        threads: 1
-        log:
-            "logs/merge_counts/{sample}.log"
-        script:
-            "../scripts/bam2bakR/noram_join.py"
-
-    rule compress_counts:
-        input:
-            "results/merge_counts/{sample}_counts.csv"
-        output:
-            "results/merge_counts/{sample}_counts.csv.gz"
-        conda:
-            "../envs/full.yaml"
-        threads: 8
-        log:
-            "logs/compress_counts/{sample}.log"
-        shell:
-            "pigz -p {threads} -c {input} > {output}"
+        pigz -p {threads} ./results/merge_features_and_muts/{wildcards.sample}_counts.csv
+        """
 
 
-
-
+# Make cB (and potentially cU) file
 if config["mutpos"]:
 
-    # Make cB file that will be input to bakR
     rule makecB:
         input:
-            expand("results/{directory}/{sample}_counts.csv.gz", directory = COUNTS_DIR, sample=SAMP_NAMES)
+            expand("results/merge_features_and_muts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
         output:
             cB = "results/cB/cB.csv.gz",
             mutpos = "results/cB/mutpos.csv.gz",
@@ -386,10 +267,9 @@ if config["mutpos"]:
 
 else:
 
-    # Make cB file that will be input to bakR
     rule makecB:
         input:
-            expand("results/merge_counts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
+            expand("results/merge_features_and_muts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
         output:
             cB = "results/cB/cB.csv.gz"
         params:
