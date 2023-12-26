@@ -59,14 +59,14 @@ cU = {}
 firstReadName = ''
 muts = {'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
 DNAcode={'A': 'T', 'C': 'G', 'T': 'A', 'G': 'C', 'N': 'N', 'a': 't', 'c': 'g', 't': 'a', 'g': 'c', 'n': 'n'}  # DNA code for comp and revcomp transformation
-header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'GF', 'EF', 'XF', 'FR', 'sj', 'ai', 'io', 'ei', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
+header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'FR', 'sj', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
 
 # For counting mutations at individual positions
 if args.mutPos:
     header.extend(['gmutloc', 'tp'])
 
 
-r_info = [''] + 4*[0] + 9*['']
+r_info = [''] + 4*[0] + 3*['']
 dovetail = []
 MDstore = {}
 
@@ -119,7 +119,7 @@ for r in samfile:
     # Initialize + acquire info: First read only
     if firstReadName != r.query_name:
         muts={'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
-        r_info = [''] + 4*[0] + 9*['']
+        r_info = [''] + 4*[0] + 3*['']
         dovetail = []
         MDstore = {}
         gmutloc = []
@@ -127,19 +127,12 @@ for r in samfile:
 
         r_info[0] = r.query_name            # Read name
         r_info[5] = r.reference_name        # Chromosome name
-        r_info[6] = r.get_tag('GF')         # GF tag
-        r_info[7] = r.get_tag('EF')         # EF tag
-        r_info[8] = r.get_tag('XF')         # XF tag
-
-        r_info[11] = str( r.get_tag('XF') == '__no_feature' and r.get_tag('GF') != '__no_feature' ).upper()     # ai: read anywhere in intron
-        r_info[12] = str( r.get_tag('EF') == '__no_feature' and r.get_tag('GF') != '__no_feature' ).upper()     # io: intron only read
-        r_info[13] = str( r.get_tag('XF') == '__no_feature' and r.get_tag('EF') != '__no_feature' ).upper()     # ei: exon-intron boundary read
 
 
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
 
-        r_info[10] = str( r_info[10] == 'TRUE' or ('N' in r.cigarstring) ).upper()     # sj: splice junction
+        r_info[6] = str( r_info[10] == 'TRUE' or ('N' in r.cigarstring) ).upper()     # sj: splice junction
 
         if (r.is_paired and (r.is_read1 == (r.is_reverse == strand_check))) or (not r.is_paired and (r.is_reverse == strand_check)):        # If read is first_in_pair and on reverse strand -or- second_in_pair and on forward strand then make sequence complement
             r_info[9] = 'R'      # FR: forward or reverse read orientation
