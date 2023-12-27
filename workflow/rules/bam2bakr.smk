@@ -227,7 +227,7 @@ rule merge_features_and_muts:
         chmod +x {params.rscript}
 
         {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
-        -t {params.transcripts_included} -o {output} 1> {log} 2>&1
+        -t {params.transcripts_included} -o {output} -s {wildcards.sample} 1> {log} 2>&1
         """
 
 
