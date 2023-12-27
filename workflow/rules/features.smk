@@ -69,7 +69,7 @@ rule featurecounts_transcripts:
 # Assign reads to exonic bins
 rule featurecounts_exonbins:
     input:
-        sam = "results/sf_reads/{sample}.s.bam"
+        sam = "results/sf_reads/{sample}.s.bam",
         gtf = config["flat_annotation"]
     output:
         multiext(
