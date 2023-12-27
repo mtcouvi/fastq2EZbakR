@@ -299,17 +299,17 @@ def get_merge_input(wildcards):
 
         MERGE_INPUT.append(expand("results/featurecounts_genes/{sid}.featureCounts", sid = wildcards.sample))
 
-    if config["features"]["exons"]
+    if config["features"]["exons"]:
 
         MERGE_INPUT.append(expand("results/featurecounts_exons/{sid}.featureCounts", sid = wildcards.sample))
 
 
-    if config["features"]["transcripts"]
+    if config["features"]["transcripts"]:
 
         MERGE_INPUT.append(expand("results/featurecounts_transcripts/{sid}.featureCounts", sid = wildcards.sample))
 
 
-    if config["features"]["exonic_bins"]
+    if config["features"]["exonic_bins"]:
 
         MERGE_INPUT.append(expand("results/featurecounts_exonbins/{sid}.featureCounts", sid = wildcards.sample))
 
