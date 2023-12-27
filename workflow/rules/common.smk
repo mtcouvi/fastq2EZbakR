@@ -352,7 +352,7 @@ if config["PE"]:
 ## Get extra parameters for transcript calling
 
 # Base parameters
-FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t transcript -O"
+FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t exon -O"
 
 
 # Add paired-end status
