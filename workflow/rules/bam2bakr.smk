@@ -250,7 +250,6 @@ if config["mutpos"]:
             mut_pos = config["mutpos"],
             min_pos_coverage = config["min_pos_coverage"],
             max_pos_coverage = config["max_pos_coverage"],
-            relative_counts_dir = COUNTS_DIR_RELATIVE,
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -260,7 +259,7 @@ if config["mutpos"]:
             """
             chmod +x {params.shellscript}
             {params.shellscript} {threads} {output.cB} {params.keepcols} {params.mut_tracks} \
-            {params.relative_counts_dir} {params.mut_pos} {params.min_pos_coverage} {output.mutpos} \
+            ./results/merge_features_and_muts/ {params.mut_pos} {params.min_pos_coverage} {output.mutpos} \
             {output.mutposfilter} {params.max_pos_coverage} 1> {log} 2>&1
             """
 
@@ -276,7 +275,6 @@ else:
             keepcols = keepcols,
             mut_tracks = config["mut_tracks"],
             mut_pos = config["mutpos"],
-            relative_counts_dir = COUNTS_DIR_RELATIVE,
         log:
             "logs/makecB/master.log"
         threads: 20
@@ -286,7 +284,7 @@ else:
             """
             chmod +x {params.shellscript}
             {params.shellscript} {threads} {output.cB} {params.keepcols} {params.mut_tracks} \
-            {params.relative_counts_dir} {params.mut_pos} 1> {log} 2>&1
+            ./results/merge_features_and_muts/ {params.mut_pos} 1> {log} 2>&1
             """
 
 

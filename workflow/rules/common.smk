@@ -425,26 +425,3 @@ else:
 
 ### Transcript cB helpers
 
-if config["strategies"]["Transcripts"]:
-
-    COUNTS_DIR = "merge_counts"
-
-    COUNTS_DIR_RELATIVE = "./results/merge_counts"
-
-else:
-
-    COUNTS_DIR = "counts"
-
-    COUNTS_DIR_RELATIVE = "./results/counts"
-
-
-
-
-
-### Site-specific mutational analysis helpers
-
-
-
-
-### Chunk size for what I eventually realized to be useless
-CHUNK_SIZE = 25000
