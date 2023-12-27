@@ -6,15 +6,14 @@ cBout=$2
 keepcols=$3
 mut_tracks=$4
 directory=$5
-transcripts=$6
-mut_pos=$7
+mut_pos=$6
 
 if [ "$mut_pos" = "True" ]; then
 
-    pos_cutoff=$8
-    mutposout=$9
-    mutposfilter=${10}
-    high_cutoff=${11}
+    pos_cutoff=$7
+    mutposout=$8
+    mutposfilter=$9
+    high_cutoff=${10}
 
 fi
 
