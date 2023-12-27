@@ -37,7 +37,7 @@ opt <- parse_args(opt_parser) # Load options from command line.
 
 # Combine tables --------------------------------------------------------------
 
-sample <- paste0("*", opt$sample, "*")
+sample <- paste0(opt$sample, "_counts")
 
 print(paste0("sample is: ", sample))
 
@@ -54,7 +54,7 @@ muts <- fread(muts_file)
 # merge with gene assignments
 if(opt$genes){
   
-  sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
   
   genes_file <- list.files("./results/featurecounts_genes/",
                            pattern = sample, full.names = TRUE)[1]
@@ -75,7 +75,7 @@ if(opt$genes){
 # merge with exon assignments
 if(opt$exons){
   
-  sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
   
   exons_file <- list.files("./results/featurecounts_exons/",
                            pattern = sample, full.names = TRUE)[1]
@@ -96,7 +96,7 @@ if(opt$exons){
 # Merge with exonbin assignments
 if(opt$exonbins){
   
-  sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
   
   exonbins_file <- list.files("./results/featurecounts_exonbins/",
                            pattern = sample, full.names = TRUE)[1]
@@ -118,7 +118,7 @@ if(opt$exonbins){
 # Merge with transcript assignments
 if(opt$transcripts){
   
-  sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
   
   transcripts_file <- list.files("./results/featurecounts_transcripts/",
                               pattern = sample, full.names = TRUE)[1]
