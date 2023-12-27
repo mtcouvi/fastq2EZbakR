@@ -57,7 +57,7 @@ if(opt$genes){
   sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
   
   genes_file <- list.files("./results/featurecounts_genes/",
-                           pattern = sample)
+                           pattern = sample, full.names = TRUE)[1]
   
   genes <- fread(genes_file)
   
@@ -78,7 +78,7 @@ if(opt$exons){
   sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
   
   exons_file <- list.files("./results/featurecounts_exons/",
-                           pattern = sample)
+                           pattern = sample, full.names = TRUE)[1]
   
   exons <- fread(exons_file)
   
@@ -99,7 +99,7 @@ if(opt$exonbins){
   sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
   
   exonbins_file <- list.files("./results/featurecounts_exonbins/",
-                           pattern = sample)
+                           pattern = sample, full.names = TRUE)[1]
   
   exonbins <- fread(exonbins_file)
   
@@ -121,7 +121,7 @@ if(opt$transcripts){
   sample <- paste0("*", opt$sample, ".s.bam.featureCounts")
   
   transcripts_file <- list.files("./results/featurecounts_transcripts/",
-                              pattern = sample)
+                              pattern = sample, full.names = TRUE)[1]
   
   transcripts <- fread(transcripts_file)
   
