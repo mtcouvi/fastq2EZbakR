@@ -39,6 +39,8 @@ opt <- parse_args(opt_parser) # Load options from command line.
 
 sample <- paste0("*", opt$sample, "*")
 
+print(paste0("sample is: ", sample))
+
 
 ### Load mutation counts
 muts_file <- list.files(path = "./results/counts/",
