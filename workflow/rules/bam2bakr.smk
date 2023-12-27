@@ -226,10 +226,8 @@ rule merge_features_and_muts:
         """
         chmod +x {params.rscript}
 
-        {params.rscript} -g {params.gene_included} -e {params.exons_included} -b {params.exonbins_included} \
-        -t {params.transcripts_included} -o ./results/merge_features_and_muts/{wildcards.sample}_counts.csv 1> {log} 2>&1
-
-        pigz -p {threads} ./results/merge_features_and_muts/{wildcards.sample}_counts.csv
+        {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
+        -t {params.transcripts_included} -o {output} 1> {log} 2>&1
         """
 
 
