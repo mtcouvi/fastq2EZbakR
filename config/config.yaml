@@ -21,12 +21,12 @@ bam2bakr: False
   # Each set of fastq files must be in a different directory
 # path to individual bam files if bam2bakr is True
 samples:
-  WT_1: data/fastq/WT_1
-  WT_2: data/fastq/WT_2
-  WT_ctl: data/fastq/WT_ctl
-  KO_1: data/fastq/KO_1
-  KO_2: data/fastq/KO_2
-  KO_ctl: data/fastq/KO_ctl
+    WT_1: data/fastq/WT_1
+    WT_2: data/fastq/WT_2
+    WT_ctl: data/fastq/WT_ctl
+    KO_1: data/fastq/KO_1
+    KO_2: data/fastq/KO_2
+    KO_ctl: data/fastq/KO_ctl
 
 ## example of what samples will look like for bam file input
 # samples:
@@ -85,15 +85,15 @@ strandedness: "reverse"
     # Only compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
-  RSEMp: False
+    RSEMp: False
 
 
 # Features to quantify
 features:
-  genes: True
-  exons: True
-  transcripts: True
-  exonic_bins: True
+    genes: True
+    exons: True
+    transcripts: True
+    exonic_bins: True
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
@@ -248,23 +248,23 @@ rsem_quant_params: ""
 # If set to -1, then rates will be estimated by model
 # Set rate to 0 if -s4U sample
 pnews:
-  WT_1: 0.05 
-  WT_2: 0.05
-  WT_ctl: 0
-  KO_1: 0.05
-  KO_2: 0.05
-  KO_ctl: 0
+    WT_1: 0.05 
+    WT_2: 0.05
+    WT_ctl: 0
+    KO_1: 0.05
+    KO_2: 0.05
+    KO_ctl: 0
 
 # Old read mutation rates
 # If set to -1, then rates will be estimated by model
 # Set rate to 0 if -s4U sample
 polds:
-  WT_1: 0.001
-  WT_2: 0.001
-  WT_ctl: 0
-  KO_1: 0.001
-  KO_2: 0.001
-  KO_ctl: 0
+    WT_1: 0.001
+    WT_2: 0.001
+    WT_ctl: 0
+    KO_1: 0.001
+    KO_2: 0.001
+    KO_ctl: 0
 
 
 
