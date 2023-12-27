@@ -50,6 +50,27 @@ for p in fastq_paths.values():
 
 
 
+# Columns in final cB
+keepcols = "sample,sj,rname"
+
+if config["features"]["genes"]:
+
+    keepcols = keepcols + ",GF"
+
+if config["features"]["exons"]:
+
+    keepcols = keepcols + ",XF"
+
+if config["features"]["transcripts"]:
+
+    keepcols = keepcols + ",transcripts"
+
+if config["features"]["exonic_bins"]:
+
+    keepcols = keepcols + ",exon_bin"
+
+
+
 ### STAR HELPERS
 
 # Trimmed fastq file paths, used as input for aligners

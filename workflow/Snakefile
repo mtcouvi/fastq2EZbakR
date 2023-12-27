@@ -40,7 +40,7 @@ if not config["bam2bakr"]:
     include: "rules/rsem_plus.smk"
     
 
-if config["strategies"]["FlatStacks"]:
+if config["features"]["exonic_bins"]:
     include: "rules/flatten.smk"
 
 

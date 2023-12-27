@@ -245,7 +245,7 @@ if config["mutpos"]:
             mutposfilter = "results/cB/mutpos_filtered.csv.gz",
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols = config["keepcols"],
+            keepcols = keepcols,
             mut_tracks = config["mut_tracks"],
             mut_pos = config["mutpos"],
             min_pos_coverage = config["min_pos_coverage"],
@@ -274,7 +274,7 @@ else:
             cB = "results/cB/cB.csv.gz"
         params:
             shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols = config["keepcols"],
+            keepcols = keepcols,
             mut_tracks = config["mut_tracks"],
             mut_pos = config["mutpos"],
             relative_counts_dir = COUNTS_DIR_RELATIVE,
