@@ -2,6 +2,12 @@ import glob
 import os
 
 
+### If RSEM+ is set, make sure that exons are quantified
+if config["strategies"]["RSEMp"]:
+
+    config["features"]["exons"] = True
+
+
 ### GENERAL HELPER FUNCTIONS/VARIABLES USED IN ALL CASES
 
 # Sample names to help expanding lists of all bam files

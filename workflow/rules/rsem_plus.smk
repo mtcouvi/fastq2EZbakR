@@ -26,7 +26,7 @@ rule rsem_to_csv:
 rule transcript_fn:
     input:
         rsem="results/rsem_csv/{sample}_rsem.csv.gz",
-        counts="results/counts/{sample}_counts.csv.gz",
+        counts="results/merge_features_and_muts/{sample}_counts.csv.gz",
     output:
         outfile="results/transcript_fn/{sample}_RSEM_plus.csv",
     params:

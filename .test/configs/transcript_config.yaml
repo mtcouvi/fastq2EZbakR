@@ -95,7 +95,7 @@ strategies:
 # Features to quantify
 features:
   genes: True
-  exons: True
+  exons: False
   transcripts: True
   exonic_bins: False
 

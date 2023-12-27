@@ -78,7 +78,7 @@ rsem <- fread(opt$rsem)
 ### Only keep relevant columns in counts.csv
     # Should eventually allow other mutation types to be analyzed
     # according to mutType argument
-counts <- counts[,c("GF", "XF", "EF", "qname", "TC", "nT")]
+counts <- counts[,c("XF", "qname", "TC", "nT")]
 
 cT <- setDT(inner_join(rsem, counts, by = "qname"))
 
