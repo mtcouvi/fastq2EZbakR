@@ -341,22 +341,22 @@ else:
 
 if config["PE"]:
 
-    FC_GENES_PARAMS = " -R -f -g gene_id -t transcript -p --countReadPairs"
+    FC_GENES_PARAMS = " -R CORE -f -g gene_id -t transcript -p --countReadPairs"
 
 else:
 
-    FC_GENES_PARAMS = " -R -f -g gene_id -t transcript"
+    FC_GENES_PARAMS = " -R CORE -f -g gene_id -t transcript"
 
 
 ## Get extra parameters for transcript calling
 
 if config["PE"]:
 
-    FC_TRANSCRIPTS_PARAMS = " -R -f -g transcript_id -t exon -O -p --countReadPairs"
+    FC_TRANSCRIPTS_PARAMS = " -R CORE -f -g transcript_id -t exon -O -p --countReadPairs"
 
 else:
 
-    FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t exon -O"
+    FC_TRANSCRIPTS_PARAMS= " -R CORE -f -g transcript_id -t exon -O"
 
 
 ## Get extra parameters for exon bin calling
@@ -365,11 +365,11 @@ else:
 # Add paired-end status
 if config["PE"]:
 
-    FC_EXONBINS_PARAMS = " -R -f -g exon_id -t exonic_part -O -p --countReadPairs"
+    FC_EXONBINS_PARAMS = " -R CORE -f -g exon_id -t exonic_part -O -p --countReadPairs"
 
 else:
 
-    FC_EXONBINS_PARAMS= " -R -f -g exon_id -t exonic_part -O"
+    FC_EXONBINS_PARAMS= " -R CORE -f -g exon_id -t exonic_part -O"
 
 
 
@@ -379,11 +379,11 @@ else:
 # Add paired-end status
 if config["PE"]:
 
-    FC_EXONS_PARAMS = " -R -g gene_id -J -p --countReadPairs"
+    FC_EXONS_PARAMS = " -R CORE -g gene_id -J -p --countReadPairs"
 
 else:
 
-    FC_EXONS_PARAMS= " -R -g gene_id -J"
+    FC_EXONS_PARAMS= " -R CORE -g gene_id -J"
 
 
 
