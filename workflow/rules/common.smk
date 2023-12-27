@@ -295,7 +295,6 @@ def get_pold(wildcards):
 ## All of the files to merge
 def get_merge_input(wildcards):
 
-    print("Received wildcards:", wildcards)
 
     MERGE_INPUT = []
 
@@ -319,7 +318,6 @@ def get_merge_input(wildcards):
 
         MERGE_INPUT.extend(expand("results/featurecounts_exonbins/{SID}.featureCounts", SID = wildcards.sample))
 
-    print("Debug: MERGE_INPUT =", MERGE_INPUT)
 
     return MERGE_INPUT
 
