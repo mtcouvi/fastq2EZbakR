@@ -81,20 +81,10 @@ strandedness: "reverse"
 
 
 # Augmentative analysis strategies
-  # Transcripts:
-    # Only compatible with STAR alignment.
-    # Final cB will have a column named "transcripts" which will indicate the set of transcripts that each read is 
-    # compatible with. This can be used in conjunction with bakR to perform transcript-isoform specific kinetic parameter
-    # estimates.
-  # FlatStacks:
-    # Flatten annotation with DEXSeq and have a column in the final cB correspond to assignment of reads to exonic
-    # bins. Useful to identify certain isoform-specific effects.
   # RSEMp:
     # Only compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
-  Transcripts: False
-  FlatStacks: False
   RSEMp: False
 
 

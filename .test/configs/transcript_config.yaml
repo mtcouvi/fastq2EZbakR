@@ -90,10 +90,7 @@ strandedness: "reverse"
     # Onloy compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
-  Transcripts: True
-  FlatStacks: False
   RSEMp: True
-
 
 # Features to quantify
 features:
