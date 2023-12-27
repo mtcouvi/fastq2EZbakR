@@ -214,7 +214,7 @@ rule merge_features_and_muts:
     params:
         genes_included = config["features"]["genes"],
         exons_included = config["features"]["exons"],
-        exonbins_included = config["features"]["exonbins"],
+        exonbins_included = config["features"]["exonic_bins"],
         transcripts_included = config["features"]["transcripts"],
         rscript = workflow.source_path("../scripts/bam2bakr/merge_features_and_muts.R")
     log:
