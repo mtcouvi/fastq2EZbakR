@@ -295,7 +295,9 @@ def get_pold(wildcards):
 ## All of the files to merge
 def get_merge_input(wildcards):
 
-    MERGE_INPUT = expand("results/counts/{sid}_counts.csv.gz", sid = wildcards.sample)
+    MERGE_INPUT = []
+
+    MERGE_INPUT.append(expand("results/counts/{sid}_counts.csv.gz", sid = wildcards.sample))
 
     if config["features"]["genes"]:
 
