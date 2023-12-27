@@ -57,23 +57,25 @@ for p in fastq_paths.values():
 
 
 # Columns in final cB
-keepcols = "sample,sj,rname"
+keepcols = ['sample', 'sj', 'rname']
 
 if config["features"]["genes"]:
 
-    keepcols = keepcols + ",GF"
+    keepcols.append("GF")
 
 if config["features"]["exons"]:
 
-    keepcols = keepcols + ",XF"
+    keepcols.append("XF")
 
 if config["features"]["transcripts"]:
 
-    keepcols = keepcols + ",transcripts"
+    keepcols.append("transcripts")
 
 if config["features"]["exonic_bins"]:
 
-    keepcols = keepcols + ",exon_bin"
+    keepcols.append("exon_bin")
+
+keepcols = ','.join(keepcols)
 
 
 
@@ -333,56 +335,52 @@ else:
 
 ## Get extra parameters for gene calling
 
-# Things I am on the fence about:
-    # 1) What to do with multi-mappers?
-        # 
-
-# Base parameters
-FC_GENES_PARAMS = " -R -f -g gene_id -t transcript"
-    # Should watch out for fact that I need to add a gene type to 
-    # certain annotations (e.g., CHESS)
-    # Could also add full-gene transcript to annotation like I do in NRsim
-
-# Add paired-end status
 if config["PE"]:
 
-    FC_GENES_PARAMS = FC_GENES_PARAMS + " -p --countReadPairs"
+    FC_GENES_PARAMS = " -R -f -g gene_id -t transcript -p --countReadPairs"
+
+else:
+
+    FC_GENES_PARAMS = " -R -f -g gene_id -t transcript"
 
 
 ## Get extra parameters for transcript calling
 
-# Base parameters
-FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t exon -O"
-
-
-# Add paired-end status
 if config["PE"]:
 
-    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+    FC_TRANSCRIPTS_PARAMS = " -R -f -g transcript_id -t exon -O -p --countReadPairs"
+
+else:
+
+    FC_TRANSCRIPTS_PARAMS= " -R -f -g transcript_id -t exon -O"
 
 
 ## Get extra parameters for exon bin calling
 
-# Base parameters
-FC_EXONBIN_PARAMS= " -R -f -g exon_id -t exonic_part -O"
-
 
 # Add paired-end status
 if config["PE"]:
 
-    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+    FC_EXONBINS_PARAMS = " -R -f -g exon_id -t exonic_part -O -p --countReadPairs"
+
+else:
+
+    FC_EXONBINS_PARAMS= " -R -f -g exon_id -t exonic_part -O"
+
 
 
 ## Get extra parameters for exon calling
 
-# Base parameters
-FC_EXON_PARAMS= " -R -g gene_id -J"
-
 
 # Add paired-end status
 if config["PE"]:
 
-    FC_TRANSCRIPTS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -p --countReadPairs"
+    FC_EXONS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -R -g gene_id -J -p --countReadPairs"
+
+else:
+
+    FC_EXONS_PARAMS= " -R -g gene_id -J"
+
 
 
 
