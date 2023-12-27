@@ -220,7 +220,7 @@ for r in samfile:
                         key = r.reference_name + ':' + str(pos) + ':' + b[0].upper() + b[1]
                         cU[key][1] += 1
 
-                        key = r.reference_name +  ':' + str(pos) + ':' + r_info[9] + ':' + b[0].upper() + b[1]
+                        key = r.reference_name +  ':' + str(pos) + ':' + r_info[6] + ':' + b[0].upper() + b[1]
 
                         gmutloc.append(str(pos))            # Record position of muatation
                         tp.append(b[0].upper() + b[1])      # Record type of mutation
