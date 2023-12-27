@@ -15,7 +15,7 @@ rule featurecounts_genes:
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
-        r_path="results/featurecounts_genes/",  # implicitly sets the --Rpath flag
+        r_path= lambda w, output: os.path.splitext(output[0])[0],  # implicitly sets the --Rpath flag
         extra= config["fc_genes_extra"] + FC_GENES_PARAMS,
     log:
         "logs/{sample}.log",
@@ -38,7 +38,7 @@ rule featurecounts_exons:
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
-        r_path="results/featurecounts_exons/",  # implicitly sets the --Rpath flag
+        r_path=lambda w, output: os.path.splitext(output[0])[0],  # implicitly sets the --Rpath flag
         extra= config["fc_exons_extra"] + FC_EXONS_PARAMS,
     log:
         "logs/{sample}.log",
@@ -59,7 +59,7 @@ rule featurecounts_transcripts:
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
-        r_path="results/featurecounts_transcripts/",  # implicitly sets the --Rpath flag
+        r_path=lambda w, output: os.path.splitext(output[0])[0],  # implicitly sets the --Rpath flag
         extra= config["fc_transcripts_extra"] + FC_TRANSCRIPTS_PARAMS,
     log:
         "logs/{sample}.log",
@@ -80,7 +80,7 @@ rule featurecounts_exonbins:
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
-        r_path="results/featurecounts_exonbins/",  # implicitly sets the --Rpath flag
+        r_path=lambda w, output: os.path.splitext(output[0])[0],  # implicitly sets the --Rpath flag
         extra= config["fc_exonbins_extra"] + FC_EXONBINS_PARAMS,
     log:
         "logs/{sample}.log",
