@@ -84,7 +84,7 @@ if(opt$exons){
   
   colnames(exons) <- c("qname", "status", "nhits", "XF")
   
-  exons <- transcripts[ nhits > 0 , c("qname", "XF")]
+  exons <- exons[ nhits > 0 , c("qname", "XF")]
   
   
   muts <- exons[muts, on = .(qname)]
