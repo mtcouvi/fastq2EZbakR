@@ -75,7 +75,7 @@ else:
         input:
             "results/align/{sample}.bam"
         output:
-            "results/sf_reads/{sample}.s.sam",
+            "results/sf_reads/{sample}.s.bam",
             "results/sf_reads/{sample}_fixed_mate.bam",
             "results/sf_reads/{sample}.f.sam",
         log:
@@ -100,7 +100,7 @@ else:
 if NORMALIZE:
     rule normalize:
         input:
-            expand("results/sf_reads/{sample}.f.sam", sample = SAMP_NAMES)
+            expand("results/sf_reads/{sample}.s.bam", sample = SAMP_NAMES)
         output:
             "results/normalization/scale"
         log:
@@ -120,7 +120,7 @@ if NORMALIZE:
 else:
     rule normalize:
         input:
-            expand("results/sf_reads/{sample}.f.sam", sample = SAMP_NAMES)
+            expand("results/sf_reads/{sample}.s.bam", sample = SAMP_NAMES)
         output:
             "results/normalization/scale"
         log:
@@ -154,7 +154,7 @@ rule call_snps:
     input:
         str(config["genome"]),
         get_index_name(),
-        expand("results/sf_reads/{ctl}.f.sam", ctl = CTL_NAMES)
+        expand("results/sf_reads/{ctl}.s.bam", ctl = CTL_NAMES)
     params:
         nctl = nctl,
         shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
@@ -178,7 +178,7 @@ rule call_snps:
 # Count mutations 
 rule cnt_muts:
     input:
-        "results/sf_reads/{sample}.f.sam",
+        "results/sf_reads/{sample}.s.bam",
         "results/snps/snp.txt"
     params:
         format = FORMAT,
@@ -296,7 +296,7 @@ else:
 rule maketdf:
     input:
         "results/counts/{sample}_counts.csv.gz",
-        "results/htseq/{sample}_tl.bam",
+        "results/sf_reads/{sample}.s.bam",
 	    "results/normalization/scale"
     output:
         temp("results/tracks/{sample}_success.txt"),

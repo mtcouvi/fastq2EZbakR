@@ -4,7 +4,7 @@
 # Assign reads to genes
 rule featurecounts_genes:
     input:
-        sam = "results/sf_reads/{sample}.f.sam",
+        sam = "results/sf_reads/{sample}.s.bam",
         gtf = config["annotation"]
     output:
         multiext(
@@ -26,7 +26,7 @@ rule featurecounts_genes:
 # Assign reads to exons
 rule featurecounts_exons:
     input:
-        sam = "results/sf_reads/{sample}.f.sam",
+        sam = "results/sf_reads/{sample}.s.bam",
         gtf = config["annotation"]
     output:
         multiext(
@@ -48,7 +48,7 @@ rule featurecounts_exons:
 # Assign reads to transcripts
 rule featurecounts_transcripts:
     input:
-        sam = "results/sf_reads/{sample}.f.sam",
+        sam = "results/sf_reads/{sample}.s.bam",
         gtf = config["annotation"]
     output:
         multiext(
@@ -69,7 +69,7 @@ rule featurecounts_transcripts:
 # Assign reads to exonic bins
 rule featurecounts_exonbins:
     input:
-        sam = "results/sf_reads/{sample}.f.sam"
+        sam = "results/sf_reads/{sample}.s.bam"
         gtf = config["flat_annotation"]
     output:
         multiext(
