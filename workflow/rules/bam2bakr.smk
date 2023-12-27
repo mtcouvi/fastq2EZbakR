@@ -208,7 +208,7 @@ rule cnt_muts:
 # Merge mutation counts with feature assignment
 rule merge_features_and_muts:
     input:
-        MERGE_INPUT
+        get_merge_input
     output:
         "results/merge_features_and_muts/{sample}_counts.csv.gz"
     params:

@@ -132,10 +132,10 @@ for r in samfile:
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
 
-        r_info[6] = str( r_info[10] == 'TRUE' or ('N' in r.cigarstring) ).upper()     # sj: splice junction
+        r_info[7] = str( r_info[7] == 'TRUE' or ('N' in r.cigarstring) ).upper()     # sj: splice junction
 
         if (r.is_paired and (r.is_read1 == (r.is_reverse == strand_check))) or (not r.is_paired and (r.is_reverse == strand_check)):        # If read is first_in_pair and on reverse strand -or- second_in_pair and on forward strand then make sequence complement
-            r_info[9] = 'R'      # FR: forward or reverse read orientation
+            r_info[6] = 'R'      # FR: forward or reverse read orientation
             MD = [[x[1], DNAcode[x[2]], min(x[0] - r.query_alignment_start + 1, r.query_alignment_length - (x[0] - r.query_alignment_start))] for x in r.get_aligned_pairs(matches_only = True, with_seq=True)]
             # Parse MD and Cigar strings, remove values that are softclipped
             # MD = [[gen_position, ref_base, base_readEnd_distance]]
@@ -144,7 +144,7 @@ for r in samfile:
             r.query_sequence = ''.join([DNAcode[x] for x in r.query_sequence])
             r.query_qualities = temp_qual
         else:
-            r_info[9] = 'F'
+            r_info[6] = 'F'
             MD = [[x[1], x[2], min(x[0] - r.query_alignment_start + 1, r.query_alignment_length - (x[0] - r.query_alignment_start))] for x in r.get_aligned_pairs(matches_only = True, with_seq=True)]
 
 
@@ -204,7 +204,7 @@ for r in samfile:
                 if (b[0].upper() in args.base):
                     whichMut = [mut for mut in args.mutType if mut[0] == b[0].upper()]     # Find out which mutation types use this reference base e.g. T -> TC, TG, TA, TN
                     for mt in whichMut:
-                        key = r.reference_name + ':' + str(pos) + ':' + r_info[6] + ':' + r_info[8] + ':' + r_info[11] + ':' + mt
+                        key = r.reference_name + ':' + str(pos) + ':' + mt
                         if key not in cU:
                             cU[key] = [1, 0]
                         else:
@@ -217,10 +217,10 @@ for r in samfile:
                 # mutPos bedGraph data + cU.rds n data
                 if args.mutPos:
                     if (b[0].upper() + b[1]) in args.mutType:
-                        key = r.reference_name + ':' + str(pos) + ':' + r_info[6] + ':' + r_info[8] + ':' + r_info[11] + ':' + b[0].upper() + b[1]
+                        key = r.reference_name + ':' + b[0].upper() + b[1]
                         cU[key][1] += 1
 
-                        key = r.reference_name + ':' + str(pos) + ':' + r_info[9] + ':' + b[0].upper() + b[1]
+                        key = r.reference_name +  ':' + b[0].upper() + b[1]
 
                         gmutloc.append(str(pos))            # Record position of muatation
                         tp.append(b[0].upper() + b[1])      # Record type of mutation
@@ -267,7 +267,7 @@ myfile.close()
 if args.mutPos:
     with open(inputName + '_cU.csv', 'w', newline='') as myfile:
         wr = csv.writer(myfile)
-        wr.writerow(['rname', 'gloc', 'GF', 'XF', 'ai', 'tp', 'trials', 'n'])
+        wr.writerow(['rname', 'gloc', 'tp', 'trials', 'n'])
         for position, counts in cU.items():
             row = position.split(':')
             row[1] = int(row[1]) + 1                        # adjust position because we are 0-based

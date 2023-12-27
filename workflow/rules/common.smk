@@ -262,6 +262,33 @@ def get_pold(wildcards):
 
 
 ### FEATURECOUNTS HELPERS
+ 
+## All of the files to merge
+def get_merge_input(wildcards):
+
+    MERGE_INPUT = expand("results/counts/{sid}_counts.csv.gz", sid = wildcards.sample)
+
+    if config["features"]["genes"]:
+
+        MERGE_INPUT.append(expand("results/featurecounts_genes/{sid}.featureCounts", sid = wildcards.sample))
+
+    if config["features"]["exons"]
+
+        MERGE_INPUT.append(expand("results/featurecounts_exons/{sid}.featureCounts", sid = wildcards.sample))
+
+
+    if config["features"]["transcripts"]
+
+        MERGE_INPUT.append(expand("results/featurecounts_transcripts/{sid}.featureCounts", sid = wildcards.sample))
+
+
+    if config["features"]["exonic_bins"]
+
+        MERGE_INPUT.append(expand("results/featurecounts_exonbins/{sid}.featureCounts", sid = wildcards.sample))
+
+    return MERGE_INPUT
+
+
 
 # Get strandedness parameter
 if config["strandedness"] == "reverse":
