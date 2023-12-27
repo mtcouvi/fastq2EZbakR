@@ -124,7 +124,7 @@ mutpos: True
 
 
 # Normalize sequencing tracks?
-normalize: True
+normalize: False
 
 
 

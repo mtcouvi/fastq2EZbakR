@@ -122,7 +122,7 @@ flat_annotation: "data/annotation/flat.gtf"
 mutpos: False
 
 # Normalize sequencing tracks?
-normalize: True
+normalize: False
 
 
 

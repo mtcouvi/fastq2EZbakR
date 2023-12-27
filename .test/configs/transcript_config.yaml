@@ -112,7 +112,7 @@ fastp_adapters: ""
 
 
 # Normalize sequencing tracks?
-normalize: True
+normalize: False
 
 
 # Path to flattened annotation 
