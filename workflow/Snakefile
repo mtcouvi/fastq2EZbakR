@@ -31,7 +31,7 @@ container: "docker://continuumio/miniconda3"
 
 include: "rules/common.smk"
 include: "rules/bam2bakr.smk"
-
+include: "rules/features.smk"
 
 if not config["bam2bakr"]:
     include: "rules/preprocess.smk"
