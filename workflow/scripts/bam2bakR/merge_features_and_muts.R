@@ -63,7 +63,7 @@ if(opt$genes){
   
   colnames(genes) <- c("qname", "status", "nhits", "GF")
   
-  genes <- transcripts[ nhits > 0 , c("qname", "GF")]
+  genes <- genes[ nhits > 0 , c("qname", "GF")]
   
   
   muts <- genes[muts, on = .(qname)]
