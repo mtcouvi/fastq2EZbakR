@@ -297,25 +297,25 @@ def get_merge_input(wildcards):
 
     MERGE_INPUT = []
 
-    MERGE_INPUT.append(expand("results/counts/{sid}_counts.csv.gz", sid = wildcards.sample))
+    MERGE_INPUT.append(expand("results/counts/{sid}_counts.csv.gz", sid = str(wildcards.sample)))
 
     if config["features"]["genes"]:
 
-        MERGE_INPUT.append(expand("results/featurecounts_genes/{sid}.featureCounts", sid = wildcards.sample))
+        MERGE_INPUT.append(expand("results/featurecounts_genes/{sid}.featureCounts", sid = str(wildcards.sample)))
 
     if config["features"]["exons"]:
 
-        MERGE_INPUT.append(expand("results/featurecounts_exons/{sid}.featureCounts", sid = wildcards.sample))
+        MERGE_INPUT.append(expand("results/featurecounts_exons/{sid}.featureCounts", sid = str(wildcards.sample)))
 
 
     if config["features"]["transcripts"]:
 
-        MERGE_INPUT.append(expand("results/featurecounts_transcripts/{sid}.featureCounts", sid = wildcards.sample))
+        MERGE_INPUT.append(expand("results/featurecounts_transcripts/{sid}.featureCounts", sid = str(wildcards.sample)))
 
 
     if config["features"]["exonic_bins"]:
 
-        MERGE_INPUT.append(expand("results/featurecounts_exonbins/{sid}.featureCounts", sid = wildcards.sample))
+        MERGE_INPUT.append(expand("results/featurecounts_exonbins/{sid}.featureCounts", sid = str(wildcards.sample)))
 
     return MERGE_INPUT
 
