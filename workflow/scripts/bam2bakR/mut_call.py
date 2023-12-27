@@ -217,10 +217,10 @@ for r in samfile:
                 # mutPos bedGraph data + cU.rds n data
                 if args.mutPos:
                     if (b[0].upper() + b[1]) in args.mutType:
-                        key = r.reference_name + ':' + b[0].upper() + b[1]
+                        key = r.reference_name + ':' + str(pos) + ':' + b[0].upper() + b[1]
                         cU[key][1] += 1
 
-                        key = r.reference_name +  ':' + b[0].upper() + b[1]
+                        key = r.reference_name +  ':' + str(pos) + ':' + r_info[9] + ':' + b[0].upper() + b[1]
 
                         gmutloc.append(str(pos))            # Record position of muatation
                         tp.append(b[0].upper() + b[1])      # Record type of mutation
