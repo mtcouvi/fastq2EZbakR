@@ -375,7 +375,7 @@ else:
 # Add paired-end status
 if config["PE"]:
 
-    FC_EXONS_PARAMS = FC_TRANSCRIPTS_PARAMS + " -R -g gene_id -J -p --countReadPairs"
+    FC_EXONS_PARAMS = " -R -g gene_id -J -p --countReadPairs"
 
 else:
 
