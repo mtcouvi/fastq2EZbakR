@@ -65,6 +65,8 @@ if(opt$genes){
   
   genes <- genes[ nhits > 0 , c("qname", "GF")]
   
+  genes[, GF := gsub(",", "+", GF)]
+
   
   muts <- genes[muts, on = .(qname)]
   
@@ -86,6 +88,7 @@ if(opt$exons){
   
   exons <- exons[ nhits > 0 , c("qname", "XF")]
   
+  exons[, XF := gsub(",", "+", XF)]
   
   muts <- exons[muts, on = .(qname)]
   
@@ -109,6 +112,9 @@ if(opt$exonbins){
   exonbins <- exonbins[ nhits > 0 , c("qname", "exon_bin")]
   
   
+  exonbins[, exon_bin := gsub(",", "+", exon_bin)]
+  
+  
   muts <- exonbins[muts, on = .(qname)]
   
   
@@ -129,6 +135,8 @@ if(opt$transcripts){
   
   
   transcripts <- transcripts[ nhits > 0 , c("qname", "transcripts")]
+  
+  transcripts[, transcripts := gsub(",", "+", transcripts)]
   
   
   muts <- transcripts[muts, on = .(qname)]
