@@ -95,13 +95,13 @@ if(opt$pnew == 0){
 
   # Calculate logit(fn) with analytical Bayesian approach
   Fn_est <- cT[,.(fn_est = 0,
-                  nreads = sum(pt)), by = .(XF, TF)]
+                  nreads = sum(pt)), by = .(GF, TF)]
 
   Fn_est$sample <- opt$sample
 
 }else{
 
-  cB <- counts[!grepl("__", XF), .N, by = .(XF, TC, nT)]
+  cB <- counts[!grepl("__", GF), .N, by = .(GF, TC, nT)]
 
   rm(counts)
   rm(rsem)
@@ -210,21 +210,21 @@ if(opt$pnew == 0){
 
   # Estimate GF for prior
   Fn_prior <- cB %>% dplyr::ungroup() %>%
-    dplyr::group_by(XF, TC, nT, pnew, pold) %>%
+    dplyr::group_by(GF, TC, nT, pnew, pold) %>%
     dplyr::summarise(n = sum(N)) %>%
-    dplyr::group_by(XF) %>%
+    dplyr::group_by(GF) %>%
     dplyr::summarise(logit_fn_rep = stats::optim(0, mixed_lik, nT = nT, TC = TC, n = n, pnew = pnew, pold = pold, method = "L-BFGS-B", lower = -7, upper = 7)$par, nreads =sum(n), .groups = "keep") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(prior = inv_logit(logit_fn_rep)) %>%
-    dplyr::select(XF, prior)
+    dplyr::select(GF, prior)
 
 
   # Add prior info
-  cT <- setDT(inner_join(cT, Fn_prior, by = "XF"))
+  cT <- setDT(inner_join(cT, Fn_prior, by = "GF"))
 
   ### Calculate logit(fn) with analytical Bayesian approach
   Fn_est <- cT[,.(fn_est = (sum((pt*dbinom(TC, nT, pnew)*prior)/(dbinom(TC, nT, pnew)*prior + dbinom(TC, nT, pold)*(1-prior)) ))/(sum(pt)),
-                  nreads = sum(pt)), by = .(XF, TF)]
+                  nreads = sum(pt)), by = .(GF, TF)]
 
   Fn_est$sample <- opt$sample
 }
