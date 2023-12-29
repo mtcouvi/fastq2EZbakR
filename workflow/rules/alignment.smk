@@ -11,8 +11,7 @@ rule modify_annotation:
     output:
         mod_gtf="results/modify_annotation/modified_annotation.gtf"
     params:
-        rscript=workflow.source_path("../scripts/modify_annotation.R"),
-        extra=config["modify_annotation_params"]
+        rscript=workflow.source_path("../scripts/alignment/modify_annotation.R"),
     threads: 1
     conda:
         "../envs/simulate.yaml"
@@ -21,7 +20,7 @@ rule modify_annotation:
     shell:
         """
         chmod +x {params.rscript}
-        {params.rscript} -g {input.gtf} -o {output.mod_gtf} {params.extra}
+        {params.rscript} -g {input.gtf} -o {output.mod_gtf} 1> {log} 2>&1
         """
 
 
