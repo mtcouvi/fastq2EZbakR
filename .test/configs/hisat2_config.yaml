@@ -140,6 +140,15 @@ mut_tracks: "TC"
 minqual: 40
 
 
+# Add a full-gene "transcript" to annotation used for STAR + RSEM to quantify pre-mRNA.
+  # This is a nice way to "regress out" pre-mRNA abundance and to identify
+  # problematic gene annotations (e.g., regions where estimated pre-mRNA abundance
+  # is as high if not higher than appreciably expressed isoforms).
+  #
+  # The annotation with the full-gene "transcript" will only be used for STAR's alignment
+  # and RSEM quantification. The full-gene transcript will not be a feature to which
+  # reads are assigned by featureCounts.
+quantify_premRNA: False
 
 # String common to spike-in gene_ids in annotation gtf
   # If you have no spike-ins, then this should be "\"\"", i.e., an empty string ("")
