@@ -14,7 +14,7 @@ rule modify_annotation:
         rscript=workflow.source_path("../scripts/alignment/modify_annotation.R"),
     threads: 1
     conda:
-        "../envs/simulate.yaml"
+        "../envs/modify.yaml"
     log:
         "logs/modify_annotation/modify_annotation.log",
     shell:
