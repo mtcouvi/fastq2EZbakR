@@ -3,13 +3,35 @@
 ##### ALIGNMENT WITH STAR
 ######################################################################################
 
+# Make modified annotation if necessary
+    # For "regressing out" pre-mRNA signal
+rule modify_annotation:
+    input:
+        gtf=config["annotation"]
+    output:
+        mod_gtf="results/modify_annotation/modified_annotation.gtf"
+    params:
+        rscript=workflow.source_path("../scripts/modify_annotation.R"),
+        extra=config["modify_annotation_params"]
+    threads: 1
+    conda:
+        "../envs/simulate.yaml"
+    log:
+        "logs/modify_annotation/modify_annotation.log",
+    shell:
+        """
+        chmod +x {params.rscript}
+        {params.rscript} -g {input.gtf} -o {output.mod_gtf} {params.extra}
+        """
+
+
 if config["aligner"] == "star":
 
     # Build STAR index
     rule index:
         input:
             fasta=config["genome"],
-            gtf=config["annotation"],
+            gtf=AandQ_ANNOTATION,
         output:
             directory(config['indices']),
         threads: 12

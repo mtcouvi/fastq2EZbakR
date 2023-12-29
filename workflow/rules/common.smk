@@ -105,6 +105,15 @@ def get_fastq_r2(wildcards):
 ### Extra parameters passed to STAR alignment
 
 
+# Annotation to use for alignment and quantification
+if config["quantify_premRNA"]:
+
+    AandQ_ANNOTATION = "results/modify_annotation/modified_annotation.gtf"
+
+else:
+
+    AandQ_ANNOTATION = config["annotation"]
+
 STAR_PARAMS = str(config["star_align_params"])
 
 ## Add necessary tags and change other settings as necessary

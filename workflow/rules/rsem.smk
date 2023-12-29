@@ -10,7 +10,7 @@ rule RSEM_index:
         idxfa="rsem_index/reference.idx.fa",
         n2g="rsem_index/reference.n2g.idx.fa",
     params:
-        extra="--gtf {} {}".format(str(config["annotation"]), str(config["rsem_index_params"])),
+        extra="--gtf {} {}".format(str(AandQ_ANNOTATION), str(config["rsem_index_params"])),
     log:
         "logs/rsem_index/prepare-reference.log",
     threads: 20
