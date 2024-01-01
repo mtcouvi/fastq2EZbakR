@@ -2,6 +2,7 @@
 rule RSEM_index:
     input:
         reference_genome=config['genome'],
+        gtf = AandQ_ANNOTATION,
     output:
         seq="rsem_index/reference.seq",
         grp="rsem_index/reference.grp",
