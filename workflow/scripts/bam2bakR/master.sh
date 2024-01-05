@@ -42,7 +42,7 @@ keepcols=${keepcols}","${base}","${mut_tracks}
 
 
 # Read all _counts.csv.gz files and save them as master-DATE.csv.gz and cB-DATE.csv.gz
-parallel -j 1 --compress --plus "base={1}; base=\$(basename \${base}); cat <(echo Filename:\${base%_counts.csv.gz}) <(pigz -d -k -c -p $cpus {1} | sed 's/\r$//')" ::: $directory/*_counts* \
+parallel -j $cpus --compress --plus "base={1}; base=\$(basename \${base}); cat <(echo Filename:\${base%_counts.csv.gz}) <(pigz -d -k -c -p 1 {1} | sed 's/\r$//')" ::: $directory/*_counts* \
     | awk -v OFS="," '
             $1 ~ /Filename/ {
                 split($1, sample, ":")
@@ -130,7 +130,7 @@ rm -f 0
 
 # Read all _cU.csv.gz files and save them as cU-DATE.csv.gz
 if [ "$mut_pos" = "True" ]; then
-    parallel -j 1 --plus "cat <(echo Filename:{1%_cU.csv.gz}) <(pigz -d -k -c -p $cpus {1})" ::: ./results/counts/*_cU.csv.gz \
+    parallel -j $cpus --plus "cat <(echo Filename:{1%_cU.csv.gz}) <(pigz -d -k -c -p 1 {1})" ::: ./results/counts/*_cU.csv.gz \
         | awk -v OFS="," '
                 $1 ~ /Filename/ {
                     split($1, sample, ":")
@@ -151,7 +151,7 @@ if [ "$mut_pos" = "True" ]; then
         | pigz -p $cpus > "$mutposout"
 
 
-   pigz -d -p $cpus -c "$mutposout" \
+   pigz -d -c "$mutposout" \
 	| awk -F "," \
 	      -v cutoff="$pos_cutoff" \
           -v upper="$high_cutoff" \
