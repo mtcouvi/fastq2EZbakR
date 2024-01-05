@@ -437,5 +437,7 @@ else:
     STRAND = 'F'
 
 
-### Transcript cB helpers
+### Optimizing cB creation multithreading
+
+MAKECB_THREADS = len(SAMP_NAMES)*4
 

@@ -250,7 +250,7 @@ if config["mutpos"]:
             max_pos_coverage = config["max_pos_coverage"],
         log:
             "logs/makecB/master.log"
-        threads: 20
+        threads: MAKECB_THREADS
         conda:
             "../envs/full.yaml"
         shell:
@@ -275,7 +275,7 @@ else:
             mut_pos = config["mutpos"],
         log:
             "logs/makecB/master.log"
-        threads: 20
+        threads: MAKECB_THREADS
         conda:
             "../envs/full.yaml"
         shell:
