@@ -97,8 +97,8 @@ strategies:
 features:
     genes: True
     exons: True
-    transcripts: False
-    exonic_bins: False
+    transcripts: True
+    exonic_bins: True
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
@@ -116,7 +116,7 @@ fastp_adapters: ""
 # Path to flattened annotation 
 # Will be created if not already present
 # Only relevant if using FlatStacks
-flat_annotation: "data/annotation/flat.gtf"
+flat_annotation: "data/annotation/flat_b2b.gtf"
 
 # Track site-specific mutational information
 mutpos: False
