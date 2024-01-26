@@ -44,6 +44,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Test workflow (bam2EZbakR)
+      uses: snakemake/snakemake-github-action@v1.25.1
+      with:
+        directory: .test
+        snakefile: workflow/Snakefile
+        args: "--configfile .test/configs/bam2bakR_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (mutpos)
       uses: snakemake/snakemake-github-action@v1.25.1
       with:
