@@ -98,19 +98,26 @@ else:
 ## 1) Properly log standard out
 # Calculate normalization scale factor to be applied to tracks        
 if NORMALIZE:
+
     rule normalize:
         input:
-            expand("results/sf_reads/{sample}.s.bam", sample = SAMP_NAMES)
+            expand(
+                "results/featurecounts_exons/{sample}.featureCounts", sample=SAMP_NAMES
+            ),
         output:
-            "results/normalization/scale"
+            "results/normalization/scale",
         log:
-            "logs/normalize/normalize.log"
+            "logs/normalize/normalize.log",
         threads: 1
+        params:
+            rscript=workflow.source_path("../scripts/bam2bakR/normalize.R"),
+            spikename=config["spikename"],
         conda:
             "../envs/full.yaml"
         shell:
-            """
-            touch {output}
+            r"""
+            chmod +x {params.rscript}
+            {params.rscript} --dirs ./results/featurecounts_exons/ --output {output} --spikename {params.spikename} 1> {log} 2>&1
             """
 
 else:
