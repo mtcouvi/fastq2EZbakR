@@ -5,9 +5,8 @@
 ### TO-DO
 ## 1) Clean up sort/filter function; maybe reduce number of output files
 if config["bam2bakr"]:
-
     if config["remove_tags"]:
-        
+
         # Remove tags from bam files that can break HTSeq
         rule remove_tags:
             input:
@@ -15,7 +14,7 @@ if config["bam2bakr"]:
             output:
                 output_bam="results/remove_tags/{sample}_no_jI_jM.bam",
             log:
-                "logs/remove_tags/{sample}.log"
+                "logs/remove_tags/{sample}.log",
             conda:
                 "../envs/full.yaml"
             script:
@@ -30,10 +29,10 @@ if config["bam2bakr"]:
                 "results/sf_reads/{sample}_fixed_mate.bam",
                 "results/sf_reads/{sample}.f.sam",
             log:
-                "logs/sort_filter/{sample}.log"
-            params: 
+                "logs/sort_filter/{sample}.log",
+            params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT
+                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
@@ -48,16 +47,16 @@ if config["bam2bakr"]:
         # Filter out multi-mappers and sort reads
         rule sort_filter:
             input:
-                get_input_bams
+                get_input_bams,
             output:
                 "results/sf_reads/{sample}.s.bam",
                 "results/sf_reads/{sample}_fixed_mate.bam",
                 "results/sf_reads/{sample}.f.sam",
             log:
-                "logs/sort_filter/{sample}.log"
-            params: 
+                "logs/sort_filter/{sample}.log",
+            params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT
+                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
@@ -67,22 +66,21 @@ if config["bam2bakr"]:
                 {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
                 """
 
-
 else:
 
     # Filter out multi-mappers and sort reads
     rule sort_filter:
         input:
-            "results/align/{sample}.bam"
+            "results/align/{sample}.bam",
         output:
             "results/sf_reads/{sample}.s.bam",
             "results/sf_reads/{sample}_fixed_mate.bam",
             "results/sf_reads/{sample}.f.sam",
         log:
-            "logs/sort_filter/{sample}.log"
-        params: 
+            "logs/sort_filter/{sample}.log",
+        params:
             shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-            format=FORMAT
+            format=FORMAT,
         threads: 8
         conda:
             "../envs/full.yaml"
@@ -93,10 +91,9 @@ else:
             """
 
 
-
 ### TO-DO
 ## 1) Properly log standard out
-# Calculate normalization scale factor to be applied to tracks        
+# Calculate normalization scale factor to be applied to tracks
 if NORMALIZE:
 
     rule normalize:
@@ -121,13 +118,14 @@ if NORMALIZE:
             """
 
 else:
+
     rule normalize:
         input:
-            expand("results/sf_reads/{sample}.s.bam", sample = SAMP_NAMES)
+            expand("results/sf_reads/{sample}.s.bam", sample=SAMP_NAMES),
         output:
-            "results/normalization/scale"
+            "results/normalization/scale",
         log:
-            "logs/normalize/normalize.log"
+            "logs/normalize/normalize.log",
         threads: 1
         conda:
             "../envs/full.yaml"
@@ -136,12 +134,13 @@ else:
             touch {output}
             """
 
+
 # Index genome fasta file for snp calling
 rule genome_index:
     input:
-        str(config["genome"])
+        str(config["genome"]),
     output:
-        get_index_name()
+        get_index_name(),
     log:
         "logs/genome_index/genome-faidx.log",
     threads: 1
@@ -150,6 +149,7 @@ rule genome_index:
     script:
         "../scripts/bam2bakR/genome-faidx.py"
 
+
 ## TO-DO
 # 1) Allow users to provide custom SNP file
 # Identify SNPs to be accounted for when counting mutations
@@ -157,16 +157,16 @@ rule call_snps:
     input:
         str(config["genome"]),
         get_index_name(),
-        expand("results/sf_reads/{ctl}.s.bam", ctl = CTL_NAMES)
+        expand("results/sf_reads/{ctl}.s.bam", ctl=CTL_NAMES),
     params:
-        nctl = nctl,
-        shellscript = workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
+        nctl=nctl,
+        shellscript=workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
     output:
         "results/snps/snp.txt",
         "results/snps/snp.vcf",
-        temp("results/snps/mkdir.txt")
+        temp("results/snps/mkdir.txt"),
     log:
-        "logs/call_snps/ctl_samps.log"
+        "logs/call_snps/ctl_samps.log",
     threads: 20
     conda:
         "../envs/full.yaml"
@@ -176,27 +176,28 @@ rule call_snps:
         {params.shellscript} {threads} {params.nctl} {output} {input} 1> {log} 2>&1
         """
 
+
 # TO-DO:
 # 1) Add mutation position optimizations and functionality
-# Count mutations 
+# Count mutations
 rule cnt_muts:
     input:
         "results/sf_reads/{sample}.s.bam",
-        "results/snps/snp.txt"
+        "results/snps/snp.txt",
     params:
-        format = FORMAT,
-        minqual = config["minqual"],
-        mut_tracks = config["mut_tracks"],
-        strand = STRAND,
-        shellscript = workflow.source_path("../scripts/bam2bakR/mut_call.sh"),
-        pythonscript = workflow.source_path("../scripts/bam2bakR/mut_call.py"),
-        awkscript = workflow.source_path("../scripts/bam2bakR/fragment_sam.awk"),
-        mutpos = config["mutpos"]
+        format=FORMAT,
+        minqual=config["minqual"],
+        mut_tracks=config["mut_tracks"],
+        strand=STRAND,
+        shellscript=workflow.source_path("../scripts/bam2bakR/mut_call.sh"),
+        pythonscript=workflow.source_path("../scripts/bam2bakR/mut_call.py"),
+        awkscript=workflow.source_path("../scripts/bam2bakR/fragment_sam.awk"),
+        mutpos=config["mutpos"],
     output:
         "results/counts/{sample}_counts.csv.gz",
-        temp("results/counts/{sample}_check.txt")
+        temp("results/counts/{sample}_check.txt"),
     log:
-        "logs/cnt_muts/{sample}.log"
+        "logs/cnt_muts/{sample}.log",
     threads: 32
     conda:
         "../envs/full.yaml"
@@ -208,22 +209,23 @@ rule cnt_muts:
         {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.minqual} {params.mut_tracks} {params.format} {params.strand} {params.pythonscript} {params.awkscript} {params.mutpos} 1> {log} 2>&1
         """
 
+
 # Merge mutation counts with feature assignment
 rule merge_features_and_muts:
     input:
         get_merge_input,
     output:
-        "results/merge_features_and_muts/{sample}_counts.csv.gz"
+        "results/merge_features_and_muts/{sample}_counts.csv.gz",
     params:
-        genes_included = config["features"]["genes"],
-        exons_included = config["features"]["exons"],
-        exonbins_included = config["features"]["exonic_bins"],
-        transcripts_included = config["features"]["transcripts"],
-        rscript = workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R")
+        genes_included=config["features"]["genes"],
+        exons_included=config["features"]["exons"],
+        exonbins_included=config["features"]["exonic_bins"],
+        transcripts_included=config["features"]["transcripts"],
+        rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
     log:
-        "logs/merge_features_and_muts/{sample}.log"
+        "logs/merge_features_and_muts/{sample}.log",
     threads: 20
-    conda: 
+    conda:
         "../envs/full.yaml"
     shell:
         """
@@ -239,20 +241,23 @@ if config["mutpos"]:
 
     rule makecB:
         input:
-            expand("results/merge_features_and_muts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
+            expand(
+                "results/merge_features_and_muts/{sample}_counts.csv.gz",
+                sample=SAMP_NAMES,
+            ),
         output:
-            cB = "results/cB/cB.csv.gz",
-            mutpos = "results/cB/mutpos.csv.gz",
-            mutposfilter = "results/cB/mutpos_filtered.csv.gz",
+            cB="results/cB/cB.csv.gz",
+            mutpos="results/cB/mutpos.csv.gz",
+            mutposfilter="results/cB/mutpos_filtered.csv.gz",
         params:
-            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols = keepcols,
-            mut_tracks = config["mut_tracks"],
-            mut_pos = config["mutpos"],
-            min_pos_coverage = config["min_pos_coverage"],
-            max_pos_coverage = config["max_pos_coverage"],
+            shellscript=workflow.source_path("../scripts/bam2bakR/master.sh"),
+            keepcols=keepcols,
+            mut_tracks=config["mut_tracks"],
+            mut_pos=config["mutpos"],
+            min_pos_coverage=config["min_pos_coverage"],
+            max_pos_coverage=config["max_pos_coverage"],
         log:
-            "logs/makecB/master.log"
+            "logs/makecB/master.log",
         threads: MAKECB_THREADS
         conda:
             "../envs/full.yaml"
@@ -268,16 +273,19 @@ else:
 
     rule makecB:
         input:
-            expand("results/merge_features_and_muts/{sample}_counts.csv.gz", sample=SAMP_NAMES)
+            expand(
+                "results/merge_features_and_muts/{sample}_counts.csv.gz",
+                sample=SAMP_NAMES,
+            ),
         output:
-            cB = "results/cB/cB.csv.gz"
+            cB="results/cB/cB.csv.gz",
         params:
-            shellscript = workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols = keepcols,
-            mut_tracks = config["mut_tracks"],
-            mut_pos = config["mutpos"],
+            shellscript=workflow.source_path("../scripts/bam2bakR/master.sh"),
+            keepcols=keepcols,
+            mut_tracks=config["mut_tracks"],
+            mut_pos=config["mutpos"],
         log:
-            "logs/makecB/master.log"
+            "logs/makecB/master.log",
         threads: MAKECB_THREADS
         conda:
             "../envs/full.yaml"
@@ -294,19 +302,24 @@ rule maketdf:
     input:
         "results/counts/{sample}_counts.csv.gz",
         "results/sf_reads/{sample}.s.bam",
-	    "results/normalization/scale"
+        "results/normalization/scale",
     output:
         temp("results/tracks/{sample}_success.txt"),
-        expand("results/tracks/{{sample}}.{mut}.{id}.{strand}.tdf", mut=Mutation_Types, id=[0,1,2,3,4,5], strand = ['pos', 'min'])
+        expand(
+            "results/tracks/{{sample}}.{mut}.{id}.{strand}.tdf",
+            mut=Mutation_Types,
+            id=[0, 1, 2, 3, 4, 5],
+            strand=["pos", "min"],
+        ),
     params:
-        shellscript = workflow.source_path("../scripts/bam2bakR/tracks.sh"),
-        pythonscript = workflow.source_path("../scripts/bam2bakR/count_to_tracks.py"),
+        shellscript=workflow.source_path("../scripts/bam2bakR/tracks.sh"),
+        pythonscript=workflow.source_path("../scripts/bam2bakR/count_to_tracks.py"),
         mut_tracks=config["mut_tracks"],
         genome=config["genome"],
         WSL=config["WSL"],
-        normalize=config["normalize"]
+        normalize=config["normalize"],
     log:
-        "logs/maketdf/{sample}.log"
+        "logs/maketdf/{sample}.log",
     threads: 20
     conda:
         "../envs/full.yaml"
@@ -316,4 +329,3 @@ rule maketdf:
         chmod +x {params.pythonscript}
         {params.shellscript} {threads} {wildcards.sample} {input} {params.mut_tracks} {params.genome} {params.WSL} {params.normalize} {params.pythonscript} {output} 1> {log} 2>&1
         """
-
