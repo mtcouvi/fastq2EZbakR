@@ -255,6 +255,47 @@ rsem_quant_params: ""
 
 
 
+##### SALMON PARAMETERS #####
+
+# Use Salmon for quantification?
+use_salmon: False
+
+# Path to directory containing Salmon indices
+  # Created automatically if not already present
+salmon_indices: "indices/salmon/"
+
+# Determing if and how to make decoy-aware index for salmon
+  # If make_decoy True, then a decoy-aware index will be made. WARNING: WILL REQUIRE LOTS OF RAM!! >100GB FOR HUMAN GENOME!!
+  # There are two options for how to make this index (see Salmon docs for details: https://salmon.readthedocs.io/en/latest/salmon.html)
+    # If entire_genome is True, then entire genome will be used. This provides a more comprehensive set of decoys at the cost of
+    # requiring more RAM and time to build the index.
+    # 
+    # If entire_genome if False, then "a set of decoy sequences will be identified
+    # by mapping annotated transcripts you wish to index against a hard-masked version
+    # of the organism's genome." (quoted from documentation linked above). This leads to 
+    # comparable performance as a whole genome decoy but is much less RAM intensive.
+decoy_settings:
+  make_decoy: True
+  entire_genome: False
+
+# Optional parameters for generateDecoyTranscriptome.sh script
+salmon_generateDecoy_params: ""
+
+# Read directionality
+directionality: "I"
+
+# Optional parameters for gffread (transcriptome fasta creation)
+gffread_extra: ""
+
+# Optional parameters for Salmon indexing
+salmon_index_params: ""
+
+# Optional parameters for Salmon quantification
+salmon_quant_params: ""
+
+
+
+
 ##### RSEM+ parameters #####
 
 # New read mutation rates

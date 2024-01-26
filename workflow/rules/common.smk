@@ -424,6 +424,10 @@ def get_other_output():
 
         target.append("results/cB/mutpos_filtered.csv.gz")
 
+    # if config["use_salmon"]:
+
+    #     target.append(expand("reul"))
+
     return target
 
 
@@ -441,3 +445,58 @@ else:
 
 MAKECB_THREADS = len(SAMP_NAMES)*4
 
+
+# ### Salmon helpers
+
+# # Make life easier for users and catch if they add a '/' at the end of their path
+# # to alignment indices. If so, remove it to avoid double '/' 
+# if config["salmon_indices"].endswith('/'):
+#     INDEX_PATH = str(config["salmon_indices"])
+# else:
+#     INDEX_PATH = str(config["salmon_indices"]) + "/"
+
+
+# # Check whether or not decoys will be created
+#     # SALMON_DECOYS and SALMON_TRANSCRIPTOME are used as
+#     # input for Salmon index. Their values will determine
+#     # whether or not generateDecoyTranscriptome.sh will need
+#     # to be run.
+# if config["decoy_settings"]["make_decoy"]:
+
+#     SALMON_DECOYS="results/salmon_decoys/decoys.txt"
+#     SALMON_TRANSCRIPTOME="results/salmon_decoys/gentrome.fa"
+
+# else:
+
+#     SALMON_DECOYS=""
+#     SALMON_TRANSCRIPTOME="make_transcriptome_fasta/transcriptome.fasta"
+
+
+# # Libtype string
+# if config["PE"]:
+
+#     if config["strandedness"] == "reverse":
+
+#         LIBTYPE = config["directionality"] + "SR"
+    
+#     if config["strandedness"] == "yes":
+
+#         LIBTYPE = config["directionality"] + "SF"
+    
+#     if config["strandedness"] == "no":
+
+#         LIBTYPE = config["directionality"] + "U"
+
+# else:
+
+#     if config["strandedness"] == "reverse":
+
+#         LIBTYPE = "SR"
+    
+#     if config["strandedness"] == "yes":
+
+#         LIBTYPE = "SF"
+    
+#     if config["strandedness"] == "no":
+
+#         LIBTYPE = "U"

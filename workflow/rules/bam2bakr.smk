@@ -26,7 +26,7 @@ if config["bam2bakr"]:
             input:
                 "results/remove_tags/{sample}_no_jI_jM.bam",
             output:
-                "results/sf_reads/{sample}.s.sam",
+                "results/sf_reads/{sample}.s.bam",
                 "results/sf_reads/{sample}_fixed_mate.bam",
                 "results/sf_reads/{sample}.f.sam",
             log:
@@ -50,7 +50,7 @@ if config["bam2bakr"]:
             input:
                 get_input_bams
             output:
-                "results/sf_reads/{sample}.s.sam",
+                "results/sf_reads/{sample}.s.bam",
                 "results/sf_reads/{sample}_fixed_mate.bam",
                 "results/sf_reads/{sample}.f.sam",
             log:
@@ -105,18 +105,14 @@ if NORMALIZE:
             "results/normalization/scale"
         log:
             "logs/normalize/normalize.log"
-        params:
-            rscript=workflow.source_path("../scripts/bam2bakR/normalize.R"),
-            spikename=config["spikename"]
         threads: 1
         conda:
             "../envs/full.yaml"
         shell:
-            r"""
-            chmod +x {params.rscript}
-            {params.rscript} --dirs ./results/htseq/ --spikename {params.spikename} 1> {log} 2>&1
-            mv scale {output}
             """
+            touch {output}
+            """
+
 else:
     rule normalize:
         input:
