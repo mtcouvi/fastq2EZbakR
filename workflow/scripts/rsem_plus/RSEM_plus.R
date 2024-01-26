@@ -6,7 +6,9 @@
 ### Load dependencies
 
 library(data.table)
-library(tidyverse)
+library(dplyr)
+library(readr)
+library(tidyr)
 library(optparse)
 library(MASS)
 
