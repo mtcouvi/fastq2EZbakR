@@ -53,7 +53,7 @@ option_list <- list(
                     default = -1,
                     help = 'background mutation rate in old reads'),
     make_option(c("-i", "--niter", type="integer"),
-                default = 20,
+                default = 7,
                 help = 'Number of EM iterations'))
 
 opt_parser <- OptionParser(option_list = option_list)
