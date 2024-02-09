@@ -51,7 +51,10 @@ option_list <- list(
                     help = 'mutation rate in new reads'),
     make_option(c("-b", "--pold", type="double"),
                     default = -1,
-                    help = 'background mutation rate in old reads'))
+                    help = 'background mutation rate in old reads'),
+    make_option(c("-i", "--niter", type="integer"),
+                default = 10,
+                help = 'Number of EM iterations'))
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser) # Load options from command line.
@@ -82,8 +85,7 @@ rsem <- fread(opt$rsem)
     # according to mutType argument
 counts <- counts[,c("GF", "qname", "TC", "nT")]
 
-cT <- setDT(inner_join(rsem, counts, by = "qname"))
-
+cT <- rsem[counts, on = .(qname), nomatch = NULL]
 
 
 ### Estimate new and old mutation rate
@@ -220,15 +222,29 @@ if(opt$pnew == 0){
     dplyr::mutate(prior = inv_logit(logit_fn_rep)) %>%
     dplyr::select(GF, prior)
 
+  Fn_prior <- setDT(Fn_prior)
 
   # Add prior info
-  cT <- setDT(inner_join(cT, Fn_prior, by = "GF"))
+  cT <- cT[Fn_prior, on = .(GF), nomatch = NULL]
 
-  ### Calculate logit(fn) with analytical Bayesian approach
-  Fn_est <- cT[,.(fn_est = (sum((pt*dbinom(TC, nT, pnew)*prior)/(dbinom(TC, nT, pnew)*prior + dbinom(TC, nT, pold)*(1-prior)) ))/(sum(pt)),
-                  nreads = sum(pt)), by = .(GF, TF)]
-
-  Fn_est$sample <- opt$sample
+  ### Estimate fn with EM
+  for(i in 1:opt$niter){
+    
+    
+    cT[,den := sum(pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold)), by = qname]
+    
+    Fn_est <- cT_rsem[,.(fn_est = sum(pt*prior*dbinom(TC, nT, pnew)/den)/sum((pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold))/den)), by = .(GF, TF)]
+    
+    Fn_est[, prior := fn_est]
+    
+    cT_rsem <- cT_rsem[,!c("prior")]
+    cT_rsem <- cT_rsem[Fn_est, on = .(GF, TF), nomatch = NULL]
+    
+    
+  }
+  
+  
+  Fn_est[, sample := opt$sample]
 }
 
 
