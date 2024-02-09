@@ -84,9 +84,12 @@ rsem <- fread(opt$rsem)
     # Should eventually allow other mutation types to be analyzed
     # according to mutType argument
 counts <- counts[,c("GF", "qname", "TC", "nT")]
+counts <- counts[complete.cases(counts),]
 
+# Add RSEM's P(transcript) to mutational information
+  # If pt is 0, don't keep it; would lead to a 0/0 situation in the EM step
 cT <- rsem[counts, on = .(qname), nomatch = NULL]
-
+cT <- cT[pt > 0,]
 
 ### Estimate new and old mutation rate
 
@@ -106,6 +109,7 @@ if(opt$pnew == 0){
 }else{
 
   cB <- counts[!grepl("__", GF), .N, by = .(GF, TC, nT)]
+  mutrate_df <- cB[, .(n = sum(N)), by = .(TC, nT)]
 
   rm(counts)
   rm(rsem)
@@ -126,8 +130,8 @@ if(opt$pnew == 0){
     low_ps <- c(-9, -9, -9)
     high_ps <- c(0, 0, 9)
 
-    fit <- stats::optim(par=c(-7,-2,0), mixture_lik, TC = cB$TC, nT = cB$nT,
-                                    n = cB$N, method = "L-BFGS-B", 
+    fit <- stats::optim(par=c(-7,-2,0), mixture_lik, TC = mutrate_df$TC, nT = mutrate_df$nT,
+                                    n = mutrate_df$n, method = "L-BFGS-B", 
                                     lower = low_ps, upper = high_ps)
 
 
@@ -150,8 +154,8 @@ if(opt$pnew == 0){
     low_ps <- c(logit(opt$pold), -9)
     high_ps <- c(0, 9)
 
-    fit <- stats::optim(par=c(-2,0), mixture_lik, TC = cB$TC, nT = cB$nT,
-                                    n = cB$N, method = "L-BFGS-B", 
+    fit <- stats::optim(par=c(-2,0), mixture_lik, TC = mutrate_df$TC, nT = mutrate_df$nT,
+                                    n = mutrate_df$n, method = "L-BFGS-B", 
                                     lower = low_ps, upper = high_ps)
 
 
@@ -175,8 +179,8 @@ if(opt$pnew == 0){
     low_ps <- c(-9, -9)
     high_ps <- c(logit(opt$pnew), 9)
 
-    fit <- stats::optim(par=c(-7,0), mixture_lik, TC = cB$TC, nT = cB$nT,
-                                    n = cB$N, method = "L-BFGS-B", 
+    fit <- stats::optim(par=c(-7,0), mixture_lik, TC = mutrate_df$TC, nT = mutrate_df$nT,
+                                    n = mutrate_df$n, method = "L-BFGS-B", 
                                     lower = low_ps, upper = high_ps)
 
 
@@ -199,12 +203,7 @@ if(opt$pnew == 0){
 
 
 
-  # Add mutation rates
-  cT$pnew <- pnew
-  cT$pold <- pold
 
-  cB$pnew <- pnew
-  cB$pold <- pold
 
   # Likelihood function for mixture model
   mixed_lik <- function(pnew, pold, TC, nT, n, logit_fn, p_sd = 1, p_mean = 0){
@@ -214,7 +213,7 @@ if(opt$pnew == 0){
 
   # Estimate GF for prior
   Fn_prior <- cB %>% dplyr::ungroup() %>%
-    dplyr::group_by(GF, TC, nT, pnew, pold) %>%
+    dplyr::group_by(GF, TC, nT) %>%
     dplyr::summarise(n = sum(N)) %>%
     dplyr::group_by(GF) %>%
     dplyr::summarise(logit_fn_rep = stats::optim(0, mixed_lik, nT = nT, TC = TC, n = n, pnew = pnew, pold = pold, method = "L-BFGS-B", lower = -7, upper = 7)$par, nreads =sum(n), .groups = "keep") %>%
@@ -250,4 +249,5 @@ if(opt$pnew == 0){
 
 
 write_csv(Fn_est, file = opt$output)
-
+print(paste0("Estimated/provided pnew is: ", pnew))
+print(paste0("Estimated/provided pold is: ", pold))
