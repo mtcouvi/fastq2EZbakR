@@ -233,12 +233,12 @@ if(opt$pnew == 0){
     
     cT[,den := sum(pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold)), by = qname]
     
-    Fn_est <- cT_rsem[,.(fn_est = sum(pt*prior*dbinom(TC, nT, pnew)/den)/sum((pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold))/den)), by = .(GF, TF)]
+    Fn_est <- cT[,.(fn_est = sum(pt*prior*dbinom(TC, nT, pnew)/den)/sum((pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold))/den)), by = .(GF, TF)]
     
     Fn_est[, prior := fn_est]
     
-    cT_rsem <- cT_rsem[,!c("prior")]
-    cT_rsem <- cT_rsem[Fn_est, on = .(GF, TF), nomatch = NULL]
+    cT <- cT[,!c("prior")]
+    cT <- cT[Fn_est, on = .(GF, TF), nomatch = NULL]
     
     
   }
