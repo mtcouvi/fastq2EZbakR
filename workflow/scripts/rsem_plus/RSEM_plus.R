@@ -138,6 +138,9 @@ if(opt$pnew == 0){
     pnew <- inv_logit(max(fit$par[1:2]))
     pold <- inv_logit(min(fit$par[1:2]))
 
+    print(paste0("Estimated pnew is: ", pnew))
+    print(paste0("Estimated pold is: ", pold))
+
   }else if(opt$pnew == -1 & opt$pold != -1){
 
     ## USER PROVIDED POLD BUT NOT PNEW
@@ -161,6 +164,9 @@ if(opt$pnew == 0){
 
     pnew <- inv_logit(fit$par[1])
     pold <- opt$pold
+
+    print(paste0("Estimated pnew is: ", pnew))
+    print(paste0("Provided pold is: ", pold))
 
   }else if(opt$pnew != -1 & opt$pold == -1){
 
@@ -187,12 +193,19 @@ if(opt$pnew == 0){
     pnew <- opt$pnew
     pold <- inv_logit(fit$par[1])
 
+    print(paste0("Provided pnew is: ", pnew))
+    print(paste0("Estimated pold is: ", pold))
+
   }else{
 
     ## USER PROVIDED BOTH PNEW AND POLD
     
     pnew <- opt$pnew
     pold <- opt$pold
+
+    print(paste0("Provided pnew is: ", pnew))
+    print(paste0("Provided pold is: ", pold))
+
 
   }
 
@@ -249,5 +262,3 @@ if(opt$pnew == 0){
 
 
 write_csv(Fn_est, file = opt$output)
-print(paste0("Estimated/provided pnew is: ", pnew))
-print(paste0("Estimated/provided pold is: ", pold))
