@@ -79,16 +79,18 @@ colnames(counts)
 nrow(counts)
 
 rsem <- fread(opt$rsem)
+setkey(rsem, qname)
 
 ### Only keep relevant columns in counts.csv
     # Should eventually allow other mutation types to be analyzed
     # according to mutType argument
 counts <- counts[,c("GF", "qname", "TC", "nT")]
 counts <- counts[complete.cases(counts),]
+setkey(counts, qname)
 
 # Add RSEM's P(transcript) to mutational information
   # If pt is 0, don't keep it; would lead to a 0/0 situation in the EM step
-cT <- rsem[counts, on = .(qname), nomatch = NULL]
+cT <- rsem[counts, nomatch = NULL]
 cT <- cT[pt > 0,]
 
 ### Estimate new and old mutation rate
@@ -237,7 +239,11 @@ if(opt$pnew == 0){
   Fn_prior <- setDT(Fn_prior)
 
   # Add prior info
-  cT <- cT[Fn_prior, on = .(GF), nomatch = NULL]
+  setkey(Fn_prior, GF)
+  setkey(cT, GF)
+  cT <- cT[Fn_prior, nomatch = NULL]
+
+  setkey(cT, GF, TF)
 
   ### Estimate fn with EM
   for(i in 1:opt$niter){
@@ -250,7 +256,7 @@ if(opt$pnew == 0){
     Fn_est[, prior := fn_est]
     
     cT <- cT[,!c("prior")]
-    cT <- cT[Fn_est, on = .(GF, TF), nomatch = NULL]
+    cT <- cT[Fn_est, nomatch = NULL]
     
     
   }
