@@ -47,6 +47,8 @@ rule transcript_fn:
 
 
 # Combine transcript isoform fraction new estimates for all samples
+    ## THIS IS WRONG AND PUTS HEADERS INSIDE THE MIDDLE OF THE TABLE
+    ## Thankfully read_csv() is able to properly parse this shit
 rule combine_fn:
     input:
         expand("results/transcript_fn/{samps}_RSEM_plus.csv", samps=SAMP_NAMES),
