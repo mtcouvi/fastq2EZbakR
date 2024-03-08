@@ -225,8 +225,8 @@ fi
                         nuc = $1":"$2
                 }
                 $1":"$2 == nuc {
-                        trial[$1","$2","$3","$4","$5","$6] += $7
-                        n[$1","$2","$3","$4","$5","$6] += $8
+                        trial[$1","$2","$3"] += $4
+                        n[$1","$2","$3"] += $5
                 }
                 END {
                         for (pos in trial) {
@@ -239,7 +239,7 @@ fi
         export -f awkProcessCU
 
         # Add header and process sorted fragments in parallel
-        cat <(echo "rname,gloc,GF,XF,ai,tp,trials,n") \
+        cat <(echo "rname,gloc,tp,trials,n") \
             <(parallel -j $cpus awkProcessCU {1} ::: ./results/counts/*_${sample}_cU_comb.csv) \
             | pigz -p $cpus > ./results/counts/"$sample"_cU.csv.gz
 
