@@ -460,7 +460,6 @@ MAKECB_THREADS = len(SAMP_NAMES) * 4
 #         LIBTYPE = "SR"
 
 #     if config["strandedness"] == "yes":
-
 #         LIBTYPE = "SF"
 #     if config["strandedness"] == "no":
 #         LIBTYPE = "U"
