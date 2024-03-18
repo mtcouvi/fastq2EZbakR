@@ -82,7 +82,7 @@ def get_fastq_r1(wildcards):
         return expand("results/trimmed/{SID}.1.fastq", SID=wildcards.sample)
 
     else:
-        return expand("results/trimmed/{SID}.fastq", SID=wildcards.sample)
+        return expand("results/trimmed/{SID}.1.fastq", SID=wildcards.sample)
 
 
 def get_fastq_r2(wildcards):
