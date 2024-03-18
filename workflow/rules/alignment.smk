@@ -42,33 +42,66 @@ if config["aligner"] == "star":
             "v2.6.0/bio/star/index"
 
     # Align with STAR
-    rule align:
-        input:
-            fq1=get_fastq_r1,
-            fq2=get_fastq_r2,
-            index=config["indices"],
-        output:
-            aln="results/align/{sample}.bam",
-            sj="results/align/{sample}-SJ.out.tab",
-            log="results/align/{sample}-Log.out",
-            log_progress="results/align/{sample}-Log.progress.out",
-            log_final="results/align/{sample}-Log.final.out",
-            aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
-        log:
-            "logs/align/{sample}_star.log",
-        params:
-            reads_per_gene=lambda wc: "GeneCounts" in config["star_align_params"],
-            chim_junc=lambda wc: "--chimOutType Junctions"
-            in config["star_align_params"],
-            idx=lambda wc, input: input.index,
-            extra=STAR_EXTRA,
-            out_reads_per_gene="results/align/{sample}-ReadsPerGene.out.tab",
-            out_chim_junc="results/align/{sample}-Chimeric.out.junction",
-        conda:
-            "../envs/star.yaml"
-        threads: 24
-        script:
-            "../scripts/alignment/star-align.py"
+
+    if config["PE"]:
+
+        rule align:
+            input:
+                fq1=get_fastq_r1,
+                fq2=get_fastq_r2,
+                index=config["indices"],
+            output:
+                aln="results/align/{sample}.bam",
+                sj="results/align/{sample}-SJ.out.tab",
+                log="results/align/{sample}-Log.out",
+                log_progress="results/align/{sample}-Log.progress.out",
+                log_final="results/align/{sample}-Log.final.out",
+                aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+            log:
+                "logs/align/{sample}_star.log",
+            params:
+                reads_per_gene=lambda wc: "GeneCounts" in config["star_align_params"],
+                chim_junc=lambda wc: "--chimOutType Junctions"
+                in config["star_align_params"],
+                idx=lambda wc, input: input.index,
+                extra=STAR_EXTRA,
+                out_reads_per_gene="results/align/{sample}-ReadsPerGene.out.tab",
+                out_chim_junc="results/align/{sample}-Chimeric.out.junction",
+            conda:
+                "../envs/star.yaml"
+            threads: 24
+            script:
+                "../scripts/alignment/star-align.py"
+
+    else:
+
+        rule align:
+            input:
+                fq1=get_fastq_r1,
+                index=config["indices"],
+            output:
+                aln="results/align/{sample}.bam",
+                sj="results/align/{sample}-SJ.out.tab",
+                log="results/align/{sample}-Log.out",
+                log_progress="results/align/{sample}-Log.progress.out",
+                log_final="results/align/{sample}-Log.final.out",
+                aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+            log:
+                "logs/align/{sample}_star.log",
+            params:
+                reads_per_gene=lambda wc: "GeneCounts" in config["star_align_params"],
+                chim_junc=lambda wc: "--chimOutType Junctions"
+                in config["star_align_params"],
+                idx=lambda wc, input: input.index,
+                extra=STAR_EXTRA,
+                out_reads_per_gene="results/align/{sample}-ReadsPerGene.out.tab",
+                out_chim_junc="results/align/{sample}-Chimeric.out.junction",
+            conda:
+                "../envs/star.yaml"
+            threads: 24
+            script:
+                "../scripts/alignment/star-align.py"
+
 
 
 ######################################################################################
