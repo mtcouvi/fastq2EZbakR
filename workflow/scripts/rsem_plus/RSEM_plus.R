@@ -23,6 +23,43 @@ mixed_lik <- function(pnew, pold, TC, nT, n, logit_fn, p_sd = 1, p_mean = 0){
   return(-logl)
 }
 
+
+# Density function for a skewed normal taken from sn package to reduce dependencies
+dsn <- function (x, xi = 0, omega = 1, alpha = 0, tau = 0, dp = NULL, log = TRUE){
+
+    if (!is.null(dp)) {
+        if (!missing(alpha)) 
+            stop("You cannot set both 'dp' and component parameters")
+        xi <- dp[1]
+        omega <- dp[2]
+        alpha <- dp[3]
+        tau <- if (length(dp) > 3) 
+            dp[4]
+        else 0
+    }
+    
+    za <- cbind((x - xi)/omega, alpha)
+    z <- za[, 1]
+    alpha <- za[, 2]
+    logN <- (-log(sqrt(2 * pi)) - logb(omega) - z^2/2)
+    logS <- numeric(length(z))
+    ok <- (abs(alpha) < Inf)
+    logS[ok] <- pnorm(tau * sqrt(1 + alpha[ok]^2) + (alpha * 
+        z)[ok], log.p = TRUE)
+    logS[!ok] <- log(as.numeric((sign(alpha) * z)[!ok] + tau > 
+        0))
+    logPDF <- as.numeric(logN + logS - pnorm(tau, log.p = TRUE))
+    logPDF <- replace(logPDF, abs(x) == Inf, -Inf)
+    logPDF <- replace(logPDF, omega <= 0, NaN)
+    out <- if (log) 
+        logPDF
+    else exp(logPDF)
+    names(out) <- names(x)
+    return(out)
+
+}
+
+
 ### Process arguments
 
 args = commandArgs(trailingOnly = TRUE)
@@ -63,7 +100,25 @@ option_list <- list(
                 help = "Prior on the number of new reads from a transcript."),
     make_option(c("-p", "--priortot", type = "double"),
                 default = 2,
-                help = "Prior on the total number of reads from a transcript."))
+                help = "Prior on the total number of reads from a transcript."),
+    make_option(c("-x", "--priorpnewmean", type = "double"),
+                default = -2,
+                help = "Prior mean on the logit(pnew)."),
+    make_option(c("-y", "--priorpnewsd", type = "double"),
+                default = 0.8,
+                help = "Prior sd on the logit(pnew)."),
+    make_option(c("-z", "--priorpnewskew", type = "double"),
+                default = -3,
+                help = "Skew on logit(pnew) prior; technically alpha in sn::dsn."),
+    make_option(c("-f", "--priorpoldmean", type = "double"),
+                default = -5,
+                help = "Prior mean on the logit(pnew)."),
+    make_option(c("-g", "--priorpoldsd", type = "double"),
+                default = 1.25,
+                help = "Prior sd on the logit(pnew)."),
+    make_option(c("-h", "--priorpoldskew", type = "double"),
+                default = -10,
+                help = "Skew on logit(pnew) prior; technically alpha in sn::dsn."),)
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser) # Load options from command line.
@@ -134,7 +189,16 @@ if(opt$pnew == 0){
 
         logl <- sum(n*log(inv_logit(param[3])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[2])^TC)*((1 -inv_logit(param[2]))^(nT-TC)) +  (1-inv_logit(param[3]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 - inv_logit(param[1]))^(nT-TC)) ) )
 
-        return(-logl)
+        return(-logl - dsn(param[2], 
+                           opt$priorpnewmean,
+                           opt$priorpnewsd,
+                           opt$priorpnewskew,
+                           log = TRUE)
+                      - dsn(param[1],
+                           opt$priorpoldmean,
+                           opt$priorpoldsd,
+                           opt$priorpoldskew,
+                           log = TRUE) - dnorm(param[3], log = TRUE))
 
     }
 
@@ -161,7 +225,11 @@ if(opt$pnew == 0){
 
         logl <- sum(n*log(inv_logit(param[2])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 -inv_logit(param[1]))^(nT-TC)) +  (1-inv_logit(param[2]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(opt$pold)^TC)*((1 - inv_logit(opt$pold))^(nT-TC)) ) )
 
-        return(-logl)
+        return(-logl - dsn(param[1], 
+                           opt$priorpnewmean,
+                           opt$priorpnewsd,
+                           opt$priorpnewskew,
+                           log = TRUE) - dnorm(param[2], log = TRUE))
 
     }
 
@@ -189,7 +257,11 @@ if(opt$pnew == 0){
 
         logl <- sum(n*log(inv_logit(param[2])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(opt$pnew)^TC)*((1 -inv_logit(opt$pnew))^(nT-TC)) +  (1-inv_logit(param[2]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 - inv_logit(param[1]))^(nT-TC)) ) )
 
-        return(-logl)
+        return(-logl - dsn(param[1],
+                           opt$priorpoldmean,
+                           opt$priorpoldsd,
+                           opt$priorpoldskew,
+                           log = TRUE) - dnorm(param[2], log = TRUE))
 
     }
 
