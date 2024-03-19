@@ -54,7 +54,16 @@ option_list <- list(
                     help = 'background mutation rate in old reads'),
     make_option(c("-i", "--niter", type="integer"),
                 default = 14,
-                help = 'Number of EM iterations'))
+                help = 'Number of EM iterations'),
+    make_option(c("-t", "--threshold", type="double"),
+                default = 1e-3,
+                help = 'change in log-likelihood threshold for convergence'),
+    make_option(c("-w", "--priornew", type = "double"),
+                default = 1,
+                help = "Prior on the number of new reads from a transcript."),
+    make_option(c("-p", "--priortot", type = "double"),
+                default = 2,
+                help = "Prior on the total number of reads from a transcript."))
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser) # Load options from command line.
@@ -226,7 +235,7 @@ if(opt$pnew == 0){
     return(-logl)
   }
 
-  # Estimate GF for prior
+  # Estimate prior for GF
   Fn_prior <- cB %>% dplyr::ungroup() %>%
     dplyr::group_by(GF, TC, nT) %>%
     dplyr::summarise(n = sum(N)) %>%
@@ -246,20 +255,47 @@ if(opt$pnew == 0){
   setkey(cT, GF, TF)
 
   ### Estimate fn with EM
-  for(i in 1:opt$niter){
+  oldll <- -Inf
+
+  # Likelihoods that can get pre-computed (new and old reads from transcript t)
+  cT[, lnew := dbinom(TC, nT, pnew) * pt]
+  cT[, lold := dbinom(TC, nT, pold) * pt]
+
+  for(i in 1:opt$niter){    
     
+    # Sum old + new likelihood for all possible isoforms
+    cT[, den := sum(pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold)), by = qname]
+
+
+    # E[# of new reads from transcript i] / E[# of reads from transcript i]
+    cT[, fn_est := (sum((lnew * prior) / den) + opt$priornew) / (sum((lnew * prior + (1 - prior) * lold ) / den ) + opt$priortot),
+          by = .(GF, TF)]
+    cT[, prior := fn_est]
+
+    # Calculate log-likelihood to assess convergence
+      # I am doing this for each gene since convergence is independent for each gene; so this can be
+      # seen as checking to ensure that all isoform estimates have converged.
+      # Would be nice to iteratively filter out those genes that have already converged to improve
+      # efficiency
+    ll_vect <- unname(unlist(cT[,.(loglikelihood = log(sum(fn_est*lnew + (1-fn_est)*lold))), by = GF][, GF := NULL ]))
+    ll_diff <- oldll - ll_vect
     
-    cT[,den := sum(pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold)), by = qname]
-    
-    Fn_est <- cT[,.(fn_est = sum(pt*prior*dbinom(TC, nT, pnew)/den)/sum((pt*prior*dbinom(TC, nT, pnew) + pt*(1-prior)*dbinom(TC, nT, pold))/den)), by = .(GF, TF)]
-    
-    Fn_est[, prior := fn_est]
-    
-    cT <- cT[,!c("prior")]
-    cT <- cT[Fn_est, nomatch = NULL]
-    
-    
+    if(max(abs(ll_diff)) < opt$threshold){
+      
+      print("Exiting before max number of iterations due to convergence")
+
+      break
+      
+    }else{
+      
+      oldll <- ll_vect
+
+    }
+
   }
+
+  # Get estimate for each isoform
+  Fn_est <- cT[,.(fn_est = mean(fn_est)), by = .(GF, TF)]
   
   
   Fn_est[, sample := opt$sample]
