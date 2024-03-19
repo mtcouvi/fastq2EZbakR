@@ -283,6 +283,7 @@ if(opt$pnew == 0){
     if(max(abs(ll_diff)) < opt$threshold){
       
       print("Exiting before max number of iterations due to convergence")
+      print(paste0("Number of iterations: ", i))
 
       break
       
