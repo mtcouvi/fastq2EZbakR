@@ -44,6 +44,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Test workflow (transcripts)
+      uses: snakemake/snakemake-github-action@v1.25.1
+      with:
+        directory: .test
+        snakefile: workflow/Snakefile
+        args: "--configfile .test/configs/transcript_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (bam2EZbakR)
       uses: snakemake/snakemake-github-action@v1.25.1
       with:
@@ -56,12 +62,6 @@ jobs:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/mutpos_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
-    - name: Test workflow (transcripts)
-      uses: snakemake/snakemake-github-action@v1.25.1
-      with:
-        directory: .test
-        snakefile: workflow/Snakefile
-        args: "--configfile .test/configs/transcript_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (hisat2)
       uses: snakemake/snakemake-github-action@v1.25.1
       with:
