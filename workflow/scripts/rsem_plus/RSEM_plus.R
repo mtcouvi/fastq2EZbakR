@@ -118,7 +118,7 @@ option_list <- list(
                 help = "Prior sd on the logit(pnew)."),
     make_option(c("-h", "--priorpoldskew", type = "double"),
                 default = -10,
-                help = "Skew on logit(pnew) prior; technically alpha in sn::dsn."),)
+                help = "Skew on logit(pnew) prior; technically alpha in sn::dsn."))
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser) # Load options from command line.
