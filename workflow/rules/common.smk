@@ -69,6 +69,9 @@ if config["features"]["transcripts"]:
 if config["features"]["exonic_bins"]:
     keepcols.append("exon_bin")
 
+if config["strategies"]["Transcripts"]:
+    keepcols.append("bamfile_transcripts")
+
 keepcols = ",".join(keepcols)
 
 
@@ -303,6 +306,14 @@ def get_merge_input(wildcards):
             expand(
                 "results/featurecounts_exonbins/{SID}.featureCounts",
                 SID=wildcards.sample,
+            )
+        )
+
+    if config["strategies"]["Transcripts"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/read_to_transcripts/{SID}.csv",
+                SID=wildcards.sample
             )
         )
 

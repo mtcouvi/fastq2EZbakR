@@ -25,6 +25,13 @@ option_list <- list(
   make_option(c("-t", "--transcripts", type = "logical"),
               default = "FALSE",
               help = "Whether reads were assigned to transcripts"),
+  make_option(c("--frombam", type = "logical"),
+              default = "FALSE",
+              help = "Whether reads were assigned to transcripts from the 
+              transcriptome aligned bam file directly. This is more accurate
+              than featureCounts based transcript isoform assignment as
+              the latter does not account for the splice junctions a read
+              is mapped across."),
   make_option(c("-o", "--output", type = "character"),
               help = "Path to modified annotation output"),
   make_option(c("-s", "--sample", type = "character"),
@@ -142,6 +149,28 @@ if(opt$transcripts){
   muts <- transcripts[muts, on = .(qname)]
   
   
+}
+
+if(opt$frombam){
+
+  sample <- paste0(opt$sample, ".csv")
+  
+  transcripts_file <- list.files("./results/read_to_transcripts/",
+                              pattern = sample, full.names = TRUE)[1]
+  
+  transcripts <- fread(transcripts_file)
+  
+  colnames(transcripts) <- c("qname", "bamfile_transcripts")
+  
+  
+  transcripts <- transcripts[ nhits > 0 , c("qname", "bamfile_transcripts")]
+  
+  transcripts[, transcripts := gsub(",", "+", transcripts)]
+  
+  
+  muts <- transcripts[muts, on = .(qname)]
+  
+
 }
 
 

@@ -84,3 +84,19 @@ rule featurecounts_exonbins:
         "logs/featurecounts_exonbins/{sample}.log",
     wrapper:
         "v3.0.2/bio/subread/featurecounts"
+
+
+# Get the set of isoforms a read maps to from the transcriptome bam
+# TO-DO: No reason this can't be split up and multi-threaded
+rule read_to_transcripts:
+    input:
+        bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+    output:
+        table="results/read_to_transcripts/{sample}.csv"
+    log:
+        "logs/read_to_transcripts/{sample}.log"
+    conda:
+        "../envs/full.yaml"
+    threads: 1
+    script:
+        "../scripts/bam2bakR/count_transcriptome.py"

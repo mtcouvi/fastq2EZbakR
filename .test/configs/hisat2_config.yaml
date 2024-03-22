@@ -91,6 +91,7 @@ strandedness: "reverse"
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
     RSEMp: False
+    Transcripts: False
 
 
 # Features to quantify
