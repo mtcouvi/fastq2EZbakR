@@ -99,4 +99,4 @@ rule read_to_transcripts:
         "../envs/full.yaml"
     threads: 1
     script:
-        "../scripts/bam2bakR/count_transcriptome.py"
+        "../scripts/bam2bakR/transcript_assignment.py"
