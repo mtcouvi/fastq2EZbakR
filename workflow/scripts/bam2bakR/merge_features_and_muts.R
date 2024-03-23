@@ -163,7 +163,7 @@ if(opt$frombam){
   colnames(transcripts) <- c("qname", "bamfile_transcripts")
   
   
-  transcripts <- transcripts[ nhits > 0 , c("qname", "bamfile_transcripts")]
+  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]
   
   transcripts[, transcripts := gsub(",", "+", transcripts)]
   
