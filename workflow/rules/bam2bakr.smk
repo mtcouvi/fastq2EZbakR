@@ -221,7 +221,7 @@ rule merge_features_and_muts:
         exons_included=config["features"]["exons"],
         exonbins_included=config["features"]["exonic_bins"],
         transcripts_included=config["features"]["transcripts"],
-        bamfiletranscripts_included=config["featurs"]["Transcripts"],
+        bamfiletranscripts_included=config["features"]["Transcripts"],
         rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
     log:
         "logs/merge_features_and_muts/{sample}.log",
