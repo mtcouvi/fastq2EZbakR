@@ -165,8 +165,6 @@ if(opt$frombam){
   
   transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]
   
-  transcripts[, transcripts := gsub(",", "+", transcripts)]
-  
   
   muts <- transcripts[muts, on = .(qname)]
   
