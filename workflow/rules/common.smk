@@ -311,10 +311,7 @@ def get_merge_input(wildcards):
 
     if config["strategies"]["Transcripts"]:
         MERGE_INPUT.extend(
-            expand(
-                "results/read_to_transcripts/{SID}.csv",
-                SID=wildcards.sample
-            )
+            expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
         )
 
     return MERGE_INPUT

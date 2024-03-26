@@ -163,8 +163,7 @@ if(opt$frombam){
   colnames(transcripts) <- c("qname", "bamfile_transcripts")
   
   
-  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]
-  
+  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]  
   
   muts <- transcripts[muts, on = .(qname)]
   

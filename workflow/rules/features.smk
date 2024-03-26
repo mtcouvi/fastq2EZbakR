@@ -92,9 +92,9 @@ rule read_to_transcripts:
     input:
         bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
     output:
-        table="results/read_to_transcripts/{sample}.csv"
+        table="results/read_to_transcripts/{sample}.csv",
     log:
-        "logs/read_to_transcripts/{sample}.log"
+        "logs/read_to_transcripts/{sample}.log",
     conda:
         "../envs/full.yaml"
     threads: 1
