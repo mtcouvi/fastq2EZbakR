@@ -277,7 +277,7 @@ else:
 
     rule makecB:
         input:
-            expand(
+            cBins=expand(
                 "results/merge_features_and_muts/{sample}_cB.csv",
                 sample=SAMP_NAMES,
             ),
@@ -292,7 +292,7 @@ else:
             """
             ### GOAL: Concatenate but make sure that headers get removed before concatenation.
 
-            head -n 1 {input[0]} > temp_header.txt
+            head -n 1 {input.cBins[0]} > temp_header.txt
             
             # Prepare an empty, gzipped file for the output
             : > {output.cB}
@@ -301,7 +301,7 @@ else:
             pigz -c temp_header.txt >> {output.cB}
             
             # Iterate over all files, decompress, skip headers, and append to the output file
-            for file in {" ".join(input)}; do
+            for file in {" ".join(input.cBins)}; do
                 tail -n +2 ${{file}} | pigz -c >> {output.cB}
             done
             
