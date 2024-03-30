@@ -204,6 +204,9 @@ cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep)
 
 muts[, sample := opt$sample]
 
+print("cols_to_keep looks like:")
+print(cols_to_keep)
+
 muts <- muts[, .(n = .N), by = cols_to_keep]
 
 
