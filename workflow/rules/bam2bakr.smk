@@ -301,7 +301,7 @@ else:
             pigz -c temp_header.txt >> {output.cB}
             
             # Iterate over all files, decompress, skip headers, and append to the output file
-            for file in {" ".join(input.cBins)}; do
+            for file in {input.cBins}; do
                 tail -n +2 ${{file}} | pigz -c >> {output.cB}
             done
             
