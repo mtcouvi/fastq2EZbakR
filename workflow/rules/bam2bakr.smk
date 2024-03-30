@@ -225,7 +225,7 @@ rule merge_features_and_muts:
         rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
     log:
         "logs/merge_features_and_muts/{sample}.log",
-    threads: 20
+    threads: 8
     conda:
         "../envs/full.yaml"
     shell:
