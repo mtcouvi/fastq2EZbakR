@@ -197,14 +197,24 @@ write_csv(muts,
 
 ##### MAKE CB
 
-muts_to_keep <- strsplit(opt$muttypes, ',')
+muts_to_keep <- strsplit(opt$muttypes, ",")
 bases_to_keep <- paste0("n", substr(muts_to_keep, start = 1, stop = 1))
 
 cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep)
 
 muts[, sample := opt$sample]
 
-muts <- muts[, .(n = sum(n)), by = ..cols_to_keep]
+print(paste0("muts_to_keep is: ", muts_to_keep))
+print(paste0("bases_to_keep is: ", bases_to_keep))
+print(paste0("feature_vect is: ", feature_vect))
+print(paste0("cols_to_keep is: ", cols_to_keep))
+print("muts looks like:")
+head(muts)
+key(muts)
+setDT(muts)
+
+muts <- muts[, .(n = sum(n)), by = cols_to_keep]
+
 
 write_csv(muts,
           file = opt$cBoutput)
