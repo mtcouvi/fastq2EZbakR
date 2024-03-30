@@ -216,7 +216,7 @@ rule merge_features_and_muts:
         get_merge_input,
     output:
         output="results/merge_features_and_muts/{sample}_counts.csv.gz",
-        cBout=temp("results/merge_features_and_muts/{sample}_cB.csv")
+        cBout=temp("results/merge_features_and_muts/{sample}_cB.csv"),
     params:
         genes_included=config["features"]["genes"],
         exons_included=config["features"]["exons"],
@@ -278,7 +278,7 @@ else:
     rule makecB:
         input:
             expand(
-                "results/merge_features_and_muts/{sample}_cB.csv,
+                "results/merge_features_and_muts/{sample}_cB.csv",
                 sample=SAMP_NAMES,
             ),
         output:
