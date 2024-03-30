@@ -56,7 +56,7 @@ muts_file <- list.files(path = "./results/counts/",
 
 muts <- fread(muts_file)
 
-
+setkey(muts, qname)
 
 # merge with gene assignments
 if(opt$genes){
@@ -74,8 +74,9 @@ if(opt$genes){
   
   genes[, GF := gsub(",", "+", GF)]
 
+  setkey(genes, qname)
   
-  muts <- genes[muts, on = .(qname)]
+  muts <- genes[muts]
   
   
 }
@@ -97,7 +98,9 @@ if(opt$exons){
   
   exons[, XF := gsub(",", "+", XF)]
   
-  muts <- exons[muts, on = .(qname)]
+  setkey(exons, qname)
+
+  muts <- exons[muts]
   
   
 }
@@ -121,8 +124,9 @@ if(opt$exonbins){
   
   exonbins[, exon_bin := gsub(",", "+", exon_bin)]
   
-  
-  muts <- exonbins[muts, on = .(qname)]
+  setkey(exonbins, qname)
+
+  muts <- exonbins[muts]
   
   
 }
@@ -145,8 +149,9 @@ if(opt$transcripts){
   
   transcripts[, transcripts := gsub(",", "+", transcripts)]
   
+  setkey(transcripts, qname)
   
-  muts <- transcripts[muts, on = .(qname)]
+  muts <- transcripts[muts]
   
   
 }
@@ -165,7 +170,9 @@ if(opt$frombam){
   
   transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]  
   
-  muts <- transcripts[muts, on = .(qname)]
+  setkey(transcripts, qname)
+
+  muts <- transcripts[muts]
   
 
 }
