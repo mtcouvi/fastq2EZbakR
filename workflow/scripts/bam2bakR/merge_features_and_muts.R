@@ -33,7 +33,11 @@ option_list <- list(
               the latter does not account for the splice junctions a read
               is mapped across."),
   make_option(c("-o", "--output", type = "character"),
-              help = "Path to modified annotation output"),
+              help = "Path to full mutation counts/feature assignment output."),
+  make_option(c("-c", "--cBoutput", type = "character"),
+              help = "Path to cB output; same as full output with some columns averaged out."),
+  make_option(c("-m", "--muttypes", type = "character"),
+              help = "String of comma separated mutation types to keep in cBs."),
   make_option(c("-s", "--sample", type = "character"),
               help = "Sample name")
 )
@@ -58,6 +62,8 @@ muts <- fread(muts_file)
 
 setkey(muts, qname)
 
+feature_vect <- c()
+
 # merge with gene assignments
 if(opt$genes){
   
@@ -78,6 +84,7 @@ if(opt$genes){
   
   muts <- genes[muts]
   
+  feature_vect <- c(feature_vect, "GF")
   
 }
 
@@ -102,7 +109,8 @@ if(opt$exons){
 
   muts <- exons[muts]
   
-  
+  feature_vect <- c(feature_vect, "XF")
+
 }
 
 
@@ -128,7 +136,8 @@ if(opt$exonbins){
 
   muts <- exonbins[muts]
   
-  
+  feature_vect <- c(feature_vect, "exon_bin")
+
 }
 
 
@@ -153,6 +162,8 @@ if(opt$transcripts){
   
   muts <- transcripts[muts]
   
+  feature_vect <- c(feature_vect, "transcripts")
+
   
 }
 
@@ -174,6 +185,7 @@ if(opt$frombam){
 
   muts <- transcripts[muts]
   
+  feature_vect <- c(feature_vect, "bamfile_transcripts")
 
 }
 
@@ -181,3 +193,18 @@ if(opt$frombam){
 # Write to final output
 write_csv(muts,
           file = opt$output)
+
+
+##### MAKE CB
+
+muts_to_keep <- strsplit(opt$muttypes, ',')
+bases_to_keep <- paste0("n", substr(muts_to_keep, start = 1, stop = 1))
+
+cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep)
+
+muts[, sample := opt$sample]
+
+muts <- muts[, .(n = sum(n)), by = cols_to_keep]
+
+write_csv(muts,
+          file = opt$cBoutput)
