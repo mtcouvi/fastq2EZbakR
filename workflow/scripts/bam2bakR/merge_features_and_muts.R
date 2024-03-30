@@ -200,7 +200,7 @@ write_csv(muts,
 muts_to_keep <- unlist(strsplit(opt$muttypes, ","))
 bases_to_keep <- paste0("n", substr(muts_to_keep, start = 1, stop = 1))
 
-cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep)
+cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep, "sj")
 
 muts[, sample := opt$sample]
 
