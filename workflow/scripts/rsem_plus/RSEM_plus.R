@@ -187,9 +187,9 @@ if(opt$pnew == 0){
     # Binomial mixture likelihood
     mixture_lik <- function(param, TC, nT, n){
 
-        logl <- sum(n*log(inv_logit(param[3])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[2])^TC)*((1 -inv_logit(param[2]))^(nT-TC)) +  (1-inv_logit(param[3]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 - inv_logit(param[1]))^(nT-TC)) ) )
+        logl <- sum(n*log(inv_logit(param[3])*dbinom(TC, nT, inv_logit(param[2])) +  (1-inv_logit(param[3]))*dbinom(TC, nT, inv_logit(param[1])) ) )
 
-        return(-logl - dsn(param[2], 
+        totlogl <- -logl - dsn(param[2], 
                            opt$priorpnewmean,
                            opt$priorpnewsd,
                            opt$priorpnewskew,
@@ -198,7 +198,9 @@ if(opt$pnew == 0){
                            opt$priorpoldmean,
                            opt$priorpoldsd,
                            opt$priorpoldskew,
-                           log = TRUE) - dnorm(param[3], log = TRUE))
+                           log = TRUE) - dnorm(param[3], log = TRUE)
+
+        return(totlogl)
 
     }
 
@@ -223,7 +225,7 @@ if(opt$pnew == 0){
     # Binomial mixture likelihood
     mixture_lik <- function(param, TC, nT, n){
 
-        logl <- sum(n*log(inv_logit(param[2])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 -inv_logit(param[1]))^(nT-TC)) +  (1-inv_logit(param[2]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(opt$pold)^TC)*((1 - inv_logit(opt$pold))^(nT-TC)) ) )
+        logl <- sum(n*log(inv_logit(param[2])*dbinom(TC, nT, inv_logit(param[1])) +  (1-inv_logit(param[2]))*dbinom(TC, nT, opt$pold) ) )
 
         return(-logl - dsn(param[1], 
                            opt$priorpnewmean,
@@ -255,7 +257,7 @@ if(opt$pnew == 0){
       # Binomial mixture likelihood
     mixture_lik <- function(param, TC, nT, n){
 
-        logl <- sum(n*log(inv_logit(param[2])*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(opt$pnew)^TC)*((1 -inv_logit(opt$pnew))^(nT-TC)) +  (1-inv_logit(param[2]))*(factorial(nT)/(factorial(nT-TC)*factorial(TC)))*(inv_logit(param[1])^TC)*((1 - inv_logit(param[1]))^(nT-TC)) ) )
+        logl <- sum(n*log(inv_logit(param[2])*dbinom(TC, nT, opt$pnew) +  (1-inv_logit(param[2]))*dbinom(TC, nT, inv_logit(param[1])) )) 
 
         return(-logl - dsn(param[1],
                            opt$priorpoldmean,
