@@ -99,4 +99,30 @@ rule read_to_transcripts:
         "../envs/full.yaml"
     threads: 1
     script:
-        "../scripts/bam2bakR/transcript_assignment.py"
+        "../scripts/features/transcript_assignment.py"
+
+
+
+# Get set of junctions a read overlaps
+rule read_to_junctions:
+    input:
+        "results/align/{sample}.bam",
+    output:
+        "results/read_to_junctions/{sample}_rsem.csv.gz",
+        temp("results/read_to_junctions/{sample}_check.txt"),
+    params:
+        shellscript=workflow.source_path("../scripts/features/junction_assignment.sh"),
+        pythonscript=workflow.source_path("../scripts/features/junction_assignment.py"),
+        awkscript=workflow.source_path("../scripts/rsem_plus/fragment_sam_rsem.awk"),
+    log:
+        "logs/read_to_junctions/{sample}.log",
+    threads: 32
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        chmod +x {params.shellscript}
+        chmod +x {params.pythonscript}
+        chmod +x {params.awkscript}
+        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript} 1> {log} 2>&1
+        """

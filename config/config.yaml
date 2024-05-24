@@ -84,17 +84,21 @@ strandedness: "reverse"
   # RSEMp:
     # Only compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
+  # Transcripts:
+    # Only compatible with STAR alignment
+    # Assign reads to set of isoforms with which they are consistent.
 strategies:
     RSEMp: False
     Transcripts: False
 
 
-# Features to quantify
+# Features to assign reads to
 features:
     genes: True
     exons: True
-    transcripts: True
+    transcripts: False
     exonic_bins: True
+    junctions: True
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
