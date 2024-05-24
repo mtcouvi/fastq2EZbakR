@@ -102,7 +102,6 @@ rule read_to_transcripts:
         "../scripts/features/transcript_assignment.py"
 
 
-
 # Get set of junctions a read overlaps
 rule read_to_junctions:
     input:
