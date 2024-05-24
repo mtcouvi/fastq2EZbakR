@@ -100,7 +100,7 @@ features:
     transcripts: True
     exonic_bins: False
     junctions: True
-    eij: True:
+    eij: True
     eej: True
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
