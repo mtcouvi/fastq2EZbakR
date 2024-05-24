@@ -336,6 +336,18 @@ def get_merge_input(wildcards):
             expand("results/read_to_junctions/{SID}.csv.gz", SID=wildcards.sample)
         )
 
+
+    if config["features"]["eej"]:
+        MERGE_INPUT.extend(
+            expand("results/featurecounts_eej/{SID}.featureCounts", SID=wildcards.sample)
+        )
+
+    if config["features"]["eij"]:
+        MERGE_INPUT.extend(
+            expand("results/featurecounts_eij/{SID}.featureCounts", SID=wildcards.sample)
+        )
+
+
     return MERGE_INPUT
 
 
@@ -385,6 +397,26 @@ if config["PE"]:
 
 else:
     FC_EXONBINS_PARAMS = " -R CORE -f -g exon_id -t exonic_part -O"
+
+
+## Get extra parameters for exon-exon junction calling
+
+if config["PE"]:
+    FC_EEJ_PARAMS = " -R CORE -g junction_id -t eej -O -p --countReadPairs --fracOverlapFeature 0.9"
+
+else:
+    FC_EEJ_PARAMS = " -R CORE -g junction_id -t eej -O --fracOverlapFeature 0.9"
+
+
+## Get extra parameters for exon-intron junction calling
+
+if config["PE"]:
+    FC_EIJ_PARAMS = " -R CORE -g junction_id -t eij -O -p --countReadPairs"
+
+else:
+    FC_EIJ_PARAMS = " -R CORE -g junction_id -t eij -O"
+
+
 
 
 ### Target rule input

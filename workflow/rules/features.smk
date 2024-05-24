@@ -125,3 +125,63 @@ rule read_to_junctions:
         chmod +x {params.awkscript}
         {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript} 1> {log} 2>&1
         """
+
+
+# Make junction annotation that featureCounts can assign reads with respect to
+rule junction_annotation
+    input:
+        config["annotation"],
+    output:
+        "junction_annotation/junctions.gtf"
+    params:
+        rscript=workflow.source_path("../scripts/features/junction_annotation.R"),
+        extra=config["junction_annotation_params"],
+    log:
+        "logs/junction_annotation/junctions.log"
+    threads: 1
+    conda:
+        "../envs/junctions.yaml"
+    shell:
+        r"""
+        chmod +x {params.rscript}
+        {params.rscript} -r {input} -o {output} {params.extra} 1> {log} 2>&1
+        """
+
+rule featurecounts_eej:
+    input:
+        samples="results/sf_reads/{sample}.s.bam",
+        annotation="junction_annotation/junctions.gtf",
+    output:
+        multiext(
+            "results/featurecounts_eej/{sample}",
+            ".featureCounts",
+            ".featureCounts.summary",
+        ),
+    threads: 20
+    params:
+        strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
+        extra=config["fc_eej_extra"] + FC_EEJ_PARAMS,
+    log:
+        "logs/featurecounts_eej/{sample}.log",
+    wrapper:
+        "v3.0.2/bio/subread/featurecounts"
+
+
+rule featurecounts_eij:
+    input:
+        samples="results/sf_reads/{sample}.s.bam",
+        annotation="junction_annotation/junctions.gtf",
+    output:
+        multiext(
+            "results/featurecounts_eij/{sample}",
+            ".featureCounts",
+            ".featureCounts.summary",
+        ),
+    threads: 20
+    params:
+        strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
+        extra=config["fc_eij_extra"] + FC_EIJ_PARAMS,
+    log:
+        "logs/featurecounts_eij/{sample}.log",
+    wrapper:
+        "v3.0.2/bio/subread/featurecounts"
