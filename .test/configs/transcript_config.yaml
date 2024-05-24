@@ -207,6 +207,9 @@ fc_eij_extra: ""
 fastp_parameters: "" 
 
 
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+junction_annotation_params: ""
 
 ##### FASTQC PARAMETERS #####
   # See https://www.bioinformatics.babraham.ac.uk/projects/fastqc/ for details

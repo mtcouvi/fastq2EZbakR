@@ -204,6 +204,11 @@ fc_eej_extra: ""
 fc_eij_extra: ""
 
 
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+junction_annotation_params: ""
+
+
 
 ##### OTHER FASTP PARAMETERS #####
   # See https://github.com/OpenGene/fastp for details
