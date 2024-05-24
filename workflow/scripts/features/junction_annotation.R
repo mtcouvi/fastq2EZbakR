@@ -38,12 +38,15 @@ ei_overhang <- opt$eioverhang
 gtf <- rtracklayer::import(opt$reference)
 
 
-gtfdf <- as_tibble(gtf[mcols(gtf)$type == "exon"])
+gtfdf <- as_tibble(gtf[mcols(gtf)$type == "exon"]) %>%
+  arrange(gene_id, transcript_id, start) %>%
+  group_by(gene_id, transcript_id) %>%
+  mutate(exon_number = 1:n())
 
 
 ### Create annotation of exon-exon junctions
 junctions <- gtfdf %>%
-  dplyr::mutate(exon_number = as.numeric(exon_number)) %>%
+  ungroup() %>%
   dplyr::select(seqnames, start, end, strand, gene_id, transcript_id, exon_number) %>%
   dplyr::distinct() %>%
   group_by(gene_id, transcript_id) %>%
