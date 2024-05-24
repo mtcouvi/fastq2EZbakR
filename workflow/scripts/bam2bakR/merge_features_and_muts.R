@@ -211,7 +211,7 @@ if(opt$eej){
   
   transcripts <- transcripts[ nhits > 0 , c("qname", "ee_junction_id")]
   
-  transcripts[, transcripts := gsub(",", "+", transcripts)]
+  transcripts[, ee_junction_id := gsub(",", "+", ee_junction_id)]
   
   setkey(transcripts, qname)
   
@@ -238,7 +238,7 @@ if(opt$eij){
   
   transcripts <- transcripts[ nhits > 0 , c("qname", "ei_junction_id")]
   
-  transcripts[, transcripts := gsub(",", "+", transcripts)]
+  transcripts[, ei_junction_id := gsub(",", "+", ei_junction_id)]
   
   setkey(transcripts, qname)
   
