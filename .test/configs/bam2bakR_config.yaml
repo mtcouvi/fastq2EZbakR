@@ -100,7 +100,7 @@ features:
     exons: True
     transcripts: True
     exonic_bins: True
-
+    junctions: False
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 

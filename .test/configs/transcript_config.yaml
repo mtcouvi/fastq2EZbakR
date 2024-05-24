@@ -99,6 +99,7 @@ features:
     exons: False
     transcripts: True
     exonic_bins: False
+    junctions: True
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
