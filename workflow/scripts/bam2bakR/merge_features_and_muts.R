@@ -32,6 +32,12 @@ option_list <- list(
               than featureCounts based transcript isoform assignment as
               the latter does not account for the splice junctions a read
               is mapped across."),
+  make_option(c("-j", "--eej", type = "logical"),
+              default = "FALSE",
+              help = "Whether reads were assigned to exon-exon junctions"),
+  make_option(c("--eij", type = "logical"),
+              default = "FALSE",
+              help = "Whether reads were assigned to exon-intron junctions"),
   make_option(c("-o", "--output", type = "character"),
               help = "Path to full mutation counts/feature assignment output."),
   make_option(c("-c", "--cBoutput", type = "character"),
@@ -189,6 +195,59 @@ if(opt$frombam){
 
 }
 
+
+# Exon-exon junction assignment
+if(opt$eej){
+  
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  
+  transcripts_file <- list.files("./results/featurecounts_eej/",
+                              pattern = sample, full.names = TRUE)[1]
+  
+  transcripts <- fread(transcripts_file)
+  
+  colnames(transcripts) <- c("qname", "status", "nhits", "ee_junction_id")
+  
+  
+  transcripts <- transcripts[ nhits > 0 , c("qname", "ee_junction_id")]
+  
+  transcripts[, transcripts := gsub(",", "+", transcripts)]
+  
+  setkey(transcripts, qname)
+  
+  muts <- transcripts[muts]
+  
+  feature_vect <- c(feature_vect, "ee_junction_id")
+
+  
+}
+
+
+# Exon-intron junction assignment
+if(opt$eij){
+  
+  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  
+  transcripts_file <- list.files("./results/featurecounts_eij/",
+                              pattern = sample, full.names = TRUE)[1]
+  
+  transcripts <- fread(transcripts_file)
+  
+  colnames(transcripts) <- c("qname", "status", "nhits", "ei_junction_id")
+  
+  
+  transcripts <- transcripts[ nhits > 0 , c("qname", "ei_junction_id")]
+  
+  transcripts[, transcripts := gsub(",", "+", transcripts)]
+  
+  setkey(transcripts, qname)
+  
+  muts <- transcripts[muts]
+  
+  feature_vect <- c(feature_vect, "ei_junction_id")
+
+  
+}
 
 # Write to final output
 write_csv(muts,

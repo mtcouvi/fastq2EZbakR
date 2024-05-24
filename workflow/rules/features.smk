@@ -128,16 +128,16 @@ rule read_to_junctions:
 
 
 # Make junction annotation that featureCounts can assign reads with respect to
-rule junction_annotation
+rule junction_annotation:
     input:
         config["annotation"],
     output:
-        "junction_annotation/junctions.gtf"
+        "junction_annotation/junctions.gtf",
     params:
         rscript=workflow.source_path("../scripts/features/junction_annotation.R"),
         extra=config["junction_annotation_params"],
     log:
-        "logs/junction_annotation/junctions.log"
+        "logs/junction_annotation/junctions.log",
     threads: 1
     conda:
         "../envs/junctions.yaml"
@@ -146,6 +146,7 @@ rule junction_annotation
         chmod +x {params.rscript}
         {params.rscript} -r {input} -o {output} {params.extra} 1> {log} 2>&1
         """
+
 
 rule featurecounts_eej:
     input:

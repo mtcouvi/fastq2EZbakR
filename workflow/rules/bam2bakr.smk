@@ -223,6 +223,8 @@ rule merge_features_and_muts:
         exonbins_included=config["features"]["exonic_bins"],
         transcripts_included=config["features"]["transcripts"],
         bamfiletranscripts_included=config["strategies"]["Transcripts"],
+        eej_included=config["features"]["eej"],
+        eij_included=config["features"]["eij"],
         rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
         muttypes=config["mut_tracks"],
     log:
@@ -236,7 +238,7 @@ rule merge_features_and_muts:
 
         {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
         -t {params.transcripts_included} --frombam {params.bamfiletranscripts_included} -o {output.output} -s {wildcards.sample} \
-        -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
+        -j {params.eej_included} --eij {params.eij_included} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
         """
 
 
