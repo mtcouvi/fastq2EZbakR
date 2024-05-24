@@ -57,23 +57,30 @@ for read in samfile:
 
     junction_tags = [(tag, value) for tag, value in read.tags if tag in ['jI', 'jM']]
 
-    check = junction_tags[0][1][0] != -1
+    if junction_tags[0][0] == 'jM':
+        
+        jM = junction_tags[0][1]
+        jI = junction_tags[1][1]
+    
+    else:
+        
+        jM = junction_tags[1][1]
+        jI = junction_tags[0][1]
+
+    check = jM[0] != -1
     
     SJcheck = True
     NCcheck = True
 
     if SJfilter:
-        SJcheck = junction_tags[0][1][0] >= 20
+        SJcheck = jM[0] >= 20
 
     if NCfilter:
-        NCcheck = junction_tags[0][1][0] != 0 and junction_tags[0][1][0] != 20
+        NCcheck = jM[0] != 0 and jM[0] != 20
 
     if check and SJcheck and NCcheck:
 
         qname = read.query_name
-
-        jM = junction_tags[0][1]
-        jI = junction_tags[1][1]
 
         nj = len(jM)
 

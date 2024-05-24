@@ -72,6 +72,10 @@ if config["features"]["exonic_bins"]:
 if config["strategies"]["Transcripts"]:
     keepcols.append("bamfile_transcripts")
 
+if config["strategies"]["junctions"]:
+    keepcols.append('junction_start')
+    keepcols.append('junction_end')
+
 keepcols = ",".join(keepcols)
 
 
@@ -120,7 +124,25 @@ args = STAR_PARAMS.split()
 # AS = Alignment score
 # MD = Used for mutation counting
 # nM = Number of mismatches
-sam_attributes = set(config["star_sam_tags"])
+
+if config["strategies"]["junctions"]:
+
+    tags = config["star_sam_tags"]
+
+    if 'jI' not in tags:
+
+        tags + ['jI']
+
+    if 'jM' not in tags:
+
+        tags + ['jM']
+
+    
+    sam_attributes = set(tags)
+
+else:
+
+    sam_attributes = set(config["star_sam_tags"])
 
 # Process --outSAMattributes
 if "--outSAMattributes" in args:
@@ -312,6 +334,11 @@ def get_merge_input(wildcards):
     if config["strategies"]["Transcripts"]:
         MERGE_INPUT.extend(
             expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
+        )
+
+    if config["strategies"]["junctions"]:
+        MERGE_INPUT.extend(
+            expand("results/read_to_junctions/{SID}.csv.gz", SID=wildcards.sample)
         )
 
     return MERGE_INPUT

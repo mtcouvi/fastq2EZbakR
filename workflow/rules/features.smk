@@ -108,7 +108,7 @@ rule read_to_junctions:
     input:
         "results/align/{sample}.bam",
     output:
-        "results/read_to_junctions/{sample}_rsem.csv.gz",
+        "results/read_to_junctions/{sample}.csv.gz",
         temp("results/read_to_junctions/{sample}_check.txt"),
     params:
         shellscript=workflow.source_path("../scripts/features/junction_assignment.sh"),
