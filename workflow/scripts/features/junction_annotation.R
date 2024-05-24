@@ -7,7 +7,7 @@
 
 library(rtracklayer)
 library(dplyr)
-library(optparser)
+library(optparse)
 library(tidyr)
 
 
