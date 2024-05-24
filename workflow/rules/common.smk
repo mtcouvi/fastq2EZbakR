@@ -72,7 +72,7 @@ if config["features"]["exonic_bins"]:
 if config["strategies"]["Transcripts"]:
     keepcols.append("bamfile_transcripts")
 
-if config["strategies"]["junctions"]:
+if config["features"]["junctions"]:
     keepcols.append("junction_start")
     keepcols.append("junction_end")
 
@@ -125,7 +125,7 @@ args = STAR_PARAMS.split()
 # MD = Used for mutation counting
 # nM = Number of mismatches
 
-if config["strategies"]["junctions"]:
+if config["features"]["junctions"]:
     tags = config["star_sam_tags"]
 
     if "jI" not in tags:
@@ -331,7 +331,7 @@ def get_merge_input(wildcards):
             expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
         )
 
-    if config["strategies"]["junctions"]:
+    if config["features"]["junctions"]:
         MERGE_INPUT.extend(
             expand("results/read_to_junctions/{SID}.csv.gz", SID=wildcards.sample)
         )
