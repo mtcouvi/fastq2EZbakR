@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 ### PURPOSE OF THIS SCRIPT
 ## Craft a junction feature that featureCounts could
 ## assign reads to in fastq2EZbakR 
