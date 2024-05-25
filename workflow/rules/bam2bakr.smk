@@ -225,7 +225,7 @@ rule merge_features_and_muts:
         bamfiletranscripts_included=config["strategies"]["Transcripts"],
         eej_included=config["features"]["eej"],
         eij_included=config["features"]["eij"],
-        starjunc_included=config["features"]["junctions"]
+        starjunc_included=config["features"]["junctions"],
         rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
         muttypes=config["mut_tracks"],
     log:
