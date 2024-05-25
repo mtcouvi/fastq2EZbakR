@@ -261,12 +261,22 @@ if(opt$starjunc){
   transcripts_file <- list.files("./results/read_to_junctions/",
                               pattern = sample, full.names = TRUE)[1]
   
+  message("file looks like:")
+
   transcripts <- fread(transcripts_file)
   
+  print(head(transcripts))
+
   colnames(transcripts) <- c("qname", "junction_start", "junction_end")
     
+  message("file looks like:")
+
+
   setkey(transcripts, qname)
   
+  print(head(transcripts))
+
+
   muts <- transcripts[muts]
   
   feature_vect <- c(feature_vect, "junction_start", "juntion_end")
