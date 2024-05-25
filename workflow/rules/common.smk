@@ -76,6 +76,13 @@ if config["features"]["junctions"]:
     keepcols.append("junction_start")
     keepcols.append("junction_end")
 
+if config["features"]["eij"]:
+    keepcols.append("ei_junction_id")
+
+if config["features"]["eej"]:
+    keepcols.append("ee_junction_id")
+
+
 keepcols = ",".join(keepcols)
 
 

@@ -32,6 +32,9 @@ option_list <- list(
               than featureCounts based transcript isoform assignment as
               the latter does not account for the splice junctions a read
               is mapped across."),
+  make_option(c("--starjunc", type = "logical"),
+              default = "FALSE",
+              help = "Whether reads were assigned to junctions via relevant STAR tags."),              
   make_option(c("-j", "--eej", type = "logical"),
               default = "FALSE",
               help = "Whether reads were assigned to exon-exon junctions"),
@@ -249,6 +252,28 @@ if(opt$eij){
   
 }
 
+
+# STAR junction assignment
+if(opt$starjunc){
+  
+  sample <- paste0(opt$sample, ".csv.gz")
+  
+  transcripts_file <- list.files("./results/read_to_junctions/",
+                              pattern = sample, full.names = TRUE)[1]
+  
+  transcripts <- fread(transcripts_file)
+  
+  colnames(transcripts) <- c("qname", "junction_start", "junction_end")
+    
+  setkey(transcripts, qname)
+  
+  muts <- transcripts[muts]
+  
+  feature_vect <- c(feature_vect, "junction_start", "juntion_end")
+
+}
+
+
 # Write to final output
 write_csv(muts,
           file = opt$output)
@@ -259,7 +284,7 @@ write_csv(muts,
 muts_to_keep <- unlist(strsplit(opt$muttypes, ","))
 bases_to_keep <- paste0("n", substr(muts_to_keep, start = 1, stop = 1))
 
-cols_to_keep <- c("sample", feature_vect, muts_to_keep, bases_to_keep, "sj")
+cols_to_keep <- c("sample", "rname", feature_vect, muts_to_keep, bases_to_keep, "sj")
 
 muts[, sample := opt$sample]
 
