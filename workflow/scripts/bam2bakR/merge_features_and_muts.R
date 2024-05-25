@@ -261,6 +261,10 @@ if(opt$starjunc){
   transcripts_file <- list.files("./results/read_to_junctions/",
                               pattern = sample, full.names = TRUE)[1]
   
+
+  message("File is:")
+  print(transcripts_file)
+
   message("file looks like:")
 
   transcripts <- fread(transcripts_file)

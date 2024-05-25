@@ -47,6 +47,9 @@ wr = csv.writer(myfile)
 wr.writerow(header)
 
 
+# Row
+r_info = [''] + 2*[0]
+
 # Set .bam file for reading
 samfile = pysam.AlignmentFile(args.bam, 'rb')
 
@@ -80,7 +83,7 @@ for read in samfile:
 
     if check and SJcheck and NCcheck:
 
-        qname = read.query_name
+        r_info[0] = read.query_name
 
         nj = len(jM)
 
@@ -89,10 +92,10 @@ for read in samfile:
             index = j*2
 
 
-            start = jI[index]
-            end = jI[index + 1]
+            r_info[1] = jI[index]
+            r_info[2] = jI[index + 1]
 
-            wr.writerow([qname, start, end])
+            wr.writerow(r_info)
     
 
 myfile.close()
