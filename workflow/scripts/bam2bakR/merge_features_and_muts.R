@@ -283,7 +283,7 @@ if(opt$starjunc){
 
   muts <- transcripts[muts]
   
-  feature_vect <- c(feature_vect, "junction_start", "juntion_end")
+  feature_vect <- c(feature_vect, "junction_start", "junction_end")
 
 }
 
