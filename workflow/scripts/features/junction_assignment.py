@@ -92,10 +92,17 @@ for read in samfile:
             index = j*2
 
 
-            r_info[1] = r_info[1] + str(jI[index])
-            r_info[2] = r_info[2] + str(jI[index + 1])
+            if j == 0:
 
-        
+                r_info[1] = str(jI[index])
+                r_info[2] = str(jI[index + 1])    
+
+            else:
+
+                r_info[1] = r_info[1] + "+" + str(jI[index])
+                r_info[2] = r_info[2] + "+" + str(jI[index + 1])
+
+            
         wr.writerow(r_info)
     
 
