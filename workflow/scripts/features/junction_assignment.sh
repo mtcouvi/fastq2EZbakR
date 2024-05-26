@@ -52,6 +52,7 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
     	| awk \
     		-v fragment_size="$newFragmentSize" \
     		-v sample="$sample" \
+            -v directory="./results/read_to_junctions" \
     		-f "$awkscript" &&
 
     for f in $(seq 1 $newFragmentNumber); do
@@ -91,7 +92,5 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
     echo "** Results fragments merged into final files"
 
 
-
-	rm -f ./results/rsem_csv/*_"$sample"_frag.bam
 
 	echo '* Cleaning up fragmented .bam files'

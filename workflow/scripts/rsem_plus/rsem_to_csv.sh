@@ -52,6 +52,7 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
     	| awk \
     		-v fragment_size="$newFragmentSize" \
     		-v sample="$sample" \
+            -v directory="./results/rsem_csv" \
     		-f "$awkscript" &&
 
     for f in $(seq 1 $newFragmentNumber); do
