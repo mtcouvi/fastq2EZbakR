@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description='This is a script to assign reads t
 requiredNamed = parser.add_argument_group('required named arguments')
 requiredNamed.add_argument('-b', '--bam', type=str, required=True, metavar = 'in_file.bam',
                     help='Bam file to process')
-parser.add_argument('--filterBySJout', action='store_true',
+parser.add_argument('--filterBySJout', action='store_false',
                     help="Do not output data for reads overlapping junctions not included in STAR's SJout.tab file")
 parser.add_argument('--filterNonCanon', action='store_true',
                     help="Do not output data for reads overlapping junctions that are non-canonical")
@@ -37,7 +37,7 @@ output = inputName + '_junctions.csv'
 
 
 # Assess filtering conditoin
-SJfilter = args.filterBySJout
+SJfilter = True
 NCfilter = args.filterNonCanon
 
 #  Set .csv file for writing (simulating _counts.rds file)
