@@ -6,7 +6,7 @@ sample=$2
 input=$3
 output=$4
 output2=$5
-rsemcsv=$6
+pyscript=$6
 awkscript=$7
 
 # Create results/rsem_csv/
@@ -44,7 +44,7 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
 
 
     for f in $(seq 1 $newFragmentNumber); do
-        samtools view -H "$input" > ./results/rsem_csv/"$f"_"$sample".sam
+        samtools view -H "$input" > ./results/read_to_junctions/"$f"_"$sample".sam
     done &&
 
 
@@ -52,12 +52,12 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
     	| awk \
     		-v fragment_size="$newFragmentSize" \
     		-v sample="$sample" \
-            -v directory="./results/rsem_csv" \
+            -v directory="./results/read_to_junctions" \
     		-f "$awkscript" &&
 
     for f in $(seq 1 $newFragmentNumber); do
-        samtools view -@ "$cpus" -o ./results/rsem_csv/"$f"_"$sample"_frag.bam ./results/rsem_csv/"$f"_"$sample".sam
-        rm ./results/rsem_csv/"$f"_"$sample".sam
+        samtools view -@ "$cpus" -o ./results/read_to_junctions/"$f"_"$sample"_frag.bam ./results/read_to_junctions/"$f"_"$sample".sam
+        rm ./results/read_to_junctions/"$f"_"$sample".sam
     done &&
 
     echo "* Aligned .sam file fragmented for sample $sample"
@@ -73,7 +73,7 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
 ## Need to add mutation call script to scripts!
 
 # Call mutations
-    parallel -j $cpus "python $rsemcsv -b {1}" ::: ./results/rsem_csv/*_"$sample"_frag.bam
+    parallel -j $cpus "python $pyscript -b {1}" ::: ./results/read_to_junctions/*_"$sample"_frag.bam
 
 
 
@@ -82,17 +82,15 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
 
 # Combine output from fragments into single file
     # 1) _rsem.csv files
-    awk 'FNR > 1 || NR == 1' ./results/rsem_csv/*_"$sample"_frag_rsem.csv \
+    awk 'FNR > 1 || NR == 1' ./results/read_to_junctions/*_"$sample"_frag_junctions.csv \
         | pigz -p $cpus > "$output"
 
-    rm ./results/rsem_csv/*_"$sample"_frag_rsem.csv
+    rm ./results/read_to_junctions/*_"$sample"_frag_junctions.csv
 
 
 
     echo "** Results fragments merged into final files"
 
 
-
-	rm -f ./results/rsem_csv/*_"$sample"_frag.bam
 
 	echo '* Cleaning up fragmented .bam files'

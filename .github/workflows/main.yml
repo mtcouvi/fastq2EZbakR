@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-      - featurecounts
+      - isoforms
   pull_request:
     branches_ignore: []
 

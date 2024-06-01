@@ -84,3 +84,105 @@ rule featurecounts_exonbins:
         "logs/featurecounts_exonbins/{sample}.log",
     wrapper:
         "v3.0.2/bio/subread/featurecounts"
+
+
+# Get the set of isoforms a read maps to from the transcriptome bam
+# TO-DO: No reason this can't be split up and multi-threaded
+rule read_to_transcripts:
+    input:
+        bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+    output:
+        table="results/read_to_transcripts/{sample}.csv",
+    log:
+        "logs/read_to_transcripts/{sample}.log",
+    conda:
+        "../envs/full.yaml"
+    threads: 1
+    script:
+        "../scripts/features/transcript_assignment.py"
+
+
+# Get set of junctions a read overlaps
+rule read_to_junctions:
+    input:
+        "results/align/{sample}.bam",
+    output:
+        "results/read_to_junctions/{sample}.csv.gz",
+        temp("results/read_to_junctions/{sample}_check.txt"),
+    params:
+        shellscript=workflow.source_path("../scripts/features/junction_assignment.sh"),
+        pythonscript=workflow.source_path("../scripts/features/junction_assignment.py"),
+        awkscript=workflow.source_path("../scripts/rsem_plus/fragment_sam_rsem.awk"),
+    log:
+        "logs/read_to_junctions/{sample}.log",
+    threads: 32
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        chmod +x {params.shellscript}
+        chmod +x {params.pythonscript}
+        chmod +x {params.awkscript}
+        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript}
+        """
+
+
+# Make junction annotation that featureCounts can assign reads with respect to
+rule junction_annotation:
+    input:
+        config["annotation"],
+    output:
+        "junction_annotation/junctions.gtf",
+    params:
+        rscript=workflow.source_path("../scripts/features/junction_annotation.R"),
+        extra=config["junction_annotation_params"],
+    log:
+        "logs/junction_annotation/junctions.log",
+    threads: 1
+    conda:
+        "../envs/junctions.yaml"
+    shell:
+        r"""
+        chmod +x {params.rscript}
+        {params.rscript} -r {input} -o {output} {params.extra} 1> {log} 2>&1
+        """
+
+
+rule featurecounts_eej:
+    input:
+        samples="results/sf_reads/{sample}.s.bam",
+        annotation="junction_annotation/junctions.gtf",
+    output:
+        multiext(
+            "results/featurecounts_eej/{sample}",
+            ".featureCounts",
+            ".featureCounts.summary",
+        ),
+    threads: 20
+    params:
+        strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
+        extra=config["fc_eej_extra"] + FC_EEJ_PARAMS,
+    log:
+        "logs/featurecounts_eej/{sample}.log",
+    wrapper:
+        "v3.0.2/bio/subread/featurecounts"
+
+
+rule featurecounts_eij:
+    input:
+        samples="results/sf_reads/{sample}.s.bam",
+        annotation="junction_annotation/junctions.gtf",
+    output:
+        multiext(
+            "results/featurecounts_eij/{sample}",
+            ".featureCounts",
+            ".featureCounts.summary",
+        ),
+    threads: 20
+    params:
+        strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
+        extra=config["fc_eij_extra"] + FC_EIJ_PARAMS,
+    log:
+        "logs/featurecounts_eij/{sample}.log",
+    wrapper:
+        "v3.0.2/bio/subread/featurecounts"

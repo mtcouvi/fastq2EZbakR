@@ -91,6 +91,7 @@ strandedness: "reverse"
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
     RSEMp: True
+    Transcripts: True
 
 # Features to quantify
 features:
@@ -98,6 +99,9 @@ features:
     exons: False
     transcripts: True
     exonic_bins: False
+    junctions: True
+    eij: True
+    eej: True
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
@@ -190,7 +194,11 @@ fc_transcripts_extra: ""
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: ""
 
+# Parameters for assignment of reads to exon-exon junctions
+fc_eej_extra: ""
 
+# Parameters for assignment of reads to exon-intron junctions
+fc_eij_extra: ""
 
 ##### OTHER FASTP PARAMETERS #####
   # See https://github.com/OpenGene/fastp for details
@@ -199,6 +207,9 @@ fc_exonbins_extra: ""
 fastp_parameters: "" 
 
 
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+junction_annotation_params: ""
 
 ##### FASTQC PARAMETERS #####
   # See https://www.bioinformatics.babraham.ac.uk/projects/fastqc/ for details
@@ -216,7 +227,7 @@ star_index_params: "--sjdbOverhang 99"
 
 
 # SAM tags to add to alignment
-star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
+star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM", "jI", "jM"]
 
 
 # Optional parameters to set for star align
