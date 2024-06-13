@@ -61,7 +61,7 @@ bft_present = snakemake.params.get("bamfile_transcripts")
 # 8) eej
 # 9) eij
 
-mutcount = input[0]
+mutcount = input_files[0]
 mutf = open(mutcount, 'r')
 mutr = csv.writer(mutf)
 count = 1
@@ -69,14 +69,14 @@ count = 1
 header = next(mutr)
 
 if genes_present:
-    genef = open(input[count], 'r')
+    genef = open(input_files[count], 'r')
     gener = csv.reader(genef, delimiter = '\t')
     count += 1
     header = header + ['GF']
     gene_row = next(gener)
 
 if exons_present:
-    exonf = open(input[count], 'r')
+    exonf = open(input_files[count], 'r')
     exonr = csv.reader(exonf, delimiter = '\t')
     count += 1
     header = header + ['XF']
@@ -84,7 +84,7 @@ if exons_present:
 
 
 if transcripts_present:
-    transcriptf = open(input[count], 'r')
+    transcriptf = open(input_files[count], 'r')
     transcriptr = csv.reader(transcriptf, delimiter = '\t')
     count += 1
     header = header + ['transcripts']
@@ -92,7 +92,7 @@ if transcripts_present:
 
 
 if eb_present:
-    ebf = open(input[count], 'r')
+    ebf = open(input_files[count], 'r')
     ebr = csv.reader(ebf, delimiter = '\t')
     count += 1
     header = header + ['exon_bin']
@@ -100,7 +100,7 @@ if eb_present:
 
 
 if bft_present:
-    bftf = open(input[count], 'r')
+    bftf = open(input_files[count], 'r')
     bftr = csv.reader(bftf)
     count += 1
     header = header + ['bamfile_transcripts']
@@ -111,7 +111,7 @@ if bft_present:
 
 
 if junctions_present:
-    jf = open(input[count], 'r')
+    jf = open(input_files[count], 'r')
     jr = csv.reader(jf)
     count += 1
     header = header + ['junction_start', 'junction_end']
@@ -122,7 +122,7 @@ if junctions_present:
 
 
 if ee_present:
-    eef = open(input[count], 'r')
+    eef = open(input_files[count], 'r')
     eer = csv.reader(eef, delimiter = '\t')
     count += 1
     header = header + ['ee_junction_id']
@@ -130,7 +130,7 @@ if ee_present:
 
 
 if ei_present:
-    eif = open(input[count], 'r')
+    eif = open(input_files[count], 'r')
     eir = csv.reader(eif, delimiter = '\t')
     count += 1
     header = header + ['ei_junction_id']
