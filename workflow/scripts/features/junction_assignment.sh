@@ -75,9 +75,13 @@ fragment_size=$(echo "scale=0; $num_reads/$cpus" | bc)
 # Call mutations
     parallel -j $cpus "python $pyscript -b {1}" ::: ./results/read_to_junctions/*_"$sample"_frag.bam
 
+    echo "** Junction information extracted for $sample"
 
 
-    echo "** Mutations called for sample $sample"
+    rm -f ./results/read_to_junctions/*_"$sample"_frag.bam
+
+    echo "** fragmented bam files cleaned up for $sample"
+
 
 
 # Combine output from fragments into single file
