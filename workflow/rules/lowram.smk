@@ -129,7 +129,7 @@ if config["lowRAM"]:
             ee=config["features"]["eej"],
             ei=config["features"]["eij"],
             transcripts=config["features"]["transcripts"],
-            bamfile_transcripts=config["Strategies"]["Transcripts"],
+            bamfile_transcripts=config["strategies"]["Transcripts"],
         threads: 1
         conda:
             "../envs/full.yaml"
