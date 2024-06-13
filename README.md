@@ -9,6 +9,7 @@ Reimplementation of the bam2bakR Snakemake workflow that makes several important
 3. Config file is more well organized and better documented
 4. Automated unit testing has been established
 5. Use of featureCounts for faster and more flexible read assignment to transcriptomic features (bam2bakR currently uses the slower HTSeq, which also doesn't properly account for splice junction mapping reads).
+6. Lots of new functionality to support ongoing/soon-to-be-released work.
 
 This pipeline will also be the site of exciting future development to expand the functionality of this pipeline, so stay tuned!
 

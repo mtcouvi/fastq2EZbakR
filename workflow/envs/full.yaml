@@ -16,6 +16,7 @@ dependencies:
   - bcftools = 1.12
   - igvtools =2.3.93
   - bc
+  - coreutils
   - procps-ng
   - r-base
   - r-optparse =1.7.3

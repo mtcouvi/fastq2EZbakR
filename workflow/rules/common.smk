@@ -69,6 +69,20 @@ if config["features"]["transcripts"]:
 if config["features"]["exonic_bins"]:
     keepcols.append("exon_bin")
 
+if config["strategies"]["Transcripts"]:
+    keepcols.append("bamfile_transcripts")
+
+if config["features"]["junctions"]:
+    keepcols.append("junction_start")
+    keepcols.append("junction_end")
+
+if config["features"]["eij"]:
+    keepcols.append("ei_junction_id")
+
+if config["features"]["eej"]:
+    keepcols.append("ee_junction_id")
+
+
 keepcols = ",".join(keepcols)
 
 
@@ -117,7 +131,20 @@ args = STAR_PARAMS.split()
 # AS = Alignment score
 # MD = Used for mutation counting
 # nM = Number of mismatches
-sam_attributes = set(config["star_sam_tags"])
+
+if config["features"]["junctions"]:
+    tags = config["star_sam_tags"]
+
+    if "jI" not in tags:
+        tags + ["jI"]
+
+    if "jM" not in tags:
+        tags + ["jM"]
+
+    sam_attributes = set(tags)
+
+else:
+    sam_attributes = set(config["star_sam_tags"])
 
 # Process --outSAMattributes
 if "--outSAMattributes" in args:
@@ -306,6 +333,30 @@ def get_merge_input(wildcards):
             )
         )
 
+    if config["strategies"]["Transcripts"]:
+        MERGE_INPUT.extend(
+            expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
+        )
+
+    if config["features"]["junctions"]:
+        MERGE_INPUT.extend(
+            expand("results/read_to_junctions/{SID}.csv.gz", SID=wildcards.sample)
+        )
+
+    if config["features"]["eej"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/featurecounts_eej/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["eij"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/featurecounts_eij/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
     return MERGE_INPUT
 
 
@@ -355,6 +406,26 @@ if config["PE"]:
 
 else:
     FC_EXONBINS_PARAMS = " -R CORE -f -g exon_id -t exonic_part -O"
+
+
+## Get extra parameters for exon-exon junction calling
+
+if config["PE"]:
+    FC_EEJ_PARAMS = (
+        " -R CORE -g junction_id -t eej -O -p --countReadPairs --fracOverlapFeature 0.9"
+    )
+
+else:
+    FC_EEJ_PARAMS = " -R CORE -g junction_id -t eej -O --fracOverlapFeature 0.9"
+
+
+## Get extra parameters for exon-intron junction calling
+
+if config["PE"]:
+    FC_EIJ_PARAMS = " -R CORE -g junction_id -t eij -O -p --countReadPairs"
+
+else:
+    FC_EIJ_PARAMS = " -R CORE -g junction_id -t eij -O"
 
 
 ### Target rule input

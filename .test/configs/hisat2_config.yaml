@@ -91,6 +91,7 @@ strandedness: "reverse"
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
 strategies:
     RSEMp: False
+    Transcripts: False
 
 
 # Features to quantify
@@ -99,7 +100,9 @@ features:
     exons: True
     transcripts: False
     exonic_bins: False
-
+    junctions: False
+    eij: False
+    eej: False
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
@@ -190,6 +193,16 @@ fc_transcripts_extra: ""
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: ""
 
+# Parameters for assignment of reads to exon-exon junctions
+fc_eej_extra: ""
+
+# Parameters for assignment of reads to exon-intron junctions
+fc_eij_extra: ""
+
+
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+junction_annotation_params: ""
 
 
 ##### OTHER FASTP PARAMETERS #####

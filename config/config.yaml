@@ -84,16 +84,36 @@ strandedness: "reverse"
   # RSEMp:
     # Only compatible with STAR alignment.
     # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
+  # Transcripts:
+    # Only compatible with STAR alignment
+    # Assign reads to set of isoforms with which they are consistent.
 strategies:
     RSEMp: False
+    Transcripts: False
 
 
-# Features to quantify
+# Features to assign reads to
+  # genes = anywhere in an annotated gene body
+  # exons = in exclusively exonic regions of a gene
+  # transcripts = set of transcripts with which read overlaps
+    # NOTE: Does not account for splice junctions the reads overlaps.
+    # Thus, Transcripts strategies should usually be preferred to this
+  # exonic_bins = exonic regions as defined in DEXSeq paper (Anders et al., 2012)
+  # junctions = exon-exon junctions. Only compatible with STAR-based alignment
+    # as STAR's unique jI and jM bam file tags are required
+  # eej = exon-exon junctions. Less accurate than junctions but compatible with any
+    # bam file. A new GTF file will be created with annotation for the junction_IDs
+    # that will show up in the final cB
+  # eij = exon-intron junctions. A new GTF file will be created with annotation for the junction_IDs
+    # that will show up in the final cB
 features:
     genes: True
     exons: True
-    transcripts: True
+    transcripts: False
     exonic_bins: True
+    junctions: True
+    eej: True
+    eij: True
 
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
@@ -132,7 +152,7 @@ mutpos: False
   # reads are assigned by featureCounts.
   # 
   # This will only have an impact if config["aligner"] is set to "star".
-quantify_premRNA: True
+quantify_premRNA: False
 
 
 # Types of mutations to make tracks for otherwise
@@ -193,6 +213,19 @@ fc_transcripts_extra: ""
 
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: ""
+
+# Parameters for assignment of reads to exon-exon junctions
+fc_eej_extra: ""
+
+# Parameters for assignment of reads to exon-intron junctions
+fc_eij_extra: ""
+
+
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+# Currently no adjustable parameters for this, but eventually there
+# will be.
+junction_annotation_params: ""
 
 
 

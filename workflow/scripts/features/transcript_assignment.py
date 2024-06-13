@@ -28,7 +28,7 @@ input = snakemake.input.bam
 output = snakemake.output.table
 
 #  Set .csv file for writing (simulating _counts.rds file)
-header = ['qname', 'transcripts']
+header = ['qname', 'bamfile_transcripts']
 myfile = open(output, 'w', newline='')
 wr = csv.writer(myfile)
 wr.writerow(header)
