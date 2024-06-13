@@ -562,12 +562,12 @@ numeric_sort_columns = [
 
 key_args = " ".join(
     [
-        f'-k{col},{col} {"n" if col in numeric_sort_columns else "V"}'
+        "-k{0},{0}{1}".format(col, "n" if col in numeric_sort_columns else "V")
         for col in cols_to_sort
     ]
 )
 
-SORTPARAMS = "k" + ",".join(cols_to_sort)
+SORTPARAMS = key_args
 
 # Columns that will be summarized over
 COLS_TO_SUM = ",".join(cols_to_search)
