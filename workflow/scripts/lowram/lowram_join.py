@@ -32,258 +32,254 @@ import csv
 import argparse
 import datetime
 
-import sys
 
-with open(snakemake.log[0], "w") as f:
-    sys.stderr = sys.stdout = f
-
-    input_files = snakemake.input
-    output = snakemake.output
+input_files = snakemake.input
+output = snakemake.output
 
 
-    ### See which file types are present
+### See which file types are present
 
-    genes_present = snakemake.params.get("genes")
-    exons_present = snakemake.params.get("exons")
-    junctions_present = snakemake.params.get("junctions")
-    eb_present = snakemake.params.get("exonic_bins")
-    ee_present = snakemake.params.get("ee")
-    ei_present = snakemake.params.get("ei")
-    transcripts_present = snakemake.params.get("transcripts")
-    bft_present = snakemake.params.get("bamfile_transcripts")
-
-
-    ### Open connections to files
-    # Files will appear in this order:
-    # 1) Mutation counts
-    # 2) Genes
-    # 3) Exons
-    # 4) transcripts (feature counts)
-    # 5) Exonic bins
-    # 6) Bamfile transcripts
-    # 7) Junctions
-    # 8) eej
-    # 9) eij
-
-    mutcount = input[count]
-    mutf = open(mutcount, 'r')
-    mutr = csv.writer(mutf)
-    count = 1
-
-    header = next(mutr)
-
-    if genes_present:
-        genef = open(input[count], 'r')
-        gener = csv.reader(genef, delimiter = '\t')
-        count += 1
-        header = header + ['GF']
-        gene_row = next(gener)
-
-    if exons_present:
-        exonf = open(input[count], 'r')
-        exonr = csv.reader(exonf, delimiter = '\t')
-        count += 1
-        header = header + ['XF']
-        exon_row = next(exonr)
+genes_present = snakemake.params.get("genes")
+exons_present = snakemake.params.get("exons")
+junctions_present = snakemake.params.get("junctions")
+eb_present = snakemake.params.get("exonic_bins")
+ee_present = snakemake.params.get("ee")
+ei_present = snakemake.params.get("ei")
+transcripts_present = snakemake.params.get("transcripts")
+bft_present = snakemake.params.get("bamfile_transcripts")
 
 
-    if transcripts_present:
-        transcriptf = open(input[count], 'r')
-        transcriptr = csv.reader(transcriptf, delimiter = '\t')
-        count += 1
-        header = header + ['transcripts']
-        transcript_row = next(transcriptr)
+### Open connections to files
+# Files will appear in this order:
+# 1) Mutation counts
+# 2) Genes
+# 3) Exons
+# 4) transcripts (feature counts)
+# 5) Exonic bins
+# 6) Bamfile transcripts
+# 7) Junctions
+# 8) eej
+# 9) eij
+
+mutcount = input[count]
+mutf = open(mutcount, 'r')
+mutr = csv.writer(mutf)
+count = 1
+
+header = next(mutr)
+
+if genes_present:
+    genef = open(input[count], 'r')
+    gener = csv.reader(genef, delimiter = '\t')
+    count += 1
+    header = header + ['GF']
+    gene_row = next(gener)
+
+if exons_present:
+    exonf = open(input[count], 'r')
+    exonr = csv.reader(exonf, delimiter = '\t')
+    count += 1
+    header = header + ['XF']
+    exon_row = next(exonr)
 
 
-    if eb_present:
-        ebf = open(input[count], 'r')
-        ebr = csv.reader(ebf, delimiter = '\t')
-        count += 1
-        header = header + ['exon_bin']
-        eb_row = next(ebr)
+if transcripts_present:
+    transcriptf = open(input[count], 'r')
+    transcriptr = csv.reader(transcriptf, delimiter = '\t')
+    count += 1
+    header = header + ['transcripts']
+    transcript_row = next(transcriptr)
 
 
-    if bft_present:
-        bftf = open(input[count], 'r')
-        bftr = csv.reader(bftf)
-        count += 1
-        header = header + ['bamfile_transcripts']
-
-        # Iterate past header
-        next(bftr)
-        bft_row = next(bftr)
+if eb_present:
+    ebf = open(input[count], 'r')
+    ebr = csv.reader(ebf, delimiter = '\t')
+    count += 1
+    header = header + ['exon_bin']
+    eb_row = next(ebr)
 
 
-    if junctions_present:
-        jf = open(input[count], 'r')
-        jr = csv.reader(jf)
-        count += 1
-        header = header + ['junction_start', 'junction_end']
+if bft_present:
+    bftf = open(input[count], 'r')
+    bftr = csv.reader(bftf)
+    count += 1
+    header = header + ['bamfile_transcripts']
 
-        # Iterate past header
-        next(jr)
-        j_row = next(jr)
-
-
-    if ee_present:
-        eef = open(input[count], 'r')
-        eer = csv.reader(eef, delimiter = '\t')
-        count += 1
-        header = header + ['ee_junction_id']
-        ee_row = next(eer)
+    # Iterate past header
+    next(bftr)
+    bft_row = next(bftr)
 
 
-    if ei_present:
-        eif = open(input[count], 'r')
-        eir = csv.reader(eif, delimiter = '\t')
-        count += 1
-        header = header + ['ei_junction_id']
-        ei_row = next(eir)
+if junctions_present:
+    jf = open(input[count], 'r')
+    jr = csv.reader(jf)
+    count += 1
+    header = header + ['junction_start', 'junction_end']
 
-    ### Functions for handling the different scenarios
+    # Iterate past header
+    next(jr)
+    j_row = next(jr)
 
-    def handle_featurecounts(iterator, current_outrow, mutrow):
 
-        while iterator and iterator[0] < mutrow[0]:
-            iterator = next(iterator, None)
+if ee_present:
+    eef = open(input[count], 'r')
+    eer = csv.reader(eef, delimiter = '\t')
+    count += 1
+    header = header + ['ee_junction_id']
+    ee_row = next(eer)
 
-        if iterator and iterator[0] == mutrow[0]:
 
-            if iterator[1] == "Assigned":
+if ei_present:
+    eif = open(input[count], 'r')
+    eir = csv.reader(eif, delimiter = '\t')
+    count += 1
+    header = header + ['ei_junction_id']
+    ei_row = next(eir)
 
-                additional_out = iterator[3]
+### Functions for handling the different scenarios
 
-                if ',' in iterator:
+def handle_featurecounts(iterator, current_outrow, mutrow):
 
-                    additional_out = additional_out.split(',')
-                    additional_out = sorted(additional_out)
-                    additional_out = '+'.join(additional_out)
+    while iterator and iterator[0] < mutrow[0]:
+        iterator = next(iterator, None)
 
-                current_outrow = current_outrow + additional_out
+    if iterator and iterator[0] == mutrow[0]:
 
-            else:
+        if iterator[1] == "Assigned":
 
-                current_outrow = current_outrow + ['__no_feature']    
+            additional_out = iterator[3]
+
+            if ',' in iterator:
+
+                additional_out = additional_out.split(',')
+                additional_out = sorted(additional_out)
+                additional_out = '+'.join(additional_out)
+
+            current_outrow = current_outrow + additional_out
 
         else:
 
-            current_outrow = current_outrow + ['__no_feature']
+            current_outrow = current_outrow + ['__no_feature']    
 
-        return current_outrow
+    else:
 
+        current_outrow = current_outrow + ['__no_feature']
 
-    def handle_bamfilet(iterator, current_outrow, mutrow):
-
-        while iterator and iterator[0] < mutrow[0]:
-            iterator = next(iterator, None)
-
-        if iterator and iterator[0] == mutrow[0]:
-
-            current_outrow = current_outrow + iterator[1]
-
-        else:
-
-            current_outrow = current_outrow + ['__no_feature']
-
-        return current_outrow
+    return current_outrow
 
 
-    def handle_junctions(iterator, current_outrow, mutrow):
+def handle_bamfilet(iterator, current_outrow, mutrow):
 
-        while iterator and iterator[0] < mutrow[0]:
-            iterator = next(iterator, None)
+    while iterator and iterator[0] < mutrow[0]:
+        iterator = next(iterator, None)
 
-        if iterator and iterator[0] == mutrow[0]:
+    if iterator and iterator[0] == mutrow[0]:
 
-            current_outrow = current_outrow + iterator[1] + iterator[2]
+        current_outrow = current_outrow + iterator[1]
 
-        else:
+    else:
 
-            current_outrow = current_outrow + ['__no_feature', '__no_feature']
+        current_outrow = current_outrow + ['__no_feature']
 
-        return current_outrow
+    return current_outrow
 
 
-    ### Create merged output
+def handle_junctions(iterator, current_outrow, mutrow):
 
-    # Open sorted files and output file
-    with open(output, 'w', newline='') as output_file:
+    while iterator and iterator[0] < mutrow[0]:
+        iterator = next(iterator, None)
 
-        writer = csv.writer(output_file)
+    if iterator and iterator[0] == mutrow[0]:
+
+        current_outrow = current_outrow + iterator[1] + iterator[2]
+
+    else:
+
+        current_outrow = current_outrow + ['__no_feature', '__no_feature']
+
+    return current_outrow
+
+
+### Create merged output
+
+# Open sorted files and output file
+with open(output, 'w', newline='') as output_file:
+
+    writer = csv.writer(output_file)
+    
+    # Get the header and write to the output
+    writer.writerow(header)
+    
+    # Initialize variables
+    for row_m in mutr:
+
+        outrow = row_m
+            
+        # Add GF information
+        if genes_present:
+
+            outrow = handle_featurecounts(gene_row, outrow, row_m)
+
+        # Add XF information
+        if exons_present:
+
+            outrow = handle_featurecounts(exon_row, outrow, row_m)
+
+        # Add transcripts information
+        if transcripts_present:
+
+            outrow = handle_featurecounts(transcript_row, outrow, row_m)
+
+        # Add transcripts information
+        if eb_present:
+
+            outrow = handle_featurecounts(eb_row, outrow, row_m)
+
+        # Add transcripts information
+        if bft_present:
+
+            outrow = handle_featurecounts(bft_row, outrow, row_m)
         
-        # Get the header and write to the output
-        writer.writerow(header)
+        # Add transcripts information
+        if junctions_present:
+
+            outrow = handle_junctions(j_row, outrow, row_m)
         
-        # Initialize variables
-        for row_m in mutr:
+        if ee_present:
 
-            outrow = row_m
-                
-            # Add GF information
-            if genes_present:
+            outrow = handle_featurecounts(ee_row, outrow, row_m)
+        
+        if ei_present:
 
-                outrow = handle_featurecounts(gene_row, outrow, row_m)
-
-            # Add XF information
-            if exons_present:
-
-                outrow = handle_featurecounts(exon_row, outrow, row_m)
-
-            # Add transcripts information
-            if transcripts_present:
-
-                outrow = handle_featurecounts(transcript_row, outrow, row_m)
-
-            # Add transcripts information
-            if eb_present:
-
-                outrow = handle_featurecounts(eb_row, outrow, row_m)
-
-            # Add transcripts information
-            if bft_present:
-
-                outrow = handle_featurecounts(bft_row, outrow, row_m)
-            
-            # Add transcripts information
-            if junctions_present:
-
-                outrow = handle_junctions(j_row, outrow, row_m)
-            
-            if ee_present:
-
-                outrow = handle_featurecounts(ee_row, outrow, row_m)
-            
-            if ei_present:
-
-                outrow = handle_featurecounts(ei_row, outrow, row_m)
-            
-            writer.writerow(outrow)
+            outrow = handle_featurecounts(ei_row, outrow, row_m)
+        
+        writer.writerow(outrow)
 
 
-    ### Close file connections
+### Close file connections
 
-    mutf.close()
+mutf.close()
 
-    if genes_present:
-        genef.close()
+if genes_present:
+    genef.close()
 
-    if exons_present:
-        exonf.close()
+if exons_present:
+    exonf.close()
 
-    if transcripts_present:
-        transcriptf.close()
+if transcripts_present:
+    transcriptf.close()
 
-    if eb_present:
-        ebf.close()
+if eb_present:
+    ebf.close()
 
-    if bft_present:
-        bftf.close()
+if bft_present:
+    bftf.close()
 
-    if junctions_present:
-        jf.close()
+if junctions_present:
+    jf.close()
 
-    if ee_present:
-        eef.close()
+if ee_present:
+    eef.close()
 
-    if ei_present:
-        eif.close()
+if ei_present:
+    eif.close()

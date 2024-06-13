@@ -6,72 +6,67 @@
 
 import csv
 
-import sys
+merged_table = snakemake.input
+cols_to_sum = snakemake.params.get("cols_to_sum")
+output = snakemake.output
 
-with open(snakemake.log[0], "w") as f:
-    sys.stderr = sys.stdout = f
+### Parse cols_to_sum
 
-    merged_table = snakemake.input
-    cols_to_sum = snakemake.params.get("cols_to_sum")
-    output = snakemake.output
+cols_to_sum = cols_to_sum.split(',')
 
-    ### Parse cols_to_sum
-
-    cols_to_sum = cols_to_sum.split(',')
-
-    header = cols_to_sum + ['n']
+header = cols_to_sum + ['n']
 
 
-    ### Create reader object for the merged table
-    mt_f = open(merged_table, 'r')
-    mt_r = csv.reader(mt_f)
+### Create reader object for the merged table
+mt_f = open(merged_table, 'r')
+mt_r = csv.reader(mt_f)
 
-    # Iterate past header
-    full_header = next(mt_r)
+# Iterate past header
+full_header = next(mt_r)
 
-    # Find which elements I want to summarise over
-    sum_elements = [index for index, item in enumerate(full_header) if item in cols_to_sum]
+# Find which elements I want to summarise over
+sum_elements = [index for index, item in enumerate(full_header) if item in cols_to_sum]
 
-    ### Create writer object for the output
-    out_f = open(output, 'w')
-    out_w = csv.writer(out_f)
-    out_w.writerow(header)
+### Create writer object for the output
+out_f = open(output, 'w')
+out_w = csv.writer(out_f)
+out_w.writerow(header)
 
-    ### Iterate over table
-    first_row = True
-    for row in mt_r:
+### Iterate over table
+first_row = True
+for row in mt_r:
+    
+    query = [row[i] for i in sum_elements]
+
+    if first_row:
+
+        # Initialize subject row to search for
+        first_row = False
+        subject = query
+        count = 1
+    
+    elif query != subject:
         
-        query = [row[i] for i in sum_elements]
+        # Write current subject row + number of instances of that row found
+        next_row = subject + [count]
+        out_w.writerow(next_row)
+        count = 1
 
-        if first_row:
+        # New subject row to search for
+        subject = [row[i] for i in sum_elements]
 
-            # Initialize subject row to search for
-            first_row = False
-            subject = query
-            count = 1
-        
-        elif query != subject:
-            
-            # Write current subject row + number of instances of that row found
-            next_row = subject + [count]
-            out_w.writerow(next_row)
-            count = 1
+    else:
 
-            # New subject row to search for
-            subject = [row[i] for i in sum_elements]
+        # Another identical row
+        count += 1
 
-        else:
+# Write the final row
+next_row = subject + [count]
+out_w.writerow(next_row)
 
-            # Another identical row
-            count += 1
-
-    # Write the final row
-    next_row = subject + [count]
-    out_w.writerow(next_row)
-
-    ### Close connections
-    out_f.close()
-    mt_f.close()
+### Close connections
+out_f.close()
+mt_f.close()
 
 
 
