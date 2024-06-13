@@ -57,7 +57,7 @@ opt <- parse_args(opt_parser) # Load options from command line.
 
 # Combine tables --------------------------------------------------------------
 
-sample <- paste0(opt$sample, "_counts")
+sample <- paste0("^", opt$sample, "_counts")
 
 print(paste0("sample is: ", sample))
 
@@ -76,7 +76,7 @@ feature_vect <- c()
 # merge with gene assignments
 if(opt$genes){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   genes_file <- list.files("./results/featurecounts_genes/",
                            pattern = sample, full.names = TRUE)[1]
@@ -101,7 +101,7 @@ if(opt$genes){
 # merge with exon assignments
 if(opt$exons){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   exons_file <- list.files("./results/featurecounts_exons/",
                            pattern = sample, full.names = TRUE)[1]
@@ -126,7 +126,7 @@ if(opt$exons){
 # Merge with exonbin assignments
 if(opt$exonbins){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   exonbins_file <- list.files("./results/featurecounts_exonbins/",
                            pattern = sample, full.names = TRUE)[1]
@@ -153,7 +153,7 @@ if(opt$exonbins){
 # Merge with transcript assignments
 if(opt$transcripts){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   transcripts_file <- list.files("./results/featurecounts_transcripts/",
                               pattern = sample, full.names = TRUE)[1]
@@ -178,7 +178,7 @@ if(opt$transcripts){
 
 if(opt$frombam){
 
-  sample <- paste0(opt$sample, ".csv")
+  sample <- paste0("^", opt$sample, ".csv")
   
   transcripts_file <- list.files("./results/read_to_transcripts/",
                               pattern = sample, full.names = TRUE)[1]
@@ -202,7 +202,7 @@ if(opt$frombam){
 # Exon-exon junction assignment
 if(opt$eej){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   transcripts_file <- list.files("./results/featurecounts_eej/",
                               pattern = sample, full.names = TRUE)[1]
@@ -229,7 +229,7 @@ if(opt$eej){
 # Exon-intron junction assignment
 if(opt$eij){
   
-  sample <- paste0(opt$sample, ".s.bam.featureCounts")
+  sample <- paste0("^", opt$sample, ".s.bam.featureCounts")
   
   transcripts_file <- list.files("./results/featurecounts_eij/",
                               pattern = sample, full.names = TRUE)[1]
@@ -256,7 +256,7 @@ if(opt$eij){
 # STAR junction assignment
 if(opt$starjunc){
   
-  sample <- paste0(opt$sample, ".csv.gz")
+  sample <- paste0("^", opt$sample, ".csv.gz")
   
   transcripts_file <- list.files("./results/read_to_junctions/",
                               pattern = sample, full.names = TRUE)[1]
