@@ -61,7 +61,7 @@ bft_present = snakemake.params.get("bamfile_transcripts")
 # 8) eej
 # 9) eij
 
-mutcount = input[count]
+mutcount = input[0]
 mutf = open(mutcount, 'r')
 mutr = csv.writer(mutf)
 count = 1
