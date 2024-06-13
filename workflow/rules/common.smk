@@ -590,3 +590,24 @@ else:
         "results/merge_features_and_muts/{sample}_cB.csv",
         sample=SAMP_NAMES,
     )
+
+
+### RSEM plus input
+
+def get_rsemp_input(wildcards):
+
+    RSEMP_INPUT = []
+
+    if config['lowRAM']:
+
+        RSEMP_INPUT.extend(
+            expand("results/merge_features_and_muts/{SID}_counts.csv.gz", SID=wildcards.sample)
+        )
+
+    else:
+
+        RSEMP_INPUT.extend(
+            expand("results/lowram_merge_features_and_counts/{SID}.csv", SID=wildcards.sample)
+        )
+
+    return RSEMP_INPUT
