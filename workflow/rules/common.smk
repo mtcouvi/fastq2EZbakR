@@ -88,8 +88,9 @@ MutTypes = config["mut_tracks"]
 Mutation_Types = MutTypes.split(",")
 Nucleotide_Types = ["n" + muttype[0] for muttype in Mutation_Types]
 
-cols_to_search = keepcols.extend(Mutation_Types)
-cols_to_search = keepcols.extend(Nucleotide_Types)
+cols_to_search = keepcols
+cols_to_search = cols_to_search.extend(Mutation_Types)
+cols_to_search = cols_to_search.extend(Nucleotide_Types)
 
 keepcols = ",".join(keepcols)
 
@@ -552,10 +553,11 @@ if config["features"]["eij"]:
     colnames.extend("ei_junction_id")
 
 
+# Get indices of columns that I need to sort in order to summarise by
 cols_to_sort = [index for index, item in enumerate(colnames) if item in cols_to_search]
 cols_to_sort = sorted(cols_to_sort)
 
-numericsort_cols = Mutation_Types + Nucleotide_Types
+numericsort_cols = Mutation_Types.extend(Nucleotide_Types)
 numeric_sort_columns = [
     index for index, item in enumerate(colnames) if item in numericsort_cols
 ]
