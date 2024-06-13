@@ -88,8 +88,8 @@ MutTypes = config["mut_tracks"]
 Mutation_Types = MutTypes.split(",")
 Nucleotide_Types = ["n" + muttype[0] for muttype in Mutation_Types]
 
-cols_to_search = keepcols + Mutation_Types + Nucleotide_Types
-
+cols_to_search = keepcols.extend(Mutation_Types)
+cols_to_search = keepcols.extend(Nucleotide_Types)
 
 keepcols = ",".join(keepcols)
 
