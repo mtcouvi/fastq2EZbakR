@@ -173,6 +173,10 @@ WSL: False
 remove_tags: False
 
 
+# Merge mutation counts and feature assignments in a RAM-efficient manner?
+  # Downside is that it's a bit slower
+lowRAM: True
+
 
 ##### OTHER FEATURECOUNTS PARAMETERS #####
 # Parameters automatically specified:

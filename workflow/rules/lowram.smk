@@ -91,27 +91,30 @@ rule sort_fcei_by_qname:
 
 ### MERGING AND SORTING FILES
 
-rule lowram_merge_features_and_counts:
-    input:
-        get_merge_input,
-    output:
-        temp("results/merge_features_and_counts/{sample}.csv")
-    params:
-        genes=config["features"]["genes"],
-        exons=config["features"]["exons"],
-        junctions=config["features"]["junctions"],
-        exonic_bins=config["features"]["exonic_bins"],
-        ee=config["features"]["eej"],
-        ei=config["features"]["eij"],
-        transcripts=config["features"]["transcripts"],
-        bamfile_transcripts=config["Strategies"]["Transcripts"],
-    script:
-        "../scripts/lowram/lowram_join.py"
+if config['lowRAM']:
+
+
+    rule lowram_merge_features_and_counts:
+        input:
+            get_merge_input,
+        output:
+            temp("results/lowram_merge_features_and_counts/{sample}.csv")
+        params:
+            genes=config["features"]["genes"],
+            exons=config["features"]["exons"],
+            junctions=config["features"]["junctions"],
+            exonic_bins=config["features"]["exonic_bins"],
+            ee=config["features"]["eej"],
+            ei=config["features"]["eij"],
+            transcripts=config["features"]["transcripts"],
+            bamfile_transcripts=config["Strategies"]["Transcripts"],
+        script:
+            "../scripts/lowram/lowram_join.py"
 
 
 rule sort_merged_files:
     input:
-        "results/merge_features_and_counts/{sample}.csv",
+        "results/lowram_merge_features_and_counts/{sample}.csv",
     output:
         "results/sort_merged_files/{sample}.csv",
     params:
@@ -120,16 +123,18 @@ rule sort_merged_files:
         """
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort {params.sortparams} -V >> {output}
+        tail -n +2 {input} | sort {params.sortparams} >> {output}
         """
 
-### WRITING TO CB
+### SUMMARISE MERGED FILES
 
 
-rule lowram_makecB:
+rule lowram_summarise:
     input:
-        "results/merge_features_and_counts/{sample}.csv",
+        "results/sort_merged_files/{sample}.csv",
     output:
-        "results/cB/cB.csv.gz",
+        temp("results/lowram_summarise/{sample}.csv"),
+    params:
+        cols_to_sum=COLS_TO_SUM,
     script:
         "../scripts/lowram/lowram_makecB.py"

@@ -529,11 +529,11 @@ if config["features"]["eij"]:
     colnames.extend('ei_junction_id')
 
 
-cols_to_sort = [column for column in colnames if colnames in cols_to_search]
+cols_to_sort = [index for index, item in enumerate(colnames) if item in cols_to_search]
 cols_to_sort = sorted(cols_to_sort)
 
 numericsort_cols = Mutation_Types + Nucleotide_Types
-numeric_sort_columns = [column for column in colnames if colnames in numericsort_cols]
+numeric_sort_columns = [index for index, item in enumerate(colnames) if item in numericsort_cols]
 
 key_args = ' '.join([
     f'-k{col},{col}{"n" if col in numeric_sort_columns else "V"}'
@@ -542,3 +542,23 @@ key_args = ' '.join([
 
 SORTPARAMS = 'k' + ','.join(cols_to_sort)
 
+# Columns that will be summarized over
+COLS_TO_SUM = ','.join(cols_to_search)
+
+
+### Input for makecB
+
+if config["lowRAM"]:
+
+    CBINPUT=expand(
+        "results/lowram_summarise/{sample}.csv",
+        sample=SAMP_NAMES,
+    )
+
+
+else:
+
+    CBINPUT=expand(
+        "results/merge_features_and_muts/{sample}_cB.csv",
+        sample=SAMP_NAMES,
+    )
