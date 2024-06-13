@@ -25,14 +25,16 @@ rule sort_mutcounts_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_mutcounts_by_qname/{sample}.log",
     shell:
         """
         ### GOAL: Sort but preserve header
-        gzip -d -c {input} > {output.decomp}
+        gzip -d -c {input} > {output.decomp} >> {log} 2>&1
 
-        head -n 1 {output.decomp} > {output.sortout}
+        head -n 1 {output.decomp} > {output.sortout} >> {log} 2>&1
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout} >> {log} 2>&1
         """
 
 
@@ -44,9 +46,11 @@ rule sort_fcgene_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_fcgene_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -k1 -V {input} > {output} >> {log} 2>&1
         """
 
 
@@ -58,9 +62,11 @@ rule sort_fcexon_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_fcexon_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -k1 -V {input} > {output} >> {log} 2>&1
         """
 
 
@@ -73,14 +79,16 @@ rule sort_junction_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_junction_by_qname/{sample}.log",
     shell:
         """
         ### GOAL: Sort but preserve header
-        gzip -d -c {input} > {output.decomp}
+        gzip -d -c {input} > {output.decomp} >> {log} 2>&1
 
-        head -n 1 {output.decomp} > {output.sortout}
+        head -n 1 {output.decomp} > {output.sortout} >> {log} 2>&1
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout} >> {log} 2>&1
         """
 
 
@@ -92,9 +100,11 @@ rule sort_fcee_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_fcee_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -k1 -V {input} > {output} >> {log} 2>&1
         """
 
 
@@ -106,9 +116,11 @@ rule sort_fcei_by_qname:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_fcei_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -k1 -V {input} > {output} >> {log} 2>&1
         """
 
 
@@ -133,6 +145,8 @@ if config["lowRAM"]:
         threads: 1
         conda:
             "../envs/full.yaml"
+        log:
+            "logs/lowram_merge_features_and_counts/{sample}.log",
         script:
             "../scripts/lowram/lowram_join.py"
 
@@ -147,11 +161,13 @@ rule sort_merged_files:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/sort_merged_files/{sample}.log",
     shell:
         """
-        head -n 1 {input} > {output}
+        head -n 1 {input} > {output} >> {log} 2>&1
         
-        tail -n +2 {input} | sort {params.sortparams} >> {output}
+        tail -n +2 {input} | sort {params.sortparams} >> {output} >> {log} 2>&1
         """
 
 
@@ -168,5 +184,7 @@ rule lowram_summarise:
     threads: 1
     conda:
         "../envs/full.yaml"
+    log:
+        "logs/lowram_summarise/{sample}.log",
     script:
         "../scripts/lowram/lowram_makecB.py"
