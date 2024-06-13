@@ -8,9 +8,10 @@
 # a left join with the mutation counts.
 # 3) Sort files by columns that will be kept in cB
 # 4) Iterate again this time counting the number of identical
-# instances of the set of columns to keep. 
+# instances of the set of columns to keep.
 
 ### Sorting rules
+
 
 # Sort by read name (qname)
 rule sort_mutcounts_by_qname:
@@ -18,7 +19,7 @@ rule sort_mutcounts_by_qname:
         "results/counts/{sample}_counts.csv.gz",
     output:
         sortout=temp("results/sort_mutcounts_by_qname/{sample}_counts.csv"),
-        decomp=temp("results/sort_mutcounts_by_qname/{sample}_decompressed_counts.csv")
+        decomp=temp("results/sort_mutcounts_by_qname/{sample}_decompressed_counts.csv"),
     shell:
         """
         ### GOAL: Sort but preserve header
@@ -29,11 +30,12 @@ rule sort_mutcounts_by_qname:
         tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
         """
 
+
 rule sort_fcgene_by_qname:
     input:
         "results/featurecounts_genes/{sample}.featureCounts",
     output:
-        temp("results/sort_fcgene_by_qname/{sample}.featureCounts")
+        temp("results/sort_fcgene_by_qname/{sample}.featureCounts"),
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -44,7 +46,7 @@ rule sort_fcexon_by_qname:
     input:
         "results/featurecounts_exons/{sample}.featureCounts",
     output:
-        temp("results/sort_fcexon_by_qname/{sample}.featureCounts")
+        temp("results/sort_fcexon_by_qname/{sample}.featureCounts"),
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -56,7 +58,7 @@ rule sort_junction_by_qname:
         "results/read_to_junctions/{sample}.csv.gz",
     output:
         sortout=temp("results/sort_junction_by_qname/{sample}_counts.csv"),
-        decomp=temp("results/sort_junction_by_qname/{sample}_decompressed_counts.csv")
+        decomp=temp("results/sort_junction_by_qname/{sample}_decompressed_counts.csv"),
     shell:
         """
         ### GOAL: Sort but preserve header
@@ -67,11 +69,12 @@ rule sort_junction_by_qname:
         tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
         """
 
+
 rule sort_fcee_by_qname:
     input:
         "results/featurecounts_ee/{sample}.featureCounts",
     output:
-        temp("results/sort_fcee_by_qname/{sample}.featureCounts")
+        temp("results/sort_fcee_by_qname/{sample}.featureCounts"),
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -82,7 +85,7 @@ rule sort_fcei_by_qname:
     input:
         "results/featurecounts_ei/{sample}.featureCounts",
     output:
-        temp("results/sort_fcei_by_qname/{sample}.featureCounts")
+        temp("results/sort_fcei_by_qname/{sample}.featureCounts"),
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -91,14 +94,13 @@ rule sort_fcei_by_qname:
 
 ### MERGING AND SORTING FILES
 
-if config['lowRAM']:
-
+if config["lowRAM"]:
 
     rule lowram_merge_features_and_counts:
         input:
             get_merge_input,
         output:
-            temp("results/lowram_merge_features_and_counts/{sample}.csv")
+            temp("results/lowram_merge_features_and_counts/{sample}.csv"),
         params:
             genes=config["features"]["genes"],
             exons=config["features"]["exons"],
@@ -125,6 +127,7 @@ rule sort_merged_files:
         
         tail -n +2 {input} | sort {params.sortparams} >> {output}
         """
+
 
 ### SUMMARISE MERGED FILES
 

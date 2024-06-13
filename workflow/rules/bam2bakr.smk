@@ -209,7 +209,8 @@ rule cnt_muts:
         {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.minqual} {params.mut_tracks} {params.format} {params.strand} {params.pythonscript} {params.awkscript} {params.mutpos} 1> {log} 2>&1
         """
 
-if not config['lowRAM']:
+
+if not config["lowRAM"]:
 
     # Merge mutation counts with feature assignment
     rule merge_features_and_muts:
@@ -227,7 +228,9 @@ if not config['lowRAM']:
             eej_included=config["features"]["eej"],
             eij_included=config["features"]["eij"],
             starjunc_included=config["features"]["junctions"],
-            rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
+            rscript=workflow.source_path(
+                "../scripts/bam2bakR/merge_features_and_muts.R"
+            ),
             muttypes=config["mut_tracks"],
         log:
             "logs/merge_features_and_muts/{sample}.log",

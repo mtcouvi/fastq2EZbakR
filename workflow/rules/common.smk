@@ -86,7 +86,7 @@ if config["features"]["eej"]:
 # Get mutation types to track
 MutTypes = config["mut_tracks"]
 Mutation_Types = MutTypes.split(",")
-Nucleotide_Types = ['n' + muttype[0] for muttype in Mutation_Types]
+Nucleotide_Types = ["n" + muttype[0] for muttype in Mutation_Types]
 
 cols_to_search = keepcols + Mutation_Types + Nucleotide_Types
 
@@ -439,7 +439,6 @@ else:
 ### Target rule input
 
 
-
 def get_other_output():
     target = []
 
@@ -491,74 +490,100 @@ MAKECB_THREADS = len(SAMP_NAMES) * 4
 ### If keeping RAM usage low, need to determine which columns of merged files to support
 
 # Columns as they appear in mutation counting csv output
-colnames = ["qname", "nA", "nC", "nT", "nG",
-"rname", "FR", "sj", 
-"TA", "CA", "GA", "NA",
-"AT", "CT", "GT", "NT",
-"AC", "TC", "GC", "NC",
-"AG", "TG", "CG", "NG",
-"AN", "TN", "CN", "GN", "NN"]
+colnames = [
+    "qname",
+    "nA",
+    "nC",
+    "nT",
+    "nG",
+    "rname",
+    "FR",
+    "sj",
+    "TA",
+    "CA",
+    "GA",
+    "NA",
+    "AT",
+    "CT",
+    "GT",
+    "NT",
+    "AC",
+    "TC",
+    "GC",
+    "NC",
+    "AG",
+    "TG",
+    "CG",
+    "NG",
+    "AN",
+    "TN",
+    "CN",
+    "GN",
+    "NN",
+]
 
 if config["features"]["genes"]:
-    colnames.extend('GF')
+    colnames.extend("GF")
 
 if config["features"]["exons"]:
-    colnames.extend('XF')
+    colnames.extend("XF")
 
 if config["features"]["transcripts"]:
-    colnames.extend('transcripts')
+    colnames.extend("transcripts")
 
 
 if config["features"]["exonic_bins"]:
-    colnames.extend('exon_bin')
+    colnames.extend("exon_bin")
 
 if config["strategies"]["Transcripts"]:
-    colnames.extend('bamfile_transcripts')
+    colnames.extend("bamfile_transcripts")
 
 
 if config["features"]["junctions"]:
-    colnames.extend('junction_start')
-    colnames.extend('junction_end')
+    colnames.extend("junction_start")
+    colnames.extend("junction_end")
 
 
 if config["features"]["eej"]:
-    colnames.extend('ee_junction_id')
+    colnames.extend("ee_junction_id")
 
 
 if config["features"]["eij"]:
-    colnames.extend('ei_junction_id')
+    colnames.extend("ei_junction_id")
 
 
 cols_to_sort = [index for index, item in enumerate(colnames) if item in cols_to_search]
 cols_to_sort = sorted(cols_to_sort)
 
 numericsort_cols = Mutation_Types + Nucleotide_Types
-numeric_sort_columns = [index for index, item in enumerate(colnames) if item in numericsort_cols]
+numeric_sort_columns = [
+    index for index, item in enumerate(colnames) if item in numericsort_cols
+]
 
-key_args = ' '.join([
-    f'-k{col},{col}{"n" if col in numeric_sort_columns else "V"}'
-    for col in cols_to_sort
-])
+key_args = " ".join(
+    [
+        f'-k{col},{col} {"n" if col in numeric_sort_columns else "V"}'
+        for col in cols_to_sort
+    ]
+)
 
-SORTPARAMS = 'k' + ','.join(cols_to_sort)
+SORTPARAMS = "k" + ",".join(cols_to_sort)
 
 # Columns that will be summarized over
-COLS_TO_SUM = ','.join(cols_to_search)
+COLS_TO_SUM = ",".join(cols_to_search)
 
 
 ### Input for makecB
 
 if config["lowRAM"]:
-
-    CBINPUT=expand(
+    CBINPUT = expand(
         "results/lowram_summarise/{sample}.csv",
         sample=SAMP_NAMES,
     )
 
 
 else:
-
-    CBINPUT=expand(
+    CBINPUT = expand(
         "results/merge_features_and_muts/{sample}_cB.csv",
         sample=SAMP_NAMES,
     )
