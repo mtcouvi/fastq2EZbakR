@@ -8,7 +8,9 @@
 # a left join with the mutation counts.
 # 3) Sort files by columns that will be kept in cB
 # 4) Iterate again this time counting the number of identical
-# instances of the set of columns to keep.
+# instances of the set of columns to keep, in order to 
+# summarize over these columns. The output of this can be passed
+# as is to the current makecB script
 
 ### Sorting rules
 

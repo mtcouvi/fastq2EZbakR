@@ -103,6 +103,11 @@ features:
     eij: True
     eej: True
 
+
+# Merge mutation counts and feature assignments in a RAM-efficient manner?
+  # Downside is that it's a bit slower
+lowRAM: True
+
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
 
