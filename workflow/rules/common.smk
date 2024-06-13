@@ -2,7 +2,7 @@ import glob
 import os
 
 
-### If RSEM+ is set, make sure that exons are quantified
+### If RSEM plus is set, make sure that exons are quantified
 if config["strategies"]["RSEMp"]:
     config["features"]["exons"] = True
 
@@ -86,7 +86,7 @@ if config["features"]["eej"]:
 # Get mutation types to track
 MutTypes = config["mut_tracks"]
 Mutation_Types = MutTypes.split(",")
-Nucleotide_Types = ["n" + muttype[0] for muttype in Mutation_Types]
+Nucleotide_Types = ["n{}".format(muttype[0]) for muttype in Mutation_Types]
 
 cols_to_search = keepcols.copy()
 cols_to_search.extend(Mutation_Types)
