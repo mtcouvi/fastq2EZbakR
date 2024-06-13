@@ -20,6 +20,9 @@ rule sort_mutcounts_by_qname:
     output:
         sortout=temp("results/sort_mutcounts_by_qname/{sample}_counts.csv"),
         decomp=temp("results/sort_mutcounts_by_qname/{sample}_decompressed_counts.csv"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         ### GOAL: Sort but preserve header
@@ -36,6 +39,9 @@ rule sort_fcgene_by_qname:
         "results/featurecounts_genes/{sample}.featureCounts",
     output:
         temp("results/sort_fcgene_by_qname/{sample}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -47,6 +53,9 @@ rule sort_fcexon_by_qname:
         "results/featurecounts_exons/{sample}.featureCounts",
     output:
         temp("results/sort_fcexon_by_qname/{sample}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -59,6 +68,9 @@ rule sort_junction_by_qname:
     output:
         sortout=temp("results/sort_junction_by_qname/{sample}_counts.csv"),
         decomp=temp("results/sort_junction_by_qname/{sample}_decompressed_counts.csv"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         ### GOAL: Sort but preserve header
@@ -75,6 +87,9 @@ rule sort_fcee_by_qname:
         "results/featurecounts_ee/{sample}.featureCounts",
     output:
         temp("results/sort_fcee_by_qname/{sample}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -86,6 +101,9 @@ rule sort_fcei_by_qname:
         "results/featurecounts_ei/{sample}.featureCounts",
     output:
         temp("results/sort_fcei_by_qname/{sample}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         sort -k1 -V {input} > {output}
@@ -110,6 +128,9 @@ if config["lowRAM"]:
             ei=config["features"]["eij"],
             transcripts=config["features"]["transcripts"],
             bamfile_transcripts=config["Strategies"]["Transcripts"],
+        threads: 1
+        conda:
+            "../envs/full.yaml"
         script:
             "../scripts/lowram/lowram_join.py"
 
@@ -121,6 +142,9 @@ rule sort_merged_files:
         "results/sort_merged_files/{sample}.csv",
     params:
         sortparams=SORTPARAMS,
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     shell:
         """
         head -n 1 {input} > {output}
@@ -139,5 +163,8 @@ rule lowram_summarise:
         temp("results/lowram_summarise/{sample}.csv"),
     params:
         cols_to_sum=COLS_TO_SUM,
+    threads: 1
+    conda:
+        "../envs/full.yaml"
     script:
         "../scripts/lowram/lowram_makecB.py"
