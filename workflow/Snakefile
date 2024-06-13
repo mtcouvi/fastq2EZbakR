@@ -11,6 +11,14 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 
+
+##### Impute potentially missing config parameters #####
+
+if "lowRAM" not in config:
+    config['lowRAM'] = False
+
+
+
 ##### setup report #####
 
 
