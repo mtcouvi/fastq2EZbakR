@@ -89,6 +89,7 @@ Mutation_Types = MutTypes.split(",")
 Nucleotide_Types = ["n{}".format(muttype[0]) for muttype in Mutation_Types]
 
 # Columns I want to summarise by
+init_keepcols = keepcols.copy()
 cols_to_search = keepcols.copy()
 cols_to_search.extend(Mutation_Types)
 cols_to_search.extend(Nucleotide_Types)

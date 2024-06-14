@@ -47,6 +47,8 @@ onstart:
     print(f"SORTPARAMS: {key_args}")
     print(f"cols_to_search: {cols_to_search}")
     print(f"cols_to_sort: {cols_to_sort}")
+    print(f"colnames: {colnames}")
+    print(f"init_keepcols: {init_keepcols}")
 
 if not config["bam2bakr"]:
 
