@@ -9,12 +9,13 @@ import csv
 merged_table = snakemake.input
 cols_to_sum = snakemake.params.get("cols_to_sum")
 output_table = snakemake.output
+sample = snakemake.wildcards.sample
 
 ### Parse cols_to_sum
 
 cols_to_sum = cols_to_sum.split(',')
 
-header = cols_to_sum + ['n']
+header = ['sample'] + cols_to_sum + ['n']
 
 
 ### Create reader object for the merged table
@@ -48,7 +49,7 @@ for row in mt_r:
     elif query != subject:
         
         # Write current subject row + number of instances of that row found
-        next_row = subject + [count]
+        next_row = [sample] + subject + [count]
         out_w.writerow(next_row)
         count = 1
 
@@ -61,7 +62,7 @@ for row in mt_r:
         count += 1
 
 # Write the final row
-next_row = subject + [count]
+next_row = [sample] + subject + [count]
 out_w.writerow(next_row)
 
 ### Close connections
