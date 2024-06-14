@@ -230,7 +230,7 @@ rule lowram_summarise:
     input:
         "results/sort_merged_files/{sample}.csv",
     output:
-        temp("results/lowram_summarise/{sample}.csv"),
+        "results/lowram_summarise/{sample}.csv",
     params:
         cols_to_sum=COLS_TO_SUM,
     threads: 1
