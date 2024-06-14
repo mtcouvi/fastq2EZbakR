@@ -88,6 +88,10 @@ MutTypes = config["mut_tracks"]
 Mutation_Types = MutTypes.split(",")
 Nucleotide_Types = ["n{}".format(muttype[0]) for muttype in Mutation_Types]
 
+# Columns I want to summarise by
+cols_to_search = keepcols.copy()
+cols_to_search.extend(Mutation_Types)
+cols_to_search.extend(Nucleotide_Types)
 
 keepcols = ",".join(keepcols)
 
@@ -548,12 +552,6 @@ if config["features"]["eej"]:
 
 if config["features"]["eij"]:
     colnames.extend("ei_junction_id")
-
-
-# Columns I want to summarise by
-cols_to_search = keepcols.copy()
-cols_to_search.extend(Mutation_Types)
-cols_to_search.extend(Nucleotide_Types)
 
 
 # Get indices of columns that I need to sort in order to summarise by
