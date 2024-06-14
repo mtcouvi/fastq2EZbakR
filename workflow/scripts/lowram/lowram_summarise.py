@@ -18,7 +18,7 @@ header = cols_to_sum + ['n']
 
 
 ### Create reader object for the merged table
-mt_f = open(merged_table, 'r')
+mt_f = open(merged_table[0], 'r')
 mt_r = csv.reader(mt_f)
 
 # Iterate past header
