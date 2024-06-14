@@ -228,7 +228,7 @@ with open(output_table[0], 'w', newline='') as output_file:
         # Add transcripts information
         if transcripts_present:
 
-            outrow = handle_featurecounts(transcript_row, outrow, row_m)
+            outrow = handle_bamfilet(transcript_row, outrow, row_m)
 
         # Add transcripts information
         if eb_present:
