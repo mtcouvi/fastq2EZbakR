@@ -59,8 +59,6 @@ first_in_pair = True
 count = 0
 for read in samfile:
 
-    count += 1
-
     junction_tags = [(tag, value) for tag, value in read.tags if tag in ['jI', 'jM']]
 
     if junction_tags[0][0] == 'jM':
@@ -88,6 +86,8 @@ for read in samfile:
         NCcheck = jM[0] != 0 and jM[0] != 20
 
     if check and SJcheck and NCcheck:
+
+        count += 1
 
         # Gotta concatenate information for read pairs
         if r_info[0] == read.query_name:
