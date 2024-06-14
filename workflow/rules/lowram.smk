@@ -94,7 +94,7 @@ rule sort_junction_by_qname:
 
 rule sort_fcee_by_qname:
     input:
-        "results/featurecounts_ee/{sample}.s.bam.featureCounts",
+        "results/featurecounts_eej/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcee_by_qname/{sample}.featureCounts"),
     threads: 1
@@ -110,7 +110,7 @@ rule sort_fcee_by_qname:
 
 rule sort_fcei_by_qname:
     input:
-        "results/featurecounts_ei/{sample}.s.bam.featureCounts",
+        "results/featurecounts_eij/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcei_by_qname/{sample}.featureCounts"),
     threads: 1
