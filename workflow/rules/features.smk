@@ -162,6 +162,7 @@ rule featurecounts_eej:
             "results/featurecounts_eej/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -182,6 +183,7 @@ rule featurecounts_eij:
             "results/featurecounts_eij/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
