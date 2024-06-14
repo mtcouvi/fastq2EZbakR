@@ -155,7 +155,7 @@ def handle_featurecounts(iterator, current_outrow, mutrow):
                 additional_out = sorted(additional_out)
                 additional_out = '+'.join(additional_out)
 
-            current_outrow = current_outrow + additional_out
+            current_outrow = current_outrow + [additional_out]
 
         else:
 
