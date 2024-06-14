@@ -144,7 +144,7 @@ rule sort_fcexonbin_by_qname:
     input:
         "results/featurecounts_exonbins/{sample}.s.bam.featureCounts",
     output:
-        temp("results/sort_fcexonbin_by_qname/{SID}.featureCounts"),
+        temp("results/sort_fcexonbin_by_qname/{sample}.featureCounts"),
     threads: 1
     conda:
         "../envs/full.yaml"
