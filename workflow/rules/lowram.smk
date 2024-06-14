@@ -239,4 +239,4 @@ rule lowram_summarise:
     log:
         "logs/lowram_summarise/{sample}.log",
     script:
-        "../scripts/lowram/lowram_makecB.py"
+        "../scripts/lowram/lowram_summarise.py"
