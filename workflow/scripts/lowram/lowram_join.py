@@ -34,7 +34,7 @@ import datetime
 
 
 input_files = snakemake.input
-output_table = snakemake.output
+output_table = snakemake.output.get("merged")
 
 
 ### See which file types are present
@@ -203,7 +203,7 @@ def handle_junctions(iterator, current_outrow, mutrow):
 ### Create merged output
 
 # Open sorted files and output file
-with open(output_table, 'w', newline='') as output_file:
+with open(output_table[0], 'w', newline='') as output_file:
 
     writer = csv.writer(output_file)
     
