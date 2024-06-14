@@ -59,7 +59,7 @@ opt <- parse_args(opt_parser) # Load options from command line.
 
 sample <- paste0("^", opt$sample, "_counts")
 
-print(paste0("sample is: ", sample))
+print(paste0("sample is: ", opt$sample))
 
 
 ### Load mutation counts

@@ -128,7 +128,7 @@ rule read_to_junctions:
         chmod +x {params.shellscript}
         chmod +x {params.pythonscript}
         chmod +x {params.awkscript}
-        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript}
+        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript}  1> {log} 2>&1
         """
 
 
