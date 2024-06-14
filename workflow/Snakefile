@@ -39,17 +39,6 @@ include: "rules/bam2bakr.smk"
 include: "rules/features.smk"
 include: "rules/lowram.smk"
 
-# Print variables
-onstart:
-    print(f"Pipeline is starting...")
-    print(f"COLS_TO_SUM: {COLS_TO_SUM}")
-    print(f"cols_to_summarize: {cols_to_summarize}")
-    print(f"SORTPARAMS: {key_args}")
-    print(f"cols_to_search: {cols_to_search}")
-    print(f"cols_to_sort: {cols_to_sort}")
-    print(f"colnames: {colnames}")
-    print(f"init_keepcols: {init_keepcols}")
-
 if not config["bam2bakr"]:
 
     include: "rules/preprocess.smk"
