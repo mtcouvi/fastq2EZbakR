@@ -7,6 +7,11 @@ if config["strategies"]["RSEMp"]:
     config["features"]["exons"] = True
 
 
+### If assigning reads to junctions, need to keep jI and jM tags for now
+if config["features"]["junctions"]:
+    config["remove_tags"] = False
+
+
 ### GENERAL HELPER FUNCTIONS/VARIABLES USED IN ALL CASES
 
 # Sample names to help expanding lists of all bam files

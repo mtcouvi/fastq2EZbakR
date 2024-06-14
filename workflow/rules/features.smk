@@ -110,7 +110,7 @@ rule read_to_transcripts:
 # Get set of junctions a read overlaps
 rule read_to_junctions:
     input:
-        "results/align/{sample}.bam",
+        "results/sf_reads/{sample}.s.bam",
     output:
         "results/read_to_junctions/{sample}.csv.gz",
         temp("results/read_to_junctions/{sample}_check.txt"),
