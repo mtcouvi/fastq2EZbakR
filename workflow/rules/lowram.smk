@@ -30,11 +30,11 @@ rule sort_mutcounts_by_qname:
     shell:
         """
         ### GOAL: Sort but preserve header
-        gzip -d -c {input} > {output.decomp} >> {log} 2>&1
+        gzip -d -c {input} > {output.decomp}
 
-        head -n 1 {output.decomp} > {output.sortout} >> {log} 2>&1
+        head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout} >> {log} 2>&1
+        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
         """
 
 
