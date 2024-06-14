@@ -8,7 +8,7 @@ import csv
 
 merged_table = snakemake.input
 cols_to_sum = snakemake.params.get("cols_to_sum")
-output_table = snakemake.output.get("summarized")
+output_table = snakemake.output
 
 ### Parse cols_to_sum
 

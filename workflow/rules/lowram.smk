@@ -184,7 +184,7 @@ if config["lowRAM"]:
         input:
             get_lowram_merge_input,
         output:
-            merged=temp("results/lowram_merge_features_and_counts/{sample}.csv"),
+            "results/lowram_merge_features_and_counts/{sample}.csv",
         params:
             genes=config["features"]["genes"],
             exons=config["features"]["exons"],
@@ -230,7 +230,7 @@ rule lowram_summarise:
     input:
         "results/sort_merged_files/{sample}.csv",
     output:
-        summarized=temp("results/lowram_summarise/{sample}.csv"),
+        temp("results/lowram_summarise/{sample}.csv"),
     params:
         cols_to_sum=COLS_TO_SUM,
     threads: 1

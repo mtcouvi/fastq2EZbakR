@@ -34,7 +34,7 @@ import datetime
 
 
 input_files = snakemake.input
-output_table = snakemake.output.get("merged")
+output_table = snakemake.output
 
 
 ### See which file types are present
