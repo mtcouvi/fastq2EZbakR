@@ -117,7 +117,7 @@ if junctions_present:
     header = header + ['junction_start', 'junction_end']
 
     # Iterate past header
-    next(jr)
+    j_row = next(jr)
     j_row = next(jr)
 
 
@@ -218,7 +218,7 @@ with open(output_table[0], 'w', newline='') as output_file:
         # Add GF information
         if genes_present:
 
-            outrow = handle_featurecounts(gene_row, mutr, outrow, row_m)
+            outrow = handle_featurecounts(gene_row, gener, outrow, row_m)
 
         # Add XF information
         if exons_present:
