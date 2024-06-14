@@ -124,6 +124,58 @@ rule sort_fcei_by_qname:
         """
 
 
+rule sort_fctranscript_by_qname:
+    input:
+        "results/featurecounts_transcripts/{sample}.s.bam.featureCounts",
+    output:
+        temp("results/sort_fctranscript_by_qname/{sample}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
+    log:
+        "logs/sort_fctranscript_by_qname/{sample}.log",
+    shell:
+        """
+        sort -k1 -V {input} > {output}
+        """
+
+
+rule sort_fcexonbin_by_qname:
+    input:
+        "results/featurecounts_exonbins/{sample}.s.bam.featureCounts",
+    output:
+        temp("results/sort_fcexonbin_by_qname/{SID}.featureCounts"),
+    threads: 1
+    conda:
+        "../envs/full.yaml"
+    log:
+        "logs/sort_fcexonbin_by_qname/{sample}.log",
+    shell:
+        """
+        sort -k1 -V {input} > {output}
+        """
+
+
+rule sort_bamtranscript_by_qname:
+    input:
+        "results/read_to_transcripts/{sample}.csv",
+    output:
+        "results/sort_bamtranscript_by_qname/{sample}.csv"
+    threads: 1
+    conda:
+        "../envs/full.yaml"
+    log:
+        "logs/sort_bamtranscript_by_qname/{sample}.log",
+    shell:
+        """
+        ### GOAL: Sort but preserve header
+        head -n 1 {input} > {output}
+        
+        tail -n +2 {input} | sort -k1 -V >> {output}
+        """
+
+
+
 ### MERGING AND SORTING FILES
 
 if config["lowRAM"]:

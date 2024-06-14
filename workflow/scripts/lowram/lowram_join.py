@@ -106,7 +106,7 @@ if bft_present:
     header = header + ['bamfile_transcripts']
 
     # Iterate past header
-    next(bftr)
+    bft_row = next(bftr)
     bft_row = next(bftr)
 
 
@@ -228,7 +228,7 @@ with open(output_table[0], 'w', newline='') as output_file:
         # Add transcripts information
         if transcripts_present:
 
-            outrow = handle_bamfilet(transcript_row, outrow, row_m)
+            outrow = handle_featurecounts(transcript_row, outrow, row_m)
 
         # Add transcripts information
         if eb_present:
@@ -238,7 +238,7 @@ with open(output_table[0], 'w', newline='') as output_file:
         # Add transcripts information
         if bft_present:
 
-            outrow = handle_featurecounts(bft_row, outrow, row_m)
+            outrow = handle_bamfilet(bft_row, outrow, row_m)
         
         # Add transcripts information
         if junctions_present:

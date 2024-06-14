@@ -644,7 +644,7 @@ def get_lowram_merge_input(wildcards):
     if config["features"]["transcripts"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_transcripts/{SID}.featureCounts",
+                "results/sort_fctranscript_by_qname/{SID}.featureCounts",
                 SID=wildcards.sample,
             )
         )
@@ -652,14 +652,14 @@ def get_lowram_merge_input(wildcards):
     if config["features"]["exonic_bins"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_exonbins/{SID}.featureCounts",
+                "results/sort_fcexonbin_by_qname/{SID}.featureCounts",
                 SID=wildcards.sample,
             )
         )
 
     if config["strategies"]["Transcripts"]:
         MERGE_INPUT.extend(
-            expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
+            expand("results/sort_bamtranscript_by_qname/{SID}.csv", SID=wildcards.sample)
         )
 
     if config["features"]["junctions"]:
