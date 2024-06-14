@@ -8,7 +8,7 @@ import csv
 
 merged_table = snakemake.input
 cols_to_sum = snakemake.params.get("cols_to_sum")
-output = snakemake.output
+output_table = snakemake.output
 
 ### Parse cols_to_sum
 
@@ -28,7 +28,7 @@ full_header = next(mt_r)
 sum_elements = [index for index, item in enumerate(full_header) if item in cols_to_sum]
 
 ### Create writer object for the output
-out_f = open(output, 'w')
+out_f = open(output_table, 'w', newline = '')
 out_w = csv.writer(out_f)
 out_w.writerow(header)
 
