@@ -175,7 +175,7 @@ remove_tags: False
 
 # Merge mutation counts and feature assignments in a RAM-efficient manner?
   # Downside is that it's a bit slower
-lowRAM: True
+lowRAM: False
 
 
 ##### OTHER FEATURECOUNTS PARAMETERS #####

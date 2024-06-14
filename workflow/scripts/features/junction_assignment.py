@@ -54,6 +54,7 @@ r_info = [''] + 2*[0]
 samfile = pysam.AlignmentFile(args.bam, 'rb')
 
 
+first_in_pair = True
 
 for read in samfile:
 
@@ -83,7 +84,15 @@ for read in samfile:
 
     if check and SJcheck and NCcheck:
 
-        r_info[0] = read.query_name
+        # Gotta concatenate information for read pairs
+        if r_info[0] == read.query_name:
+
+            first_in_pair = False
+
+        else:   
+
+            r_info[0] = read.query_name
+            first_in_pair = True
 
         nj = len(jM)
 
@@ -92,7 +101,7 @@ for read in samfile:
             index = j*2
 
 
-            if j == 0:
+            if j == 0 and first_in_pair:
 
                 r_info[1] = str(jI[index])
                 r_info[2] = str(jI[index + 1])    
