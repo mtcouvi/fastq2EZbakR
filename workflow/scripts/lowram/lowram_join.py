@@ -138,18 +138,18 @@ if ei_present:
 
 ### Functions for handling the different scenarios
 
-def handle_featurecounts(iterator, current_outrow, mutrow):
+def handle_featurecounts(query_row, iterator, current_outrow, mutrow):
 
-    while iterator and iterator[0] < mutrow[0]:
-        iterator = next(iterator, None)
+    while query_row and query_row[0] < mutrow[0]:
+        query_row = next(iterator, None)
 
-    if iterator and iterator[0] == mutrow[0]:
+    if query_row and query_row[0] == mutrow[0]:
 
-        if iterator[1] == "Assigned":
+        if query_row[1] == "Assigned":
 
-            additional_out = iterator[3]
+            additional_out = query_row[3]
 
-            if ',' in iterator:
+            if ',' in additional_out:
 
                 additional_out = additional_out.split(',')
                 additional_out = sorted(additional_out)
@@ -168,14 +168,14 @@ def handle_featurecounts(iterator, current_outrow, mutrow):
     return current_outrow
 
 
-def handle_bamfilet(iterator, current_outrow, mutrow):
+def handle_bamfilet(query_row, iterator, current_outrow, mutrow):
 
-    while iterator and iterator[0] < mutrow[0]:
-        iterator = next(iterator, None)
+    while query_row and query_row[0] < mutrow[0]:
+        query_row = next(iterator, None)
 
-    if iterator and iterator[0] == mutrow[0]:
+    if query_row and query_row[0] == mutrow[0]:
 
-        current_outrow = current_outrow + iterator[1]
+        current_outrow = current_outrow + [query_row[1]]
 
     else:
 
@@ -184,14 +184,14 @@ def handle_bamfilet(iterator, current_outrow, mutrow):
     return current_outrow
 
 
-def handle_junctions(iterator, current_outrow, mutrow):
+def handle_junctions(query_row, iterator, current_outrow, mutrow):
 
-    while iterator and iterator[0] < mutrow[0]:
-        iterator = next(iterator, None)
+    while query_row and query_row[0] < mutrow[0]:
+        query_row = next(iterator, None)
 
-    if iterator and iterator[0] == mutrow[0]:
+    if query_row and query_row[0] == mutrow[0]:
 
-        current_outrow = current_outrow + iterator[1] + iterator[2]
+        current_outrow = current_outrow + [query_row[1]] + [query_row[2]]
 
     else:
 
@@ -218,40 +218,40 @@ with open(output_table[0], 'w', newline='') as output_file:
         # Add GF information
         if genes_present:
 
-            outrow = handle_featurecounts(gene_row, outrow, row_m)
+            outrow = handle_featurecounts(gene_row, mutr, outrow, row_m)
 
         # Add XF information
         if exons_present:
 
-            outrow = handle_featurecounts(exon_row, outrow, row_m)
+            outrow = handle_featurecounts(exon_row, exonr, outrow, row_m)
 
         # Add transcripts information
         if transcripts_present:
 
-            outrow = handle_featurecounts(transcript_row, outrow, row_m)
+            outrow = handle_featurecounts(transcript_row, transcriptr, outrow, row_m)
 
         # Add transcripts information
         if eb_present:
 
-            outrow = handle_featurecounts(eb_row, outrow, row_m)
+            outrow = handle_featurecounts(eb_row, ebr, outrow, row_m)
 
         # Add transcripts information
         if bft_present:
 
-            outrow = handle_bamfilet(bft_row, outrow, row_m)
+            outrow = handle_bamfilet(bft_row, bftr, outrow, row_m)
         
         # Add transcripts information
         if junctions_present:
 
-            outrow = handle_junctions(j_row, outrow, row_m)
+            outrow = handle_junctions(j_row, jr, outrow, row_m)
         
         if ee_present:
 
-            outrow = handle_featurecounts(ee_row, outrow, row_m)
+            outrow = handle_featurecounts(ee_row, eer, outrow, row_m)
         
         if ei_present:
 
-            outrow = handle_featurecounts(ei_row, outrow, row_m)
+            outrow = handle_featurecounts(ei_row, eir, outrow, row_m)
         
         writer.writerow(outrow)
 
