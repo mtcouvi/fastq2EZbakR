@@ -526,33 +526,33 @@ colnames = [
 ]
 
 if config["features"]["genes"]:
-    colnames.extend("GF")
+    colnames.append("GF")
 
 if config["features"]["exons"]:
-    colnames.extend("XF")
+    colnames.append("XF")
 
 if config["features"]["transcripts"]:
-    colnames.extend("transcripts")
+    colnames.append("transcripts")
 
 
 if config["features"]["exonic_bins"]:
-    colnames.extend("exon_bin")
+    colnames.append("exon_bin")
 
 if config["strategies"]["Transcripts"]:
-    colnames.extend("bamfile_transcripts")
+    colnames.append("bamfile_transcripts")
 
 
 if config["features"]["junctions"]:
-    colnames.extend("junction_start")
-    colnames.extend("junction_end")
+    colnames.append("junction_start")
+    colnames.append("junction_end")
 
 
 if config["features"]["eej"]:
-    colnames.extend("ee_junction_id")
+    colnames.append("ee_junction_id")
 
 
 if config["features"]["eij"]:
-    colnames.extend("ei_junction_id")
+    colnames.append("ei_junction_id")
 
 
 # Get indices of columns that I need to sort in order to summarise by
