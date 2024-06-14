@@ -26,20 +26,17 @@ if config["bam2bakr"]:
                 "results/remove_tags/{sample}_no_jI_jM.bam",
             output:
                 "results/sf_reads/{sample}.s.bam",
-                "results/sf_reads/{sample}_fixed_mate.bam",
-                "results/sf_reads/{sample}.f.sam",
             log:
                 "logs/sort_filter/{sample}.log",
             params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
                 """
 
     else:
@@ -50,20 +47,17 @@ if config["bam2bakr"]:
                 get_input_bams,
             output:
                 "results/sf_reads/{sample}.s.bam",
-                "results/sf_reads/{sample}_fixed_mate.bam",
-                "results/sf_reads/{sample}.f.sam",
             log:
                 "logs/sort_filter/{sample}.log",
             params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
                 """
 
 else:
@@ -74,20 +68,17 @@ else:
             "results/align/{sample}.bam",
         output:
             "results/sf_reads/{sample}.s.bam",
-            "results/sf_reads/{sample}_fixed_mate.bam",
-            "results/sf_reads/{sample}.f.sam",
         log:
             "logs/sort_filter/{sample}.log",
         params:
             shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-            format=FORMAT,
         threads: 8
         conda:
             "../envs/full.yaml"
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+            {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
             """
 
 
