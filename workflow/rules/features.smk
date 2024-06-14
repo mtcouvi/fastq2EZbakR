@@ -11,6 +11,7 @@ rule featurecounts_genes:
             "results/featurecounts_genes/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -33,6 +34,7 @@ rule featurecounts_exons:
             ".featureCounts",
             ".featureCounts.summary",
             ".featureCounts.jcounts",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -54,6 +56,8 @@ rule featurecounts_transcripts:
             "results/featurecounts_transcripts/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
+
         ),
     threads: 20
     params:
@@ -75,6 +79,7 @@ rule featurecounts_exonbins:
             "results/featurecounts_exonbins/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:

@@ -615,3 +615,70 @@ def get_rsemp_input(wildcards):
         )
 
     return RSEMP_INPUT
+
+
+### Files to merge if lowRAM
+
+## All of the files to merge
+def get_lowram_merge_input(wildcards):
+    MERGE_INPUT = []
+
+    MERGE_INPUT.extend(
+        expand("results/sort_mutcounts_by_qname/{SID}_counts.csv", SID=wildcards.sample)
+    )
+
+    if config["features"]["genes"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcgene_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["exons"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcexon_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["transcripts"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/featurecounts_transcripts/{SID}.featureCounts",
+                SID=wildcards.sample,
+            )
+        )
+
+    if config["features"]["exonic_bins"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/featurecounts_exonbins/{SID}.featureCounts",
+                SID=wildcards.sample,
+            )
+        )
+
+    if config["strategies"]["Transcripts"]:
+        MERGE_INPUT.extend(
+            expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
+        )
+
+    if config["features"]["junctions"]:
+        MERGE_INPUT.extend(
+            expand("results/sort_junction_by_qname/{SID}_counts.csv", SID=wildcards.sample)
+        )
+
+    if config["features"]["eej"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcee_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["eij"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcei_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    return MERGE_INPUT

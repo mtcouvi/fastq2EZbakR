@@ -40,7 +40,7 @@ rule sort_mutcounts_by_qname:
 
 rule sort_fcgene_by_qname:
     input:
-        "results/featurecounts_genes/{sample}.featureCounts",
+        "results/featurecounts_genes/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcgene_by_qname/{sample}.featureCounts"),
     threads: 1
@@ -56,7 +56,7 @@ rule sort_fcgene_by_qname:
 
 rule sort_fcexon_by_qname:
     input:
-        "results/featurecounts_exons/{sample}.featureCounts",
+        "results/featurecounts_exons/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcexon_by_qname/{sample}.featureCounts"),
     threads: 1
@@ -94,7 +94,7 @@ rule sort_junction_by_qname:
 
 rule sort_fcee_by_qname:
     input:
-        "results/featurecounts_ee/{sample}.featureCounts",
+        "results/featurecounts_ee/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcee_by_qname/{sample}.featureCounts"),
     threads: 1
@@ -110,7 +110,7 @@ rule sort_fcee_by_qname:
 
 rule sort_fcei_by_qname:
     input:
-        "results/featurecounts_ei/{sample}.featureCounts",
+        "results/featurecounts_ei/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcei_by_qname/{sample}.featureCounts"),
     threads: 1
@@ -130,7 +130,7 @@ if config["lowRAM"]:
 
     rule lowram_merge_features_and_counts:
         input:
-            get_merge_input,
+            get_lowram_merge_input,
         output:
             temp("results/lowram_merge_features_and_counts/{sample}.csv"),
         params:
