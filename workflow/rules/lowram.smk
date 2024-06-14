@@ -50,7 +50,7 @@ rule sort_fcgene_by_qname:
         "logs/sort_fcgene_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output} >> {log} 2>&1
+        sort -k1 -V {input} > {output}
         """
 
 
@@ -66,7 +66,7 @@ rule sort_fcexon_by_qname:
         "logs/sort_fcexon_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output} >> {log} 2>&1
+        sort -k1 -V {input} > {output}
         """
 
 
@@ -84,11 +84,11 @@ rule sort_junction_by_qname:
     shell:
         """
         ### GOAL: Sort but preserve header
-        gzip -d -c {input} > {output.decomp} >> {log} 2>&1
+        gzip -d -c {input} > {output.decomp}
 
-        head -n 1 {output.decomp} > {output.sortout} >> {log} 2>&1
+        head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout} >> {log} 2>&1
+        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
         """
 
 
@@ -104,7 +104,7 @@ rule sort_fcee_by_qname:
         "logs/sort_fcee_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output} >> {log} 2>&1
+        sort -k1 -V {input} > {output}
         """
 
 
@@ -120,7 +120,7 @@ rule sort_fcei_by_qname:
         "logs/sort_fcei_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output} >> {log} 2>&1
+        sort -k1 -V {input} > {output}
         """
 
 
@@ -165,9 +165,9 @@ rule sort_merged_files:
         "logs/sort_merged_files/{sample}.log",
     shell:
         """
-        head -n 1 {input} > {output} >> {log} 2>&1
+        head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort {params.sortparams} >> {output} >> {log} 2>&1
+        tail -n +2 {input} | sort {params.sortparams} >> {output}
         """
 
 
