@@ -44,6 +44,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Test workflow (lowRAM)
+      uses: snakemake/snakemake-github-action@v1.25.1
+      with:
+        directory: .test
+        snakefile: workflow/Snakefile
+        args: "--configfile .test/configs/lowram_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (transcripts)
       uses: snakemake/snakemake-github-action@v1.25.1
       with:

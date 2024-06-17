@@ -54,9 +54,10 @@ r_info = [''] + 2*[0]
 samfile = pysam.AlignmentFile(args.bam, 'rb')
 
 
+first_in_pair = True
 
+count = 0
 for read in samfile:
-
 
     junction_tags = [(tag, value) for tag, value in read.tags if tag in ['jI', 'jM']]
 
@@ -75,6 +76,9 @@ for read in samfile:
     SJcheck = True
     NCcheck = True
 
+    # NOTE: This only checks first junction;
+    # need to think about if I want to handle
+    # multi-junction case differently
     if SJfilter:
         SJcheck = jM[0] >= 20
 
@@ -83,7 +87,22 @@ for read in samfile:
 
     if check and SJcheck and NCcheck:
 
-        r_info[0] = read.query_name
+        count += 1
+
+        # Gotta concatenate information for read pairs
+        if r_info[0] == read.query_name:
+
+            first_in_pair = False
+
+        else:   
+
+            # Write data if this isn't the first read
+            if count > 1:
+
+                wr.writerow(r_info)
+
+            r_info[0] = read.query_name
+            first_in_pair = True
 
         nj = len(jM)
 
@@ -92,7 +111,7 @@ for read in samfile:
             index = j*2
 
 
-            if j == 0:
+            if j == 0 and first_in_pair:
 
                 r_info[1] = str(jI[index])
                 r_info[2] = str(jI[index + 1])    
@@ -102,8 +121,10 @@ for read in samfile:
                 r_info[1] = r_info[1] + "+" + str(jI[index])
                 r_info[2] = r_info[2] + "+" + str(jI[index + 1])
 
-            
-        wr.writerow(r_info)
+
+# Write final row of data
+wr.writerow(r_info)
+    
     
 
 myfile.close()

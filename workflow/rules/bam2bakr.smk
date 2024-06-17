@@ -26,20 +26,17 @@ if config["bam2bakr"]:
                 "results/remove_tags/{sample}_no_jI_jM.bam",
             output:
                 "results/sf_reads/{sample}.s.bam",
-                "results/sf_reads/{sample}_fixed_mate.bam",
-                "results/sf_reads/{sample}.f.sam",
             log:
                 "logs/sort_filter/{sample}.log",
             params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
                 """
 
     else:
@@ -50,20 +47,17 @@ if config["bam2bakr"]:
                 get_input_bams,
             output:
                 "results/sf_reads/{sample}.s.bam",
-                "results/sf_reads/{sample}_fixed_mate.bam",
-                "results/sf_reads/{sample}.f.sam",
             log:
                 "logs/sort_filter/{sample}.log",
             params:
                 shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-                format=FORMAT,
             threads: 8
             conda:
                 "../envs/full.yaml"
             shell:
                 """
                 chmod +x {params.shellscript}
-                {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+                {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
                 """
 
 else:
@@ -74,20 +68,17 @@ else:
             "results/align/{sample}.bam",
         output:
             "results/sf_reads/{sample}.s.bam",
-            "results/sf_reads/{sample}_fixed_mate.bam",
-            "results/sf_reads/{sample}.f.sam",
         log:
             "logs/sort_filter/{sample}.log",
         params:
             shellscript=workflow.source_path("../scripts/bam2bakR/sort_filter.sh"),
-            format=FORMAT,
         threads: 8
         conda:
             "../envs/full.yaml"
         shell:
             """
             chmod +x {params.shellscript}
-            {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.format} 1> {log} 2>&1
+            {params.shellscript} {threads} {wildcards.sample} {input} {output} 1> {log} 2>&1
             """
 
 
@@ -210,37 +201,41 @@ rule cnt_muts:
         """
 
 
-# Merge mutation counts with feature assignment
-rule merge_features_and_muts:
-    input:
-        get_merge_input,
-    output:
-        output="results/merge_features_and_muts/{sample}_counts.csv.gz",
-        cBout=temp("results/merge_features_and_muts/{sample}_cB.csv"),
-    params:
-        genes_included=config["features"]["genes"],
-        exons_included=config["features"]["exons"],
-        exonbins_included=config["features"]["exonic_bins"],
-        transcripts_included=config["features"]["transcripts"],
-        bamfiletranscripts_included=config["strategies"]["Transcripts"],
-        eej_included=config["features"]["eej"],
-        eij_included=config["features"]["eij"],
-        starjunc_included=config["features"]["junctions"],
-        rscript=workflow.source_path("../scripts/bam2bakR/merge_features_and_muts.R"),
-        muttypes=config["mut_tracks"],
-    log:
-        "logs/merge_features_and_muts/{sample}.log",
-    threads: 8
-    conda:
-        "../envs/full.yaml"
-    shell:
-        """
-        chmod +x {params.rscript}
+if not config["lowRAM"]:
 
-        {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
-        -t {params.transcripts_included} --frombam {params.bamfiletranscripts_included} -o {output.output} -s {wildcards.sample} \
-        -j {params.eej_included} --starjunc {params.starjunc_included} --eij {params.eij_included} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
-        """
+    # Merge mutation counts with feature assignment
+    rule merge_features_and_muts:
+        input:
+            get_merge_input,
+        output:
+            output="results/merge_features_and_muts/{sample}_counts.csv.gz",
+            cBout=temp("results/merge_features_and_muts/{sample}_cB.csv"),
+        params:
+            genes_included=config["features"]["genes"],
+            exons_included=config["features"]["exons"],
+            exonbins_included=config["features"]["exonic_bins"],
+            transcripts_included=config["features"]["transcripts"],
+            bamfiletranscripts_included=config["strategies"]["Transcripts"],
+            eej_included=config["features"]["eej"],
+            eij_included=config["features"]["eij"],
+            starjunc_included=config["features"]["junctions"],
+            rscript=workflow.source_path(
+                "../scripts/bam2bakR/merge_features_and_muts.R"
+            ),
+            muttypes=config["mut_tracks"],
+        log:
+            "logs/merge_features_and_muts/{sample}.log",
+        threads: 8
+        conda:
+            "../envs/full.yaml"
+        shell:
+            """
+            chmod +x {params.rscript}
+
+            {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
+            -t {params.transcripts_included} --frombam {params.bamfiletranscripts_included} -o {output.output} -s {wildcards.sample} \
+            -j {params.eej_included} --starjunc {params.starjunc_included} --eij {params.eij_included} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
+            """
 
 
 # Make cB (and potentially cU) file
@@ -280,10 +275,7 @@ else:
 
     rule makecB:
         input:
-            cBins=expand(
-                "results/merge_features_and_muts/{sample}_cB.csv",
-                sample=SAMP_NAMES,
-            ),
+            cBins=CBINPUT,
         output:
             cB="results/cB/cB.csv.gz",
         log:

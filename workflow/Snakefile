@@ -11,6 +11,12 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 
+##### Impute potentially missing config parameters #####
+
+if "lowRAM" not in config:
+    config["lowRAM"] = False
+
+
 ##### setup report #####
 
 
@@ -31,7 +37,7 @@ container: "docker://continuumio/miniconda3"
 include: "rules/common.smk"
 include: "rules/bam2bakr.smk"
 include: "rules/features.smk"
-
+include: "rules/lowram.smk"
 
 if not config["bam2bakr"]:
 

@@ -11,6 +11,7 @@ rule featurecounts_genes:
             "results/featurecounts_genes/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -33,6 +34,7 @@ rule featurecounts_exons:
             ".featureCounts",
             ".featureCounts.summary",
             ".featureCounts.jcounts",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -54,6 +56,8 @@ rule featurecounts_transcripts:
             "results/featurecounts_transcripts/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
+
         ),
     threads: 20
     params:
@@ -75,6 +79,7 @@ rule featurecounts_exonbins:
             "results/featurecounts_exonbins/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -105,7 +110,7 @@ rule read_to_transcripts:
 # Get set of junctions a read overlaps
 rule read_to_junctions:
     input:
-        "results/align/{sample}.bam",
+        "results/sf_reads/{sample}.s.bam",
     output:
         "results/read_to_junctions/{sample}.csv.gz",
         temp("results/read_to_junctions/{sample}_check.txt"),
@@ -123,7 +128,7 @@ rule read_to_junctions:
         chmod +x {params.shellscript}
         chmod +x {params.pythonscript}
         chmod +x {params.awkscript}
-        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript}
+        {params.shellscript} {threads} {wildcards.sample} {input} {output} {params.pythonscript} {params.awkscript}  1> {log} 2>&1
         """
 
 
@@ -157,6 +162,7 @@ rule featurecounts_eej:
             "results/featurecounts_eej/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:
@@ -177,6 +183,7 @@ rule featurecounts_eij:
             "results/featurecounts_eij/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
+            ".s.bam.featureCounts",
         ),
     threads: 20
     params:

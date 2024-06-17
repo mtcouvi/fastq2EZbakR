@@ -2,9 +2,14 @@ import glob
 import os
 
 
-### If RSEM+ is set, make sure that exons are quantified
+### If RSEM plus is set, make sure that exons are quantified
 if config["strategies"]["RSEMp"]:
     config["features"]["exons"] = True
+
+
+### If assigning reads to junctions, need to keep jI and jM tags for now
+if config["features"]["junctions"]:
+    config["remove_tags"] = False
 
 
 ### GENERAL HELPER FUNCTIONS/VARIABLES USED IN ALL CASES
@@ -82,6 +87,17 @@ if config["features"]["eij"]:
 if config["features"]["eej"]:
     keepcols.append("ee_junction_id")
 
+
+# Get mutation types to track
+MutTypes = config["mut_tracks"]
+Mutation_Types = MutTypes.split(",")
+Nucleotide_Types = ["n{}".format(muttype[0]) for muttype in Mutation_Types]
+
+# Columns I want to summarise by
+init_keepcols = keepcols.copy()
+cols_to_search = keepcols.copy()
+cols_to_search.extend(Mutation_Types)
+cols_to_search.extend(Nucleotide_Types)
 
 keepcols = ",".join(keepcols)
 
@@ -430,10 +446,6 @@ else:
 
 ### Target rule input
 
-# Get mutation types to track
-MutTypes = config["mut_tracks"]
-Mutation_Types = MutTypes.split(",")
-
 
 def get_other_output():
     target = []
@@ -481,3 +493,200 @@ else:
 ### Optimizing cB creation multithreading
 
 MAKECB_THREADS = len(SAMP_NAMES) * 4
+
+
+### If keeping RAM usage low, need to determine which columns of merged files to support
+
+# Columns as they appear in mutation counting csv output
+colnames = [
+    "qname",
+    "nA",
+    "nC",
+    "nT",
+    "nG",
+    "rname",
+    "FR",
+    "sj",
+    "TA",
+    "CA",
+    "GA",
+    "NA",
+    "AT",
+    "CT",
+    "GT",
+    "NT",
+    "AC",
+    "TC",
+    "GC",
+    "NC",
+    "AG",
+    "TG",
+    "CG",
+    "NG",
+    "AN",
+    "TN",
+    "CN",
+    "GN",
+    "NN",
+]
+
+if config["features"]["genes"]:
+    colnames.append("GF")
+
+if config["features"]["exons"]:
+    colnames.append("XF")
+
+if config["features"]["transcripts"]:
+    colnames.append("transcripts")
+
+
+if config["features"]["exonic_bins"]:
+    colnames.append("exon_bin")
+
+if config["strategies"]["Transcripts"]:
+    colnames.append("bamfile_transcripts")
+
+
+if config["features"]["junctions"]:
+    colnames.append("junction_start")
+    colnames.append("junction_end")
+
+
+if config["features"]["eej"]:
+    colnames.append("ee_junction_id")
+
+
+if config["features"]["eij"]:
+    colnames.append("ei_junction_id")
+
+
+# Get indices of columns that I need to sort in order to summarise by
+cols_to_sort = [index for index, item in enumerate(colnames) if item in cols_to_search]
+cols_to_sort = sorted(cols_to_sort)
+
+numericsort_cols = Mutation_Types.copy()
+numericsort_cols.extend(Nucleotide_Types)
+numeric_sort_columns = [
+    index for index, item in enumerate(colnames) if item in numericsort_cols
+]
+
+key_args = " ".join(
+    [
+        "-k{0},{0}{1}".format(col, "n" if col in numeric_sort_columns else "V")
+        for col in cols_to_sort
+    ]
+)
+
+SORTPARAMS = key_args
+
+# Columns that will be summarized over, properly ordered
+cols_to_summarize = [col for col in colnames if col in cols_to_search]
+COLS_TO_SUM = ",".join(cols_to_summarize)
+
+
+### Input for makecB
+
+if config["lowRAM"]:
+    CBINPUT = expand(
+        "results/lowram_summarise/{sample}.csv",
+        sample=SAMP_NAMES,
+    )
+
+
+else:
+    CBINPUT = expand(
+        "results/merge_features_and_muts/{sample}_cB.csv",
+        sample=SAMP_NAMES,
+    )
+
+
+### RSEM plus input
+
+
+def get_rsemp_input(wildcards):
+    RSEMP_INPUT = []
+
+    if config["lowRAM"]:
+        RSEMP_INPUT.extend(
+            expand(
+                "results/lowram_merge_features_and_counts/{SID}.csv",
+                SID=wildcards.sample,
+            )
+        )
+
+    else:
+        RSEMP_INPUT.extend(
+            expand(
+                "results/merge_features_and_muts/{SID}_counts.csv.gz",
+                SID=wildcards.sample,
+            )
+        )
+
+    return RSEMP_INPUT
+
+
+### Files to merge if lowRAM
+
+## All of the files to merge
+def get_lowram_merge_input(wildcards):
+    MERGE_INPUT = []
+
+    MERGE_INPUT.extend(
+        expand("results/sort_mutcounts_by_qname/{SID}_counts.csv", SID=wildcards.sample)
+    )
+
+    if config["features"]["genes"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcgene_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["exons"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcexon_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["transcripts"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fctranscript_by_qname/{SID}.featureCounts",
+                SID=wildcards.sample,
+            )
+        )
+
+    if config["features"]["exonic_bins"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcexonbin_by_qname/{SID}.featureCounts",
+                SID=wildcards.sample,
+            )
+        )
+
+    if config["strategies"]["Transcripts"]:
+        MERGE_INPUT.extend(
+            expand("results/sort_bamtranscript_by_qname/{SID}.csv", SID=wildcards.sample)
+        )
+
+    if config["features"]["junctions"]:
+        MERGE_INPUT.extend(
+            expand("results/sort_junction_by_qname/{SID}_counts.csv", SID=wildcards.sample)
+        )
+
+    if config["features"]["eej"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcee_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    if config["features"]["eij"]:
+        MERGE_INPUT.extend(
+            expand(
+                "results/sort_fcei_by_qname/{SID}.featureCounts", SID=wildcards.sample
+            )
+        )
+
+    return MERGE_INPUT
