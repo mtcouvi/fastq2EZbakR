@@ -467,7 +467,7 @@ def get_other_output():
     if config["strategies"]["RSEMp"]:
         target.append("results/transcript_fn/RSEM_plus.csv")
 
-    if config["aligner"] == "star" and not config['bam2bakR']:
+    if config["aligner"] == "star" and not config["bam2bakr"]:
         target.append(expand("results/rsem/{SID}.isoforms.results", SID=SAMP_NAMES))
 
     if config["mutpos"]:
@@ -627,6 +627,7 @@ def get_rsemp_input(wildcards):
 
 ### Files to merge if lowRAM
 
+
 ## All of the files to merge
 def get_lowram_merge_input(wildcards):
     MERGE_INPUT = []
@@ -667,12 +668,16 @@ def get_lowram_merge_input(wildcards):
 
     if config["strategies"]["Transcripts"]:
         MERGE_INPUT.extend(
-            expand("results/sort_bamtranscript_by_qname/{SID}.csv", SID=wildcards.sample)
+            expand(
+                "results/sort_bamtranscript_by_qname/{SID}.csv", SID=wildcards.sample
+            )
         )
 
     if config["features"]["junctions"]:
         MERGE_INPUT.extend(
-            expand("results/sort_junction_by_qname/{SID}_counts.csv", SID=wildcards.sample)
+            expand(
+                "results/sort_junction_by_qname/{SID}_counts.csv", SID=wildcards.sample
+            )
         )
 
     if config["features"]["eej"]:

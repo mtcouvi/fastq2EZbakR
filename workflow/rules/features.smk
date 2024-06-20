@@ -57,7 +57,6 @@ rule featurecounts_transcripts:
             ".featureCounts",
             ".featureCounts.summary",
             ".s.bam.featureCounts",
-
         ),
     threads: 20
     params:

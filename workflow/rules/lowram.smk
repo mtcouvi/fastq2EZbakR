@@ -160,7 +160,7 @@ rule sort_bamtranscript_by_qname:
     input:
         "results/read_to_transcripts/{sample}.csv",
     output:
-        "results/sort_bamtranscript_by_qname/{sample}.csv"
+        "results/sort_bamtranscript_by_qname/{sample}.csv",
     threads: 1
     conda:
         "../envs/full.yaml"
@@ -173,7 +173,6 @@ rule sort_bamtranscript_by_qname:
         
         tail -n +2 {input} | sort -k1 -V >> {output}
         """
-
 
 
 ### MERGING AND SORTING FILES
