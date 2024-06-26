@@ -1,6 +1,7 @@
 site_name: PipelineDocs
 site_url: https://fastq2ezbakR.readthedocs.io/en/latest/
 nav:
+  - Introduction: index.md
   - Configuration: configuration.md
 theme: 
   name: readthedocs
