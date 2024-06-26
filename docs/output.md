@@ -59,16 +59,22 @@ Alignment:
 * BAM files will be located in the `results/align` directory. I
 * If using STAR this directory will include a number of additional files, including the transcriptome alignment bam file, an SJ.out.tab file, and various log files
 
-
 FastQC:
 
 * fastqc output will be stored in the `results/fastqc/` directory
 
+Fastq trimming:
+
+* Trimmed fastq files output by fastp are in the `results/trimmed/` directory
+
+RSEM quantification
+
+* If RSEM is used to quantify isoform abundances, its output will be located in the `results/rsem/` directory.
+
 There are several temporary files that are deleted once the steps requiring them finish running. These include:
 
 * Unzipped fastq files (if gzipped)
-* Trimmed fastq files
-* Various 
+* Intermediate files unique to the `lowRAM: True` path
 
 
 

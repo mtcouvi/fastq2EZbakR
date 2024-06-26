@@ -4,7 +4,7 @@ fastq2EZbakR is a Snakemake implementation of the [TimeLapse pipeline](https://b
 
 ## Where to go
 
-Step 1: Read the [Deployment](deploy.md) documentation to get up and running with fastq2EZbakR.
+Step 1: Read the [Deployment](deploy.md) documentation to get up and running with fastq2EZbakR, or the [Slurm] documentation for deploying fastq2EZbakR on an HPC system with a slurm scheduler (e.g., Yale's HPC).
 Step 2: Read the [Configuration](configuration.md) documentation to get details about all config parameters.
 Step 3: Read about [Output](output.md) produced by fastq2EZbakR.
 Step 4: Check out ancillary documentation about creating [tracks](tracks.md) and [FAQs](faq.md).
