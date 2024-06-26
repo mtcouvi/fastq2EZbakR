@@ -246,8 +246,8 @@ rule makecU:
             sample=SAMP_NAMES,
         ),
     output:
-        mutpos="results/cB/mutpos.csv.gz",
-        mutposfilter="results/cB/mutpos_filtered.csv.gz",
+        mutpos="results/cU/mutpos.csv.gz",
+        mutposfilter="results/cU/mutpos_filtered.csv.gz",
     params:
         shellscript=workflow.source_path("../scripts/bam2bakR/makecU.sh"),
         min_pos_coverage=config["min_pos_coverage"],

@@ -2,11 +2,10 @@
 
 # Source the paths and variables:
 cpus=$1
-cBout=$2
-pos_cutoff=$3
-mutposout=$4
-mutposfilter=$5
-high_cutoff=$6
+pos_cutoff=$2
+mutposout=$3
+mutposfilter=$4
+high_cutoff=$5
 
 
 
