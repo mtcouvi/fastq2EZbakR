@@ -2,6 +2,10 @@
 
 This page provides instructions for running fastq2EZbakR on HPC clusters that use a Slurm scheduler (such as Yale's clusters). Some of the information here is also presented in the [general deployment documentation](deploy.md), to make this a completely self-contained tutorial for Simon lab members and other Slurm users.
 
+## Important note
+
+Version 8 of Snakemake completely changed how Snakemake submits jobs to clusters. The instructions and profile discussed below will only work with versions < 8.0.0. If you need to use versions >= 8.0.0, please check out [this repository](https://github.com/jdblischak/smk-simple-slurm), which is also where the version 7 compatible strategy that I discuss below originally came from. 
+
 ## Advice: set the SNAKEMAKE_CONDA_PREFIX environment variable
 
 TLDR: Follow these steps to create an environment variable called SNAKEMAKE_CONDA_PREFIX that will specify where to save conda environments that Snakemake creates. Instructions below are specific to Yale HPC, but this is a good idea for anyone running fastq2EZbakR in a folder that is periodically deleted:
