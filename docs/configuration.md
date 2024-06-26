@@ -1,6 +1,10 @@
 ## Configuring fastq2EZbakR
 
-In the `config/` directory you will find a file named `config.yaml`. If you open it in a text editor, you will see several parameters which you can alter to your heart's content. The first parameter that you have to set is at the top of the file:
+In the `config/` directory you will find a file named `config.yaml`. If you open it in a text editor, you will see several parameters which you can alter to your heart's content. These parameters are split into two major sections, the first being those that are very important to check and alter as necessary, and the second being parameters whose default values are worth assessing but that are probably ok.
+
+### Parameters you need to set
+
+ The first parameter that you have to set is at the top of the file:
 
 ``` yaml
 samples:
@@ -101,3 +105,11 @@ These are:
 * `junctions`: Only compatible with STAR alignment. Uses the custom jI and jM tags to identify the set of exon-exon junctions a read overlaps.
 * `eej`: A hack that attempts to mimic `junctions` but in a way that does not require STAR alignment or custom tags. A custom annotation is created automatically that includes annotation of exon-exon junction reads, that if a read aligns to, and if the `sj` column always included in the output cB is TRUE, indicates that the read likely overlapped the respective exon-exon junction.
 * `eei`: Similar to `eej`, hacky strategy to use featureCounts to assign reads to exon-intron junctions. Use this and `eej` with caution.
+
+
+### Parameters you should probably double check
+
+
+
+
+### Remaining parameters

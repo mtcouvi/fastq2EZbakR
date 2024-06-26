@@ -1,39 +1,32 @@
-# Welcome to my Snakemake pipeline deployment docs!
+# Welcome to fastq2EZbakR!
 
-Biologists often rely on computational pipelines to process and analyze their data. A pipeline is simply a set of operations to perform on data so that you can extract useful insights from the data. With the omics-revolution came a spike in demand for these kinds of pipelines, as methods like RNA-seq generate massive raw datasets that require computationally intensive, multi-step processing to interpret. One of the best way to build such pipelines is with workflow managers, of which there are several popular and powerful options (Snakemake, NextFlow, Cromwell, etc.).
+fastq2EZbakR is a Snakemake implementation of the [TimeLapse pipeline](https://bitbucket.org/mattsimon9/timelapse_pipeline/src/master/) developed by the [Simon lab](https://simonlab.yale.edu/) at Yale. The contributors to the original pipeline are Matthew Simon, Jeremy Schofield, Martin Machyna, Lea Kiefer, and Joshua Zimmer. Despite its origins, a lot has changed since the initial creation of the pipeline, and fastq2EZbakR has a load of novel functionality. It is also an extension/rewrite of bam2bakR, doing pretty much everything it does and thensome.
 
-During my PhD, I became incredibly fond of Snakemake, and quickly realized just how transformative the modern generation of workflow managers are. They make building high quality, reproducible, and well organized pipelines easier than ever. For that reason, I devoted a lot of time to learning the ins and outs of Snakemake and the pipeline development process. In the process, I have developed a number of Snakemake pipelines for processing data relevant to my thesis project, and to the larger work of the [Simon lab](https://simonlab.yale.edu/). This website is a one-stop-shop for all documentation related to running these pipelines. In addition, I have attempted to generalize the instructions for running a Snakemake pipeline so that they apply equally well to all of the standardized Snakemake pipelines posted on the [Snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/?usage=cbg-ethz/). Thus, I hope this a useful resource for anyone interested in using any of the pipelines I have developed as well as the treasure trove of amazing Snakemake pipelines developed by others.
+## Where to go
 
-## Where to go next
+Step 1: Read the QuickStart documentation to get up and running with fastq2EZbakR quickly.
+Step 2: Read the Configuration documentation to get details about all config parameters.
+Step 3: Read about output produced by fastq2EZbakR.
+Step 4: 
 
-If you are here for information regarding one of my pipelines, I suggest checking out (in this order):
+## What fastq2EZbakR does
 
-1. The general pipeline deployment instructions [page](deploy.md), or the Yale/slurm HPC-specific one if [relevant](simon.md), which are identical for all pipelines discussed in this website. The latter also provides some information that may be useful to anyone running these pipelines on a shared computing system in which it is possible to request multiple jobs in parallel.
-1. The relevant introduction page. The pipelines I developed whose documentation is currently hosted here include:
-    - [bam2bakR](bam2bakR/intro.md)
-    - [THE_Aligner](aligner/intro.md)
-    - [PROseq_etal](proseq/intro.md)
-1. The relevant configuration page, which discusses the config parameters for each pipeline:
-    - [bam2bakR](bam2bakR/configuration.md)
-    - [THE_Aligner](aligner/configuration.md)
-    - [PROseq_etal](proseq/configuration.md)
-1. The tips and tricks [page](pragmatism.md) for general advice about Snakemake which might help demystify these pipelines a bit.
-1. Information about the output produced by each pipeline:
-    - [bam2bakR](bam2bakR/output.md)
-    - [THE_Aligner](aligner/output.md)
-    - [PROseq_etal](proseq/output.md)
+The input to fastq2EZbakR is either fastq files or aligned bam files (the latter must have the not-always-standard MD tag). The main output of fastq2EZbakR is a so-called cB (counts binomial) file that will always include the following columns:
 
-While not currently populated (for the most part), other pages that may be useful to check out in the future if you are using my pipelines are:
+* sample - Sample name
+* rname - Chromosome name
+* sj - Logical: TRUE if read contains exon-exon spliced junction
+* n - Number of reads which have the identical set of values described above
 
-1. The FAQs for each pipeline, with some pipeline-specific debugging tips.
-    - [bam2bakR's](bam2bakR/faqs.md) already has some useful information there.
-1. The architecture section, which will go into great detail about how each and every step of the pipeline works.
+In addition, columns reporting mutation counts and nucleotide counts will be included. For a standard NR-seq dataset (s4U labeling), that means tracking T-to-C mutation counts (column name: TC) and the number of reference Ts covered by a read (column name: nT). Finally, reads will be assigned to a set of annotated features, and columns will be included based on which of these feature assignment strategies you have activated in your particular pipeline run. The possibilities include:
 
+* GF: gene read was assigned to (any region of gene)
+* XF: gene read was assigned to (only exonic regions of gene)
+* exonic_bin: exonic bins as defined in DEXSeq paper
+* bamfile_transcripts: set of transcripts a read is compatible with (i.e, its transcript equivalence class)
+* junction_start: 5' splice site of exon-exon junction (genomic coordinate)
+* junction_end: 3' splice site of exon-exon junction (genomic coordinate)
+* ei_junction_id: Numerical ID given to a given exon-intron junction
+* ee_junction_id: Numerical ID given to a given exon-exon junction
 
-Everyone else should head to the general pipeline deployment instructions [page](deploy.md), or the Yale/slurm HPC-specific one if [relevant](simon.md), and then to the tips and tricks [page](pragmatism.md)!
-
-Finally, if you want to check out the source code, links to the respective GitHub repos are below:
-
-- [bam2bakR](https://github.com/simonlabcode/bam2bakR/)
-- [THE_Aligner](https://github.com/isaacvock/THE_Aligner)
-- [PROseq_etal](https://github.com/isaacvock/PROseq_etal)
+See [Configuration](configuration.md) for details about feature assignment strategies and how to select which to use.
