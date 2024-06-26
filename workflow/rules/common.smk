@@ -467,7 +467,7 @@ def get_other_output():
     if config["strategies"]["RSEMp"]:
         target.append("results/transcript_fn/RSEM_plus.csv")
 
-    if config["aligner"] == "star" and not config["bam2bakr"]:
+    if config["aligner"] == "star" and not config["bam2bakr"] and config["run_rsem"]:
         target.append(expand("results/rsem/{SID}.isoforms.results", SID=SAMP_NAMES))
 
     if config["mutpos"]:

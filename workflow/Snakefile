@@ -16,6 +16,9 @@ configfile: "config/config.yaml"
 if "lowRAM" not in config:
     config["lowRAM"] = False
 
+if "run_rsem" not in config:
+    config["run_rsem"] = True
+
 
 ##### setup report #####
 
