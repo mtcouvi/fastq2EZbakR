@@ -92,6 +92,8 @@ if(opt$genes){
   setkey(genes, qname)
   
   muts <- genes[muts]
+
+  muts[, GF := ifelse(is.na(GF), "__no_feature", GF)]
   
   feature_vect <- c(feature_vect, "GF")
   
@@ -117,6 +119,9 @@ if(opt$exons){
   setkey(exons, qname)
 
   muts <- exons[muts]
+
+  muts[, XF := ifelse(is.na(XF), "__no_feature", XF)]
+
   
   feature_vect <- c(feature_vect, "XF")
 
@@ -144,6 +149,9 @@ if(opt$exonbins){
   setkey(exonbins, qname)
 
   muts <- exonbins[muts]
+
+  muts[, exon_bin := ifelse(is.na(exon_bin), "__no_feature", exon_bin)]
+
   
   feature_vect <- c(feature_vect, "exon_bin")
 
@@ -170,6 +178,9 @@ if(opt$transcripts){
   setkey(transcripts, qname)
   
   muts <- transcripts[muts]
+
+  muts[, transcripts := ifelse(is.na(transcripts), "__no_feature", transcripts)]
+
   
   feature_vect <- c(feature_vect, "transcripts")
 
@@ -193,6 +204,9 @@ if(opt$frombam){
   setkey(transcripts, qname)
 
   muts <- transcripts[muts]
+
+  muts[, bamfile_transcripts := ifelse(is.na(bamfile_transcripts), "__no_feature", bamfile_transcripts)]
+
   
   feature_vect <- c(feature_vect, "bamfile_transcripts")
 
@@ -220,6 +234,8 @@ if(opt$eej){
   
   muts <- transcripts[muts]
   
+  muts[, ee_junction_id := ifelse(is.na(ee_junction_id), "__no_feature", ee_junction_id)]
+
   feature_vect <- c(feature_vect, "ee_junction_id")
 
   
@@ -247,6 +263,8 @@ if(opt$eij){
   
   muts <- transcripts[muts]
   
+  muts[, ei_junction_id := ifelse(is.na(ei_junction_id), "__no_feature", ei_junction_id)]
+
   feature_vect <- c(feature_vect, "ei_junction_id")
 
   
@@ -283,6 +301,10 @@ if(opt$starjunc){
 
   muts <- transcripts[muts]
   
+  muts[, junction_start := ifelse(is.na(junction_start), "__no_feature", junction_start)]
+  muts[, junction_end := ifelse(is.na(junction_end), "__no_feature", junction_end)]
+
+
   feature_vect <- c(feature_vect, "junction_start", "junction_end")
 
 }
