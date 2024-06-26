@@ -265,6 +265,7 @@ rule makecU:
         {output.mutposfilter} {params.max_pos_coverage} 1> {log} 2>&1
         """
 
+
 rule makecB:
     input:
         cBins=CBINPUT,
