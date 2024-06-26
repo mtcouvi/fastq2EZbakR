@@ -2,7 +2,12 @@ site_name: PipelineDocs
 site_url: https://fastq2ezbakR.readthedocs.io/en/latest/
 nav:
   - Introduction: index.md
+  - Deployment: deploy.md
+  - Slurm/Yale HPC: slurm.md
   - Configuration: configuration.md
+  - Output: output.md
+  - Colored tracks: tracks.md
+  - FAQ: faq.md
 theme: 
   name: readthedocs
   navigation_depth: 5
