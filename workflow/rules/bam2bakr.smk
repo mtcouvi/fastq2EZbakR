@@ -239,70 +239,62 @@ if not config["lowRAM"]:
 
 
 # Make cB (and potentially cU) file
-if config["mutpos"]:
+rule makecU:
+    input:
+        expand(
+            "results/counts/{sample}_counts.csv.gz",
+            sample=SAMP_NAMES,
+        ),
+    output:
+        mutpos="results/cB/mutpos.csv.gz",
+        mutposfilter="results/cB/mutpos_filtered.csv.gz",
+    params:
+        shellscript=workflow.source_path("../scripts/bam2bakR/makecU.sh"),
+        min_pos_coverage=config["min_pos_coverage"],
+        max_pos_coverage=config["max_pos_coverage"],
+    log:
+        "logs/makecU/makecU.log",
+    threads: MAKECB_THREADS
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        chmod +x {params.shellscript}
+        {params.shellscript} {threads} \
+        {params.min_pos_coverage} {output.mutpos} \
+        {output.mutposfilter} {params.max_pos_coverage} 1> {log} 2>&1
+        """
 
-    rule makecB:
-        input:
-            expand(
-                "results/merge_features_and_muts/{sample}_counts.csv.gz",
-                sample=SAMP_NAMES,
-            ),
-        output:
-            cB="results/cB/cB.csv.gz",
-            mutpos="results/cB/mutpos.csv.gz",
-            mutposfilter="results/cB/mutpos_filtered.csv.gz",
-        params:
-            shellscript=workflow.source_path("../scripts/bam2bakR/master.sh"),
-            keepcols=keepcols,
-            mut_tracks=config["mut_tracks"],
-            mut_pos=config["mutpos"],
-            min_pos_coverage=config["min_pos_coverage"],
-            max_pos_coverage=config["max_pos_coverage"],
-        log:
-            "logs/makecB/master.log",
-        threads: MAKECB_THREADS
-        conda:
-            "../envs/full.yaml"
-        shell:
-            """
-            chmod +x {params.shellscript}
-            {params.shellscript} {threads} {output.cB} {params.keepcols} {params.mut_tracks} \
-            ./results/merge_features_and_muts/ {params.mut_pos} {params.min_pos_coverage} {output.mutpos} \
-            {output.mutposfilter} {params.max_pos_coverage} 1> {log} 2>&1
-            """
+rule makecB:
+    input:
+        cBins=CBINPUT,
+    output:
+        cB="results/cB/cB.csv.gz",
+    log:
+        "logs/makecB/makecB.log",
+    threads: 8
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        ### GOAL: Concatenate but make sure that headers get removed before concatenation.
 
-else:
-
-    rule makecB:
-        input:
-            cBins=CBINPUT,
-        output:
-            cB="results/cB/cB.csv.gz",
-        log:
-            "logs/makecB/makecB.log",
-        threads: 8
-        conda:
-            "../envs/full.yaml"
-        shell:
-            """
-            ### GOAL: Concatenate but make sure that headers get removed before concatenation.
-
-            head -n 1 {input.cBins[0]} > temp_header.txt
-            
-            # Prepare an empty, gzipped file for the output
-            : > {output.cB}
-            
-            # Compress the header and add to the output file
-            pigz -c temp_header.txt >> {output.cB}
-            
-            # Iterate over all files, decompress, skip headers, and append to the output file
-            for file in {input.cBins}; do
-                tail -n +2 ${{file}} | pigz -c >> {output.cB}
-            done
-            
-            # Cleanup the temporary header file
-            rm temp_header.txt
-            """
+        head -n 1 {input.cBins[0]} > temp_header.txt
+        
+        # Prepare an empty, gzipped file for the output
+        : > {output.cB}
+        
+        # Compress the header and add to the output file
+        pigz -c temp_header.txt >> {output.cB}
+        
+        # Iterate over all files, decompress, skip headers, and append to the output file
+        for file in {input.cBins}; do
+            tail -n +2 ${{file}} | pigz -c >> {output.cB}
+        done
+        
+        # Cleanup the temporary header file
+        rm temp_header.txt
+        """
 
 
 # Make color-coded tracks
