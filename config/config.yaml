@@ -76,7 +76,7 @@ indices: data/indices/star_index
   # reverse means that read 2 represents 5' to 3' sequence of original RNA (read 1 thus represents its reverse complement)
   # yes means that read 1 represents 5' to 3' sequence of original RNA
   # no means unstranded
-  # Used by HTSeq (see https://htseq.readthedocs.io/en/master/htseqcount.html for details)
+  # Used by featureCounts, though terminology comes from HTSeq
 strandedness: "reverse"
 
 
@@ -293,6 +293,7 @@ rsem_quant_params: ""
 
 
 ##### SALMON PARAMETERS #####
+# NOT YET IMPLEMENTED
 
 # Use Salmon for quantification?
 use_salmon: False
