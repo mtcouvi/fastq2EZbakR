@@ -41,4 +41,4 @@ pigz -d -c "$mutposout" \
 
 echo "**  site-specific mutation file created: mutpos.csv.gz"
 
-fi
+
