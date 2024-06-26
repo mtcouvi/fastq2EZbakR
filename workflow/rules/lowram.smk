@@ -160,7 +160,7 @@ rule sort_bamtranscript_by_qname:
     input:
         "results/read_to_transcripts/{sample}.csv",
     output:
-        "results/sort_bamtranscript_by_qname/{sample}.csv",
+        temp("results/sort_bamtranscript_by_qname/{sample}.csv"),
     threads: 1
     conda:
         "../envs/full.yaml"
@@ -206,7 +206,7 @@ rule sort_merged_files:
     input:
         "results/lowram_merge_features_and_counts/{sample}.csv",
     output:
-        "results/sort_merged_files/{sample}.csv",
+        temp("results/sort_merged_files/{sample}.csv"),
     params:
         sortparams=SORTPARAMS,
     threads: 1
@@ -229,7 +229,7 @@ rule lowram_summarise:
     input:
         "results/sort_merged_files/{sample}.csv",
     output:
-        "results/lowram_summarise/{sample}.csv",
+        temp("results/lowram_summarise/{sample}.csv"),
     params:
         cols_to_sum=COLS_TO_SUM,
     threads: 1

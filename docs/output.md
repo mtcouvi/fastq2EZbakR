@@ -68,7 +68,7 @@ There are several temporary files that are deleted once the steps requiring them
 
 * Unzipped fastq files (if gzipped)
 * Trimmed fastq files
-* 
+* Various 
 
 
 
