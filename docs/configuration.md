@@ -109,7 +109,18 @@ These are:
 
 ### Parameters you should probably double check
 
+The following remaining parameters have default settings that will work in a lot of cases, but that you should still double check to make sure they fit your particular use case:
 
-
+* `mut_tracks`: Specifies the types of mutations you would like to track in the final cB file. Should be a comma separated string of strings of the form \[reference nucleotide\]\[mutated nucleotide\]. For example "TC" denotes that T-to-C mutations should be tracked in the cB file, and "TC,GA" denotes that T-to-C and G-to-A mutations should both be included in the cB file.
+* `normalize`: Boolean; if True, then scale factors are calculated using edgeR that are applied to the .tdf sequencing tracks created by fastq2EZbakR.
+* `spikename`: If `normalize` is True, and you have spike-ins, then you can specify a string common to all of the gene_ids in your provided annotation GTF. A custom R script will grep for this string when deciding what features to use for normalization purposes.
+* `fastp_adapters`: Arguments to specify adapter sequences for trimming by [fastp](https://github.com/OpenGene/fastp). fastp can automatically detect adapters in paired-end libraries, but its always best to specify these explicitly if you know them.
+* `flat_annotation`: If `exonic_bins: True`, then this will be the path to and name of the DEXSeq flattened annotation created automatically by fastq2EZbakR.
+* `minqual`: Minimum base quality for it to be called as a bona fide mutation.
+* `WSL`: I have found that running fastq2EZbakR on the Windows subsystem for Linux encounters a weird bug where GNU parallel doesn't work for a single step of the pipeline (colored track creation). Thus, if on the WSL, this step needs to be run iteratively, which is what setting `WSL: True` will do.
+* `lowRAM`: If True, this can significantly cut down on RAM usage of the mutation count and feature assignment merging step. This is done through sorting the tables to be merged and merging them with a custom Python script that iterates through the rows of all tables to be merged, never loading any of them fully into RAM. The downside of this strategy is additional runtime and temporary disk space usage. With `lowRAM` set to False, the RAM used by the merging step is a function of the sequencing depth (i.e., number of reads in your individual bam files). This can cause problems for particularly deeply sequenced libraries. For example, a 300 million read library may require > 100 GB for this step.
+* `mutpos`: If True, then an additional output will be created, called a cU file, that tracks the mutational content of all mutation types specified in `mut_tracks`. **NOTE**: this option requires a lot of disk space for large datasets. **ALSO NOTE**: this is not currently compatible with `lowRAM: True`
 
 ### Remaining parameters
+
+The remaining parameters tune the behaviors of individual rules and are mostly optional parameters to the command line tools or custom scripts used. Read the comments associated with these parameters, and post an [Issue](https://github.com/isaacvock/fastq2EZbakR/issues) to the fastq2EZbakR Github if you have any questions about these parameters.
