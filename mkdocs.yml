@@ -1,0 +1,14 @@
+site_name: PipelineDocs
+site_url: https://fastq2ezbakR.readthedocs.io/en/latest/
+nav:
+  - Configuration: configuration.md
+theme: 
+  name: readthedocs
+  navigation_depth: 5
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
