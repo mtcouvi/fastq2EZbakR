@@ -25,7 +25,6 @@ if config["PE"]:
         wrapper:
             "v2.2.1/bio/fastp"
 
-
 else:
 
     # Trim with fastp
