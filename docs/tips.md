@@ -1,6 +1,10 @@
 # fastq2EZbakR Tips and Tricks
 
-This page is devoted to a number of small pieces of advice and details about running fastq2EZbakR that you may find useful. 
+This page is devoted to a number of small pieces of advice and details about running fastq2EZbakR that you may find useful. In particular, information relevant ot the following topics is provided:
+
+1. [fastq2EZbakR runtime](#runtime)
+1. [fastq2EZbakR RAM usage](#ram)
+1. [Feature assignment strategies in fastq2EZbakR](#features)
 
 ## Runtime<a name="runtime"></a>
 
