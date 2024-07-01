@@ -5,6 +5,7 @@ nav:
   - Deployment: deploy.md
   - Slurm/Yale HPC: slurm.md
   - Configuration: configuration.md
+  - Tips and Tricks: tricks.md
   - Output: output.md
   - Colored tracks: tracks.md
   - FAQ: faq.md
