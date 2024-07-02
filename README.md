@@ -13,4 +13,4 @@ Reimplementation of the bam2bakR Snakemake workflow that makes several important
 
 This pipeline will also be the site of exciting future development to expand the functionality of this pipeline, so stay tuned!
 
-The steps for running this pipline are identical to [bam2bakR](https://tl-snakemake.readthedocs.io/en/latest/), though there are differences in the config file to be aware of. In addition, if you are a Yale user or are interested in seeing how to optimize deployment of the pipeline on a shared cluster (in particular one which uses the slurm workload manager), check out the [documentation](https://pipelinedocs.readthedocs.io/en/latest/simon/) for how to generally run all of the Snakemake pipelines I have developed. The steps for deploying these pipelines are identical to that of deploying fastq2EZbakR, and the same profile can be used to manage job scheduling in both cases.
+Documentation can be found here: https://fastq2ezbakr.readthedocs.io/en/latest/
