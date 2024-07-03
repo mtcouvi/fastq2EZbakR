@@ -68,6 +68,9 @@ aligner: "star"
   # so probably better to avoid specifying a path there that might
   # clash with the names of one of the other automatically created
   # directories). 
+  # If you aren't providing this, directory must not exist at the time
+  # you launch the pipeline with `snakemake ...`, or else Snakemake won't
+  # know to create it.
 indices: data/indices/star_index
 
 
