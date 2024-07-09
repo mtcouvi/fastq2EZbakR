@@ -29,10 +29,12 @@
 # Write new row to output and loop on to the next
 
 import csv
-import argparse
-import datetime
 
 import sys
+
+# String comparison with < yields incorrect results; this works
+from natsort import natsort_keygen, ns
+version_key = natsort_keygen(alg=ns.REAL)
 
 with open(snakemake.log[0], "w") as f:
     sys.stderr = sys.stdout = f
@@ -144,7 +146,7 @@ with open(snakemake.log[0], "w") as f:
 
     def handle_featurecounts(query_row, iterator, current_outrow, mutrow):
 
-        while query_row and query_row[0] < mutrow[0]:
+        while query_row and version_key(query_row[0]) < version_key(mutrow[0]):
             query_row = next(iterator, None)
 
         if query_row and query_row[0] == mutrow[0]:
@@ -174,7 +176,7 @@ with open(snakemake.log[0], "w") as f:
 
     def handle_bamfilet(query_row, iterator, current_outrow, mutrow):
 
-        while query_row and query_row[0] < mutrow[0]:
+        while query_row and version_key(query_row[0]) < version_key(mutrow[0]):
             query_row = next(iterator, None)
 
         if query_row and query_row[0] == mutrow[0]:
@@ -190,7 +192,7 @@ with open(snakemake.log[0], "w") as f:
 
     def handle_junctions(query_row, iterator, current_outrow, mutrow):
 
-        while query_row and query_row[0] < mutrow[0]:
+        while query_row and version_key(query_row[0]) < version_key(mutrow[0]):
             query_row = next(iterator, None)
 
         if query_row and query_row[0] == mutrow[0]:
