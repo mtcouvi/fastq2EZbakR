@@ -18,13 +18,6 @@ Mutation counting output:
   - These can be useful for tracking down problems in the mutation counting. See [FAQs](faqs.md) for details.
   - Mutation counting is accomplished with a custom python script called by a custom shell script.
 
-Feature assignment
-
-* Tables of read counts and read assignments for each feature assigned via featureCounts (genes, exons, exonic_bins, eej, and eij) will be located in a directory called `results/featurecounts_<feature>/`, where `<feature>` refers to the type of feature reads were assigned to.
-* If assigning reads to transcript equivalence classes using STAR's output, these assignments will be located in the `results/read_to_transcripts` directory.
-* If assigning reads to exon-exon junctions using STAR's output, these assignments will be located in the `results/read_to_junctions` directory.
-
-
 Merged feature assignment and mutation counting:
 
 * Tables that have combined the exonic and gene feature assignment information with the mutation calling output are in `results/merge_feature_and_muts/<sampleID>_counts.csv.gz`. 
@@ -51,6 +44,10 @@ Normalization:
   - This is a simple tab-delimited text file with two "columns", one corresponding to the sample ID, and the other corresponding to the scale factor
   - These will be used to scale the heights of the sequencing tracks in `results/tracks/`.
 
+Feature assignment:
+
+* Tables of read counts for each feature assigned via featureCounts (genes, exons, exonic_bins, eej, and eij) will be located in a directory called `results/featurecounts_<feature>/`, where `<feature>` refers to the type of feature reads were assigned to.
+  - If using feature assignment strategies that don't use featureCounts, all output produced by these are temporary. See below for details regaring what this means and how to keep these files if necessary. In either case, the read assignment information is also present in the merged tables discussed above.
 
 **fastq2EZbakR output if providing fastq files (rather than bams) as input**
 
@@ -63,18 +60,13 @@ FastQC:
 
 * fastqc output will be stored in the `results/fastqc/` directory
 
-Fastq trimming:
-
-* Trimmed fastq files output by fastp are in the `results/trimmed/` directory
-
 RSEM quantification
 
 * If RSEM is used to quantify isoform abundances, its output will be located in the `results/rsem/` directory.
 
 There are several temporary files that are deleted once the steps requiring them finish running. These include:
 
-* Unzipped fastq files (if gzipped)
-* Intermediate files unique to the `lowRAM: True` path
+**Temporary files**
 
-
+There are several intermediate files produced which, by default, are deleted once the steps of the pipeline that use them as input have finished running. If you would like to retain this output, you can add `--notemp` to your call to `snakemake` to prevent deletion of these files.
 
