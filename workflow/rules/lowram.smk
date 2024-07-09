@@ -22,7 +22,7 @@ rule sort_mutcounts_by_qname:
     output:
         sortout=temp("results/sort_mutcounts_by_qname/{sample}_counts.csv"),
         decomp=temp("results/sort_mutcounts_by_qname/{sample}_decompressed_counts.csv"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
@@ -34,7 +34,7 @@ rule sort_mutcounts_by_qname:
 
         head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort -S 10% --parallel={threads} -k1 -V >> {output.sortout}
         """
 
 
@@ -43,14 +43,14 @@ rule sort_fcgene_by_qname:
         "results/featurecounts_genes/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcgene_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fcgene_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -59,14 +59,14 @@ rule sort_fcexon_by_qname:
         "results/featurecounts_exons/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcexon_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fcexon_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -76,7 +76,7 @@ rule sort_junction_by_qname:
     output:
         sortout=temp("results/sort_junction_by_qname/{sample}_counts.csv"),
         decomp=temp("results/sort_junction_by_qname/{sample}_decompressed_counts.csv"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
@@ -88,7 +88,7 @@ rule sort_junction_by_qname:
 
         head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort -S 10% --parallel={threads} -k1 -V >> {output.sortout}
         """
 
 
@@ -97,14 +97,14 @@ rule sort_fcee_by_qname:
         "results/featurecounts_eej/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcee_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fcee_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -113,14 +113,14 @@ rule sort_fcei_by_qname:
         "results/featurecounts_eij/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcei_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fcei_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -129,14 +129,14 @@ rule sort_fctranscript_by_qname:
         "results/featurecounts_transcripts/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fctranscript_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fctranscript_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -145,14 +145,14 @@ rule sort_fcexonbin_by_qname:
         "results/featurecounts_exonbins/{sample}.s.bam.featureCounts",
     output:
         temp("results/sort_fcexonbin_by_qname/{sample}.featureCounts"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
         "logs/sort_fcexonbin_by_qname/{sample}.log",
     shell:
         """
-        sort -k1 -V {input} > {output}
+        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -161,7 +161,7 @@ rule sort_bamtranscript_by_qname:
         "results/read_to_transcripts/{sample}.csv",
     output:
         temp("results/sort_bamtranscript_by_qname/{sample}.csv"),
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
@@ -171,7 +171,7 @@ rule sort_bamtranscript_by_qname:
         ### GOAL: Sort but preserve header
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort -k1 -V >> {output}
+        tail -n +2 {input} | sort -S 10% --parallel={threads} -k1 -V >> {output}
         """
 
 
@@ -209,7 +209,7 @@ rule sort_merged_files:
         temp("results/sort_merged_files/{sample}.csv"),
     params:
         sortparams=SORTPARAMS,
-    threads: 1
+    threads: 20
     conda:
         "../envs/full.yaml"
     log:
@@ -218,7 +218,7 @@ rule sort_merged_files:
         """
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort -t, {params.sortparams} >> {output}
+        tail -n +2 {input} | sort -t, -S 10% --parallel={threads} {params.sortparams} >> {output}
         """
 
 
