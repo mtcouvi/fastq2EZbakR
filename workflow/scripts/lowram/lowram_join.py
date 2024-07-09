@@ -171,7 +171,7 @@ with open(snakemake.log[0], "w") as f:
 
             current_outrow = current_outrow + ['__no_feature']
 
-        return current_outrow
+        return current_outrow, query_row, iterator
 
 
     def handle_bamfilet(query_row, iterator, current_outrow, mutrow):
@@ -187,7 +187,7 @@ with open(snakemake.log[0], "w") as f:
 
             current_outrow = current_outrow + ['__no_feature']
 
-        return current_outrow
+        return current_outrow, query_row, iterator
 
 
     def handle_junctions(query_row, iterator, current_outrow, mutrow):
@@ -203,7 +203,7 @@ with open(snakemake.log[0], "w") as f:
 
             current_outrow = current_outrow + ['__no_feature', '__no_feature']
 
-        return current_outrow
+        return current_outrow, query_row, iterator
 
 
     ### Create merged output
@@ -224,40 +224,40 @@ with open(snakemake.log[0], "w") as f:
             # Add GF information
             if genes_present:
 
-                outrow = handle_featurecounts(gene_row, gener, outrow, row_m)
+                outrow, gene_row, gener = handle_featurecounts(gene_row, gener, outrow, row_m)
 
             # Add XF information
             if exons_present:
 
-                outrow = handle_featurecounts(exon_row, exonr, outrow, row_m)
+                outrow, exon_row, exonr = handle_featurecounts(exon_row, exonr, outrow, row_m)
 
             # Add transcripts information
             if transcripts_present:
 
-                outrow = handle_featurecounts(transcript_row, transcriptr, outrow, row_m)
+                outrow, transcript_row, transcriptr = handle_featurecounts(transcript_row, transcriptr, outrow, row_m)
 
             # Add transcripts information
             if eb_present:
 
-                outrow = handle_featurecounts(eb_row, ebr, outrow, row_m)
+                outrow, eb_row, ebr = handle_featurecounts(eb_row, ebr, outrow, row_m)
 
             # Add transcripts information
             if bft_present:
 
-                outrow = handle_bamfilet(bft_row, bftr, outrow, row_m)
+                outrow, bft_row, bftr = handle_bamfilet(bft_row, bftr, outrow, row_m)
             
             # Add transcripts information
             if junctions_present:
 
-                outrow = handle_junctions(j_row, jr, outrow, row_m)
+                outrow, j_row, jr = handle_junctions(j_row, jr, outrow, row_m)
             
             if ee_present:
 
-                outrow = handle_featurecounts(ee_row, eer, outrow, row_m)
+                outrow, ee_row, eer = handle_featurecounts(ee_row, eer, outrow, row_m)
             
             if ei_present:
 
-                outrow = handle_featurecounts(ei_row, eir, outrow, row_m)
+                outrow, ei_row, eir = handle_featurecounts(ei_row, eir, outrow, row_m)
             
             writer.writerow(outrow)
 
