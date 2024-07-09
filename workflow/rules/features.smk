@@ -11,8 +11,8 @@ rule featurecounts_genes:
             "results/featurecounts_genes/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_genes/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
@@ -34,8 +34,8 @@ rule featurecounts_exons:
             ".featureCounts",
             ".featureCounts.summary",
             ".featureCounts.jcounts",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_exons/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
@@ -56,8 +56,8 @@ rule featurecounts_transcripts:
             "results/featurecounts_transcripts/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_transcripts/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
@@ -78,8 +78,8 @@ rule featurecounts_exonbins:
             "results/featurecounts_exonbins/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_exonbins/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
@@ -161,8 +161,8 @@ rule featurecounts_eej:
             "results/featurecounts_eej/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_eej/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
@@ -182,8 +182,8 @@ rule featurecounts_eij:
             "results/featurecounts_eij/{sample}",
             ".featureCounts",
             ".featureCounts.summary",
-            ".s.bam.featureCounts",
         ),
+        temp("results/featurecounts_eij/{sample}.s.bam.featureCounts"),
     threads: 20
     params:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
