@@ -6,10 +6,12 @@ if config["PE"]:
         input:
             sample=get_input_fastqs,
         output:
-            trimmed=temp([
-                "results/trimmed/{sample}.1.fastq",
-                "results/trimmed/{sample}.2.fastq",
-            ]),
+            trimmed=temp(
+                [
+                    "results/trimmed/{sample}.1.fastq",
+                    "results/trimmed/{sample}.2.fastq",
+                ]
+            ),
             # Unpaired reads separately
             unpaired1=temp("results/trimmed/{sample}.u1.fastq"),
             unpaired2=temp("results/trimmed/{sample}.u2.fastq"),
