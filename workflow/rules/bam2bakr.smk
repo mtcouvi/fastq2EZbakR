@@ -12,7 +12,7 @@ if config["bam2bakr"]:
             input:
                 input_bam=get_input_bams,
             output:
-                output_bam="results/remove_tags/{sample}_no_jI_jM.bam",
+                output_bam=temp("results/remove_tags/{sample}_no_jI_jM.bam"),
             log:
                 "logs/remove_tags/{sample}.log",
             conda:

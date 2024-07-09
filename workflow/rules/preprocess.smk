@@ -6,14 +6,14 @@ if config["PE"]:
         input:
             sample=get_input_fastqs,
         output:
-            trimmed=[
+            trimmed=temp([
                 "results/trimmed/{sample}.1.fastq",
                 "results/trimmed/{sample}.2.fastq",
-            ],
+            ]),
             # Unpaired reads separately
-            unpaired1="results/trimmed/{sample}.u1.fastq",
-            unpaired2="results/trimmed/{sample}.u2.fastq",
-            failed="results/trimmed/{sample}.failed.fastq",
+            unpaired1=temp("results/trimmed/{sample}.u1.fastq"),
+            unpaired2=temp("results/trimmed/{sample}.u2.fastq"),
+            failed=temp("results/trimmed/{sample}.failed.fastq"),
             html="results/reports/{sample}.html",
             json="results/reports/{sample}.json",
         log:
@@ -32,8 +32,8 @@ else:
         input:
             sample=get_input_fastqs,
         output:
-            trimmed="results/trimmed/{sample}.1.fastq",
-            failed="results/trimmed/{sample}.1.failed.fastq",
+            trimmed=temp("results/trimmed/{sample}.1.fastq"),
+            failed=temp("results/trimmed/{sample}.1.failed.fastq"),
             html="results/reports/{sample}.1.html",
             json="results/reports{sample}.1.json",
         log:

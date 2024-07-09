@@ -96,7 +96,7 @@ rule read_to_transcripts:
     input:
         bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
     output:
-        table="results/read_to_transcripts/{sample}.csv",
+        table=temp("results/read_to_transcripts/{sample}.csv"),
     log:
         "logs/read_to_transcripts/{sample}.log",
     conda:
@@ -111,7 +111,7 @@ rule read_to_junctions:
     input:
         "results/sf_reads/{sample}.s.bam",
     output:
-        "results/read_to_junctions/{sample}.csv.gz",
+        temp("results/read_to_junctions/{sample}.csv.gz"),
         temp("results/read_to_junctions/{sample}_check.txt"),
     params:
         shellscript=workflow.source_path("../scripts/features/junction_assignment.sh"),
