@@ -570,6 +570,10 @@ numeric_sort_columns = [
     index for index, item in enumerate(colnames) if item in numericsort_cols
 ]
 
+# Need to add 1 because linux sort is 1-indexed
+cols_to_sort = [x + 1 for x in cols_to_sort]
+numeric_sort_columns = [x + 1 for x in numeric_sort_columns]
+
 key_args = " ".join(
     [
         "-k{0},{0}{1}".format(col, "n" if col in numeric_sort_columns else "V")
