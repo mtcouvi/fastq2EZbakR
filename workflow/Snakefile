@@ -38,6 +38,13 @@ container: "docker://continuumio/miniconda3"
 
 
 include: "rules/common.smk"
+
+
+onstart:
+    print("COLS_TO_SUM is:")
+    print(COLS_TO_SUM)
+
+
 include: "rules/bam2bakr.smk"
 include: "rules/features.smk"
 include: "rules/lowram.smk"
