@@ -43,6 +43,8 @@ include: "rules/common.smk"
 onstart:
     print("COLS_TO_SUM is:")
     print(COLS_TO_SUM)
+    print('SORTPARAMS is:')
+    print(SORTPARAMS)
 
 
 include: "rules/bam2bakr.smk"
