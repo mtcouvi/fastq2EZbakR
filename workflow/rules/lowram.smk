@@ -218,7 +218,7 @@ rule sort_merged_files:
         """
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort {params.sortparams} >> {output}
+        tail -n +2 {input} | sort -t, {params.sortparams} >> {output}
         """
 
 
