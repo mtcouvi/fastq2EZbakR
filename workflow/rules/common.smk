@@ -322,21 +322,23 @@ def get_merge_input(wildcards):
     if config["features"]["genes"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_genes/{SID}.featureCounts", SID=wildcards.sample
+                "results/featurecounts_genes/{SID}.s.bam.featureCounts",
+                SID=wildcards.sample,
             )
         )
 
     if config["features"]["exons"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_exons/{SID}.featureCounts", SID=wildcards.sample
+                "results/featurecounts_exons/{SID}.s.bam.featureCounts",
+                SID=wildcards.sample,
             )
         )
 
     if config["features"]["transcripts"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_transcripts/{SID}.featureCounts",
+                "results/featurecounts_transcripts/{SID}.s.bam.featureCounts",
                 SID=wildcards.sample,
             )
         )
@@ -344,7 +346,7 @@ def get_merge_input(wildcards):
     if config["features"]["exonic_bins"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_exonbins/{SID}.featureCounts",
+                "results/featurecounts_exonbins/{SID}.s.bam.featureCounts",
                 SID=wildcards.sample,
             )
         )
@@ -362,14 +364,16 @@ def get_merge_input(wildcards):
     if config["features"]["eej"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_eej/{SID}.featureCounts", SID=wildcards.sample
+                "results/featurecounts_eej/{SID}.s.bam.featureCounts",
+                SID=wildcards.sample,
             )
         )
 
     if config["features"]["eij"]:
         MERGE_INPUT.extend(
             expand(
-                "results/featurecounts_eij/{SID}.featureCounts", SID=wildcards.sample
+                "results/featurecounts_eij/{SID}.s.bam.featureCounts",
+                SID=wildcards.sample,
             )
         )
 
