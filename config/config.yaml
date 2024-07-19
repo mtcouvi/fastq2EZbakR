@@ -166,7 +166,7 @@ WSL: False
 
 # Merge mutation counts and feature assignments in a RAM-efficient manner?
   # Downside is that it's a bit slower
-lowRAM: True
+lowRAM: False
 
 
 # Track site-specific mutational content
@@ -247,7 +247,8 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
   # --sjdbGTFfile is automatically set to be the provided annotation file
   # --outSAMattributes will also be set and provided the tags specified in `star_sam_tags`, overwriting whatever is set here
   # Finally, --outSAMType will be force set to BAM SortedByCoordinate, overwriting whatever is set here
-star_align_params: ""
+  # We suggest turning off soft-clipping to improve assignment of reads to exons
+star_align_params: "--alignEndsType Local"
 
 
 
@@ -260,7 +261,8 @@ hisat2_index_params: ""
 # Optional parmaeters to set for hisat2 alignment
   # NOTE: --rna-strandedness is automatically set based on required strandedness parameter
     # DON'T REDUNDANTLY SPECIFY --rna-strandedness HERE!!
-hisat2_align_params: ""
+  # We suggest turning off soft-clipping to improve assignment of reads to exons
+hisat2_align_params: "--no-softclip"
 
 
 # Index base name. If not specified, defaults to "hisat2_index"
