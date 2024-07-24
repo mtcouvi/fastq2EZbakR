@@ -188,22 +188,22 @@ remove_tags: True
 # !!DO NOT REDUNDANTLY SPECIFY AUTOMATICALLY SPECIFIED PARAMETERS!!
 
 # Parameters for assignment of reads to genes
-fc_genes_extra: ""
+fc_genes_extra: "--primary"
 
 # Parameters for assignment of reads to exons
-fc_exons_extra: ""
+fc_exons_extra: "--nonOverlap 0 --primary"
 
 # Parameters for assignment of reads to transcripts
-fc_transcripts_extra: ""
+fc_transcripts_extra: "--nonOverlap 0 --primary"
 
 # Parameters for assignment of reads to exonbins
-fc_exonbins_extra: ""
+fc_exonbins_extra: "--primary"
 
 # Parameters for assignment of reads to exon-exon junctions
-fc_eej_extra: ""
+fc_eej_extra: "--primary"
 
 # Parameters for assignment of reads to exon-intron junctions
-fc_eij_extra: ""
+fc_eij_extra: "--primary"
 
 ##### OTHER FASTP PARAMETERS #####
   # See https://github.com/OpenGene/fastp for details
@@ -239,7 +239,8 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM", "jI", "jM"]
   # --sjdbGTFfile is automatically set to be the provided annotation file
   # --outSAMattributes will also be set and provided the tags specified in `star_sam_tags`, overwriting whatever is set here
   # Finally, --outSAMType will be force set to BAM SortedByCoordinate, overwriting whatever is set here
-star_align_params: "--outFilterType BySJout"
+  # We suggest turning off soft-clipping to improve assignment of reads to exons
+star_align_params: "--alignEndsType Local"
 
 
 
@@ -252,7 +253,9 @@ hisat2_index_params: ""
 # Optional parmaeters to set for hisat2 alignment
   # NOTE: --rna-strandedness is automatically set based on required strandedness parameter
     # DON'T REDUNDANTLY SPECIFY --rna-strandedness HERE!!
-hisat2_align_params: ""
+  # We suggest turning off soft-clipping to improve assignment of reads to exons
+hisat2_align_params: "--no-softclip"
+
 
 
 # Index base name. If not specified, defaults to "hisat2_index"
