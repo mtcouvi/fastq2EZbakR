@@ -174,6 +174,25 @@ def get_fastq_r2(wildcards):
         return expand("results/trimmed/{SID}.2.fastq", SID=wildcards.sample)
 
 
+### HISAT2 HELPERS
+
+def get_hisat2_reads(wildcards, READS = READS):
+
+    if config["skip_trimming"]:
+
+        if is_gz:
+
+            return expand("results/unzipped/{SID}.{read}.fastq", SID = wildcards.sample, read = READS)
+
+        else:
+
+            fastq_path = config["samples"][wildcards.sample]
+            fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
+            return fastq_files
+
+    else:
+
+        return expand("results/trimmed/{SID}.{read}.fastq", SID=wildcards.sample, read = READS)
 
 ### Extra parameters passed to STAR alignment
 
