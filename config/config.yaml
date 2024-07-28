@@ -142,6 +142,10 @@ normalize: True
 spikename: "\"\""
 
 
+# Skip adapter trimming? If True, will skip fastp step
+skip_trimming: False
+
+
 # Adapters to pass to fastp 
   # Not strictly necessary as fastp can autodetect. Autodetection is more accurate for paired-end data
   # For paired-end data with widely used Illumina TruSeq adapters, this could be: 

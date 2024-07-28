@@ -48,9 +48,29 @@ else:
             "v2.2.1/bio/fastp"
 
 
+if config["skip_trimming"] and is_gz:
+
+    # Decompression with pigz cannot be parallelized, so force use of 1 thread
+    rule unzip:
+        input:
+            fastqs=get_input_fastqs,
+        output:
+            unzipped_fqs=temp(
+                expand("results/unzipped/{{sample}}.{read}.fastq", read=READS)
+            ),
+        log:
+            "logs/unzip/{sample}.log",
+        conda:
+            "../envs/rapidgzip.yaml"
+        threads: 128 # see rapidgzip github for specs; doesn't start to plateau until 128 cores
+        script:
+            "../scripts/preprocess/rapidgzip.py"
+
+
 # Run fastqc on trimmed fastqs
 rule fastqc:
     input:
+        get_fastqc_read,
         "results/trimmed/{sample}.{read}.fastq",
     output:
         html="results/fastqc/{sample}_r{read}.html",
