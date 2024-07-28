@@ -71,7 +71,6 @@ if config["skip_trimming"] and is_gz:
 rule fastqc:
     input:
         get_fastqc_read,
-        "results/trimmed/{sample}.{read}.fastq",
     output:
         html="results/fastqc/{sample}_r{read}.html",
         zip="results/fastqc/{sample}_r{read}_fastqc.zip",
