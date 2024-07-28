@@ -62,7 +62,7 @@ if config["skip_trimming"] and is_gz:
             "logs/unzip/{sample}.log",
         conda:
             "../envs/rapidgzip.yaml"
-        threads: 128 # see rapidgzip github for specs; doesn't start to plateau until 128 cores
+        threads: 128  # see rapidgzip github for specs; doesn't start to plateau until 128 cores
         script:
             "../scripts/preprocess/rapidgzip.py"
 

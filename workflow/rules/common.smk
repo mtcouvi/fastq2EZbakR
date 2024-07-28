@@ -104,25 +104,28 @@ keepcols = ",".join(keepcols)
 
 ### FASTQC HELPERS
 
+
 def get_fastqc_read(wildcards):
-    
     if config["skip_trimming"]:
-
         if is_gz:
-
-            return expand("results/unzipped/{SID}.{READ}.fastq", SID = wildcards.sample, READ = wildcards.read)
+            return expand(
+                "results/unzipped/{SID}.{READ}.fastq",
+                SID=wildcards.sample,
+                READ=wildcards.read,
+            )
 
         else:
-
             fastq_path = config["samples"][wildcards.sample]
             fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
             readID = int(wildcards.read)
             return fastq_files[readID]
 
-
     else:
-
-        return expand("results/trimmed/{SID}.{READ}.fastq", SID = wildcards.sample, READ = wildcards.read)
+        return expand(
+            "results/trimmed/{SID}.{READ}.fastq",
+            SID=wildcards.sample,
+            READ=wildcards.read,
+        )
 
 
 ### STAR HELPERS
@@ -131,21 +134,16 @@ def get_fastqc_read(wildcards):
 
 
 def get_fastq_r1(wildcards):
-
     if config["skip_trimming"]:
-
         if is_gz:
-
-            return expand("results/unzipped/{SID}.1.fastq", SID = wildcards.sample)
+            return expand("results/unzipped/{SID}.1.fastq", SID=wildcards.sample)
 
         else:
-
             fastq_path = config["samples"][wildcards.sample]
             fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
             return fastq_files[1]
 
     elif config["PE"]:
-
         return expand("results/trimmed/{SID}.1.fastq", SID=wildcards.sample)
 
     else:
@@ -153,21 +151,16 @@ def get_fastq_r1(wildcards):
 
 
 def get_fastq_r2(wildcards):
-
     if config["skip_trimming"]:
-
         if is_gz:
-
-            return expand("results/unzipped/{SID}.2.fastq", SID = wildcards.sample)
+            return expand("results/unzipped/{SID}.2.fastq", SID=wildcards.sample)
 
         else:
-
             fastq_path = config["samples"][wildcards.sample]
             fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
             return fastq_files[2]
 
     elif config["PE"]:
-
         return expand("results/trimmed/{SID}.2.fastq", SID=wildcards.sample)
 
     else:
@@ -176,23 +169,24 @@ def get_fastq_r2(wildcards):
 
 ### HISAT2 HELPERS
 
-def get_hisat2_reads(wildcards, READS = READS):
 
+def get_hisat2_reads(wildcards, READS=READS):
     if config["skip_trimming"]:
-
         if is_gz:
-
-            return expand("results/unzipped/{SID}.{read}.fastq", SID = wildcards.sample, read = READS)
+            return expand(
+                "results/unzipped/{SID}.{read}.fastq", SID=wildcards.sample, read=READS
+            )
 
         else:
-
             fastq_path = config["samples"][wildcards.sample]
             fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
             return fastq_files
 
     else:
+        return expand(
+            "results/trimmed/{SID}.{read}.fastq", SID=wildcards.sample, read=READS
+        )
 
-        return expand("results/trimmed/{SID}.{read}.fastq", SID=wildcards.sample, read = READS)
 
 ### Extra parameters passed to STAR alignment
 
