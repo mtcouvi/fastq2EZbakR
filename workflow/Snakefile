@@ -19,6 +19,9 @@ if "lowRAM" not in config:
 if "run_rsem" not in config:
     config["run_rsem"] = True
 
+if "skip_trimming" not in config:
+    config["skip_trimming"] = False
+
 
 ##### setup report #####
 

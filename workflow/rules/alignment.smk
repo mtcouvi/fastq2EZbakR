@@ -184,7 +184,7 @@ if config["aligner"] == "hisat2":
     # Align with hisat2
     rule align:
         input:
-            reads=expand("results/trimmed/{{sample}}.{read}.fastq", read=READS),
+            reads=get_hisat2_reads,
             idx=config["indices"],
         output:
             "results/align/{sample}.bam",
