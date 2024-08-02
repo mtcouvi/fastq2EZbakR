@@ -142,7 +142,7 @@ mutpos: False
   # The annotation with the full-gene "transcript" will only be used for STAR's alignment
   # and RSEM quantification. The full-gene transcript will not be a feature to which
   # reads are assigned by featureCounts.
-quantify_premRNA: True
+quantify_premRNA: False
 
 
 # Types of mutations to make tracks for otherwise
