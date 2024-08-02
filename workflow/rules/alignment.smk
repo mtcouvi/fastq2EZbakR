@@ -26,20 +26,22 @@ rule modify_annotation:
 
 if config["aligner"] == "star":
 
-    # Build STAR index
-    rule index:
-        input:
-            fasta=config["genome"],
-            gtf=AandQ_ANNOTATION,
-        output:
-            directory(config["indices"]),
-        threads: 12
-        params:
-            extra=config["star_index_params"],
-        log:
-            "logs/index/star_index_genome.log",
-        wrapper:
-            "v2.6.0/bio/star/index"
+    if make_index:
+
+        # Build STAR index
+        rule index:
+            input:
+                fasta=config["genome"],
+                gtf=AandQ_ANNOTATION,
+            output:
+                directory(config["indices"]),
+            threads: 12
+            params:
+                extra=config["star_index_params"],
+            log:
+                "logs/index/star_index_genome.log",
+            wrapper:
+                "v2.6.0/bio/star/index"
 
     # Align with STAR
 
@@ -109,77 +111,80 @@ if config["aligner"] == "star":
 
 
 if config["aligner"] == "hisat2":
-    ### Add annotated splice junctions to index
-    if config["annotation"]:
 
-        # Get exons from annotation using hisat2's custom python script
-        rule get_exons:
-            input:
-                annotation=config["annotation"],
-            output:
-                "results/get_exons/exons.exon",
-            log:
-                "logs/get_exons/exons.log",
-            conda:
-                "../envs/hisat2.yaml"
-            threads: 1
-            shell:
-                "hisat2_extract_exons.py {input.annotation} 1> {output} 2> {log}"
+    if make_index:
 
-        # Get splice sites from annotation using hisat2's custom python script
-        rule get_ss:
-            input:
-                annotation=config["annotation"],
-            output:
-                "results/get_ss/splice_sites.ss",
-            log:
-                "logs/get_ss/ss.log",
-            conda:
-                "../envs/hisat2.yaml"
-            threads: 1
-            shell:
-                "hisat2_extract_splice_sites.py {input.annotation} 1> {output} 2> {log}"
+        ### Add annotated splice junctions to index
+        if config["annotation"]:
 
-        # Build hisat2 index
-        rule index:
-            input:
-                fasta=config["genome"],
-                annotation=config["annotation"],
-                ss="results/get_ss/splice_sites.ss",
-                exons="results/get_exons/exons.exon",
-            output:
-                directory(config["indices"]),
-            params:
-                prefix=HISAT2_BASE,
-                extra="{} {}".format(
-                    "--ss results/get_ss/splice_sites.ss --exon results/get_exons/exons.exon",
-                    config["hisat2_index_params"],
-                ),
-            log:
-                "logs/index/hisat2_index.log",
-            threads: 20
-            wrapper:
-                "v2.6.0/bio/hisat2/index"
+            # Get exons from annotation using hisat2's custom python script
+            rule get_exons:
+                input:
+                    annotation=config["annotation"],
+                output:
+                    "results/get_exons/exons.exon",
+                log:
+                    "logs/get_exons/exons.log",
+                conda:
+                    "../envs/hisat2.yaml"
+                threads: 1
+                shell:
+                    "hisat2_extract_exons.py {input.annotation} 1> {output} 2> {log}"
 
-    else:
+            # Get splice sites from annotation using hisat2's custom python script
+            rule get_ss:
+                input:
+                    annotation=config["annotation"],
+                output:
+                    "results/get_ss/splice_sites.ss",
+                log:
+                    "logs/get_ss/ss.log",
+                conda:
+                    "../envs/hisat2.yaml"
+                threads: 1
+                shell:
+                    "hisat2_extract_splice_sites.py {input.annotation} 1> {output} 2> {log}"
 
-        # Build hisat2 index
-        rule index:
-            input:
-                fasta=config["genome"],
-                annotation=config["annotation"],
-                ss="results/get_ss/splice_sites.ss",
-                exons="results/get_exon/exons.exon",
-            output:
-                directory(config["indices"]),
-            params:
-                prefix=HISAT2_BASE,
-                extra=config["hisat2_index_params"],
-            log:
-                "logs/index/hisat2_index.log",
-            threads: 20
-            wrapper:
-                "v2.6.0/bio/hisat2/index"
+            # Build hisat2 index
+            rule index:
+                input:
+                    fasta=config["genome"],
+                    annotation=config["annotation"],
+                    ss="results/get_ss/splice_sites.ss",
+                    exons="results/get_exons/exons.exon",
+                output:
+                    directory(config["indices"]),
+                params:
+                    prefix=HISAT2_BASE,
+                    extra="{} {}".format(
+                        "--ss results/get_ss/splice_sites.ss --exon results/get_exons/exons.exon",
+                        config["hisat2_index_params"],
+                    ),
+                log:
+                    "logs/index/hisat2_index.log",
+                threads: 20
+                wrapper:
+                    "v2.6.0/bio/hisat2/index"
+
+        else:
+
+            # Build hisat2 index
+            rule index:
+                input:
+                    fasta=config["genome"],
+                    annotation=config["annotation"],
+                    ss="results/get_ss/splice_sites.ss",
+                    exons="results/get_exon/exons.exon",
+                output:
+                    directory(config["indices"]),
+                params:
+                    prefix=HISAT2_BASE,
+                    extra=config["hisat2_index_params"],
+                log:
+                    "logs/index/hisat2_index.log",
+                threads: 20
+                wrapper:
+                    "v2.6.0/bio/hisat2/index"
 
     # Align with hisat2
     rule align:
