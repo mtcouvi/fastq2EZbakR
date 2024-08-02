@@ -168,7 +168,7 @@ def get_fastq_r2(wildcards):
 
 
 # Determine whether or not indexing needs to be done
-star_indices = glob.glob(f"{INDEX_PATH}/chrName.txt")
+star_indices = glob.glob(f"{INDEX_PATH}/genomeParameters.txt")
 
 if len(star_indices) == 0:
     make_index = True

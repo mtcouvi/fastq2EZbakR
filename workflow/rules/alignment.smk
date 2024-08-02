@@ -33,14 +33,17 @@ if config["aligner"] == "star":
                 fasta=config["genome"],
                 gtf=AandQ_ANNOTATION,
             output:
-                directory(config["indices"]),
-            threads: 12
+                outdir=directory(config["indices"]),
+                outfile=star_indices,
             params:
                 extra=config["star_index_params"],
             log:
                 "logs/index/star_index_genome.log",
-            wrapper:
-                "v2.6.0/bio/star/index"
+            conda:
+                "../envs/star.yaml"
+            threads: 24
+            script:
+                "../scripts/alignment/star-index.py"
 
     # Align with STAR
 
