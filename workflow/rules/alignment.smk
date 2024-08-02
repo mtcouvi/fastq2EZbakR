@@ -25,7 +25,6 @@ rule modify_annotation:
 
 
 if config["aligner"] == "star":
-
     if make_index:
 
         # Build STAR index
@@ -111,9 +110,7 @@ if config["aligner"] == "star":
 
 
 if config["aligner"] == "hisat2":
-
     if make_index:
-
         ### Add annotated splice junctions to index
         if config["annotation"]:
 

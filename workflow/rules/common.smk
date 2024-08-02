@@ -206,7 +206,6 @@ else:
     make_index = False
 
 
-
 ### Extra parameters passed to STAR alignment
 
 
