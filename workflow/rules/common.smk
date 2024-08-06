@@ -170,10 +170,12 @@ def get_fastq_r2(wildcards):
 # Determine whether or not indexing needs to be done
 star_indices = glob.glob(f"{INDEX_PATH}/genomeParameters.txt")
 
-if len(star_indices) == 0:
-    make_index = True
-else:
-    make_index = False
+
+if config["aligner"] == "star":
+    if len(star_indices) == 0:
+        make_index = True
+    else:
+        make_index = False
 
 
 ### HISAT2 HELPERS
@@ -200,10 +202,11 @@ def get_hisat2_reads(wildcards, READS=READS):
 # Determine whether or not indexing needs to be done
 hisat2_indices = glob.glob(f"{INDEX_PATH}/*.ht2*")
 
-if len(hisat2_indices) == 0:
-    make_index = True
-else:
-    make_index = False
+if config["aligner"] == "star":
+    if len(hisat2_indices) == 0:
+        make_index = True
+    else:
+        make_index = False
 
 
 ### Extra parameters passed to STAR alignment
