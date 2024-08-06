@@ -167,6 +167,17 @@ def get_fastq_r2(wildcards):
         return expand("results/trimmed/{SID}.2.fastq", SID=wildcards.sample)
 
 
+# Determine whether or not indexing needs to be done
+star_indices = glob.glob(f"{INDEX_PATH}/genomeParameters.txt")
+
+
+if config["aligner"] == "star":
+    if len(star_indices) == 0:
+        make_index = True
+    else:
+        make_index = False
+
+
 ### HISAT2 HELPERS
 
 
@@ -186,6 +197,16 @@ def get_hisat2_reads(wildcards, READS=READS):
         return expand(
             "results/trimmed/{SID}.{read}.fastq", SID=wildcards.sample, read=READS
         )
+
+
+# Determine whether or not indexing needs to be done
+hisat2_indices = glob.glob(f"{INDEX_PATH}/*.ht2*")
+
+if config["aligner"] == "hisat2":
+    if len(hisat2_indices) == 0:
+        make_index = True
+    else:
+        make_index = False
 
 
 ### Extra parameters passed to STAR alignment
