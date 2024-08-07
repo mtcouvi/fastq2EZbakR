@@ -64,7 +64,7 @@ RSEM quantification
 
 * If RSEM is used to quantify isoform abundances, its output will be located in the `results/rsem/` directory.
 
-There are several temporary files that are deleted once the steps requiring them finish running. These include:
+There are several temporary files that are deleted once the steps requiring them finish running.
 
 **Temporary files**
 
