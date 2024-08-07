@@ -53,7 +53,7 @@ You can then specify the aligner you would like to use:
 ```yaml
 aligner: "star"
 ```
-Currently, only STAR and HISAT2 are implemented, and I highly recommend using STAR. I used to advocate for HISAT-3N when aligning NR-seq data, but a [recent paper](https://pubmed.ncbi.nlm.nih.gov/38381903/) showed that STAR is about as good (and in some cases even better) at aligning reads from an NR-seq experiment. In addition, HISAT-3N cannot be easily installed with conda, and is not as actively maintained as STAR. Finally, much of the cool functionality of fastq2EZbakR (e.g., assignment of reads to transcript equivalence classes and exon-exon splice junctions) are currenlty only possible with the output of STAR.
+Currently, only STAR and HISAT2 are implemented, and I highly recommend using STAR. I used to advocate for HISAT-3N when aligning NR-seq data, but a [recent paper](https://pubmed.ncbi.nlm.nih.gov/38381903/) showed that STAR is about as good (and in some cases even better) at aligning reads from an NR-seq experiment. In addition, HISAT-3N cannot be easily installed with conda, and is not as actively maintained as STAR. Finally, much of the cool functionality of fastq2EZbakR (e.g., assignment of reads to transcript equivalence classes and exon-exon splice junctions) are currently only possible with the output of STAR.
 
 
 This is followed by the path to the alignment indices:
@@ -114,6 +114,7 @@ The following remaining parameters have default settings that will work in a lot
 * `mut_tracks`: Specifies the types of mutations you would like to track in the final cB file. Should be a comma separated string of strings of the form \[reference nucleotide\]\[mutated nucleotide\]. For example "TC" denotes that T-to-C mutations should be tracked in the cB file, and "TC,GA" denotes that T-to-C and G-to-A mutations should both be included in the cB file.
 * `normalize`: Boolean; if True, then scale factors are calculated using edgeR that are applied to the .tdf sequencing tracks created by fastq2EZbakR.
 * `spikename`: If `normalize` is True, and you have spike-ins, then you can specify a string common to all of the gene_ids in your provided annotation GTF. A custom R script will grep for this string when deciding what features to use for normalization purposes.
+* `skip_trimming`: If True, then fastp trimming of fastqs will be skipped.
 * `fastp_adapters`: Arguments to specify adapter sequences for trimming by [fastp](https://github.com/OpenGene/fastp). fastp can automatically detect adapters in paired-end libraries, but its always best to specify these explicitly if you know them.
 * `flat_annotation`: If `exonic_bins: True`, then this will be the path to and name of the DEXSeq flattened annotation created automatically by fastq2EZbakR.
 * `minqual`: Minimum base quality for it to be called as a bona fide mutation.
