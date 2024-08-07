@@ -90,10 +90,10 @@ features:
     genes: True
     exons: True
     transcripts: False
-    exonic_bins: True
-    junctions: True
-    eej: True
-    eij: True
+    exonic_bins: False
+    junctions: False
+    eej: False
+    eij: False
 ```
 
 These are:
