@@ -15,7 +15,7 @@ rule RSEM_index:
             str(AandQ_ANNOTATION), str(config["rsem_index_params"])
         ),
     log:
-        "logs/rsem_index/prepare-reference.log",
+        "logs/RSEM_index/prepare-reference.log",
     threads: 20
     wrapper:
         "v2.3.1/bio/rsem/prepare-reference"
@@ -44,7 +44,7 @@ rule RSEM:
         # additional optional parameters to pass to rsem, for example,
         extra=config["rsem_quant_params"],
     log:
-        "logs/rsem/{sample}.log",
+        "logs/RSEM/{sample}.log",
     conda:
         "../envs/rsem.yaml"
     threads: 20
