@@ -46,20 +46,37 @@ else:
 
 # Get input fastq files for first step
 def get_input_fastqs(wildcards):
-    fastq_path = config["samples"][wildcards.sample]
-    fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
-    return fastq_files
+    if config["download_fastqs"]:
+        if config["PE"]:
+            SRA_READS = ["_1.fastq", "_2.fastq"]
+
+        else:
+            SRA_READS = [".fastq"]
+
+        return expand(
+            "results/download_fastq/{SAMPLE}{READ}",
+            SAMPLE=wildcards.sample,
+            READ=SRA_READS,
+        )
+
+    else:
+        fastq_path = config["samples"][wildcards.sample]
+        fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
+        return fastq_files
 
 
 # Check if fastq files are gzipped
 fastq_paths = config["samples"]
 
-is_gz = False
 
-for p in fastq_paths.values():
-    fastqs = sorted(glob.glob(f"{p}/*.fastq*"))
-    test_gz = any(path.endswith(".fastq.gz") for path in fastqs)
-    is_gz = any([is_gz, test_gz])
+if not config["download_fastqs"]
+
+    is_gz = False
+
+    for p in fastq_paths.values():
+        fastqs = sorted(glob.glob(f"{p}/*.fastq*"))
+        test_gz = any(path.endswith(".fastq.gz") for path in fastqs)
+        is_gz = any([is_gz, test_gz])
 
 
 # Columns in final cB
