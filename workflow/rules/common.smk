@@ -16,7 +16,10 @@ if config["features"]["junctions"]:
 
 # Sample names to help expanding lists of all bam files
 # and to aid in defining wildcards
-SAMP_NAMES = list(config["samples"].keys())
+if config["download_fastqs"]:
+    SAMP_NAMES = config["sra_accessions"]
+else:
+    SAMP_NAMES = list(config["samples"].keys())
 
 
 # Directory containing index; used in case of certain aligners
