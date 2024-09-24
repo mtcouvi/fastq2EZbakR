@@ -296,6 +296,13 @@ rsem_index_params: ""
 rsem_quant_params: ""
 
 
+##### FASTERQDUMP PARAMETERS ######
+
+# Optional parameters to pass to fasterq_dump if sra_download = True
+fasterq_dump_extras: ""
+
+
+
 ##### RSEM+ parameters #####
 
 # New read mutation rates

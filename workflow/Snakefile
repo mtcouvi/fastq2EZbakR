@@ -50,6 +50,8 @@ include: "rules/bam2bakr.smk"
 include: "rules/features.smk"
 include: "rules/lowram.smk"
 
+if config["download_fastqs"]:
+    include: "rules/sra.smk"
 
 if not config["bam2bakr"]:
 
