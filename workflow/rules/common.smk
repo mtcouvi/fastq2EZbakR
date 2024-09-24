@@ -69,8 +69,7 @@ def get_input_fastqs(wildcards):
 fastq_paths = config["samples"]
 
 
-if not config["download_fastqs"]
-
+if not config["download_fastqs"]:
     is_gz = False
 
     for p in fastq_paths.values():
