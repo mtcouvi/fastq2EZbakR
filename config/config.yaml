@@ -264,7 +264,7 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
   # --outSAMattributes will also be set and provided the tags specified in `star_sam_tags`, overwriting whatever is set here
   # Finally, --outSAMType will be force set to BAM SortedByCoordinate, overwriting whatever is set here
   # We suggest turning off soft-clipping to improve assignment of reads to exons
-star_align_params: "--alignEndsType Local"
+star_align_params: "--alignEndsType EndToEnd --outFilterType BySJout --outFilterMismatchNmax 20 --outFilterScoreMinOverLread 0.4 --outFilterMatchNminOverLread 0.4"
 
 
 
@@ -299,7 +299,7 @@ rsem_quant_params: ""
 ##### FASTERQDUMP PARAMETERS ######
 
 # Optional parameters to pass to fasterq_dump if sra_download = True
-fasterq_dump_extras: ""
+fasterq_dump_extras: "--skip-technical"
 
 
 
