@@ -15,6 +15,18 @@
 # paths to directories containing fastq files will be expected as input.
 bam2bakr: False
 
+# Download fastq files from SRA? If True, you don't need to specify paths to fastq files under samples.
+# In fact, samples will go completely unused in this case
+# NOTE: check if the fastq files you are downloading are all
+# paired end or single end, and make sure to set PE accordingly
+# below.
+download_fastqs: False
+
+# List of SRA accession codes to download fastq files from
+# Only relevant if download_fastqs is True
+sra_accessions: ["SRR24994162", "SRR24994161"]
+
+
 ## Paths to data to process
 # path to directory containing fastq files if bam2bakr is False
   # fastq files can be either gzipped or unzipped
@@ -252,7 +264,7 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
   # --outSAMattributes will also be set and provided the tags specified in `star_sam_tags`, overwriting whatever is set here
   # Finally, --outSAMType will be force set to BAM SortedByCoordinate, overwriting whatever is set here
   # We suggest turning off soft-clipping to improve assignment of reads to exons
-star_align_params: "--alignEndsType Local"
+star_align_params: "--alignEndsType EndToEnd --outFilterType BySJout --outFilterMismatchNmax 20 --outFilterScoreMinOverLread 0.4 --outFilterMatchNminOverLread 0.4"
 
 
 
@@ -282,6 +294,13 @@ rsem_index_params: ""
 
 # Optional parameters to set for RSEM quantification
 rsem_quant_params: ""
+
+
+##### FASTERQDUMP PARAMETERS ######
+
+# Optional parameters to pass to fasterq_dump if sra_download = True
+fasterq_dump_extras: "--skip-technical"
+
 
 
 ##### RSEM+ parameters #####
