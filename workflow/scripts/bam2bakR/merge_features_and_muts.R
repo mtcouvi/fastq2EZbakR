@@ -163,7 +163,7 @@ if(opt$frombam){
     if(nrow(current_assignments) == 0){
       stop("Something went wrong, current_assignments is empty!")
     }
-    
+
     setDT(current_assignments)
     setkey(current_assignments, GF, bamfile_transcripts)
     setkey(muts, GF, bamfile_transcripts)
@@ -176,6 +176,8 @@ if(opt$frombam){
 
     muts[, bamfile_transcripts := new_bft]
     muts[, new_bft := NULL]
+
+    setkey(muts, qname)
 
   }
 
