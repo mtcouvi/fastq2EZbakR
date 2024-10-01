@@ -153,6 +153,7 @@ if(opt$frombam){
       tidyr::separate_rows(transcript_id, sep = "\\+")
 
 
+    setDT(current_assignments)
     setkey(current_assignments, GF, transcript_id)
 
     current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
@@ -162,7 +163,8 @@ if(opt$frombam){
     if(nrow(current_assignments) == 0){
       stop("Something went wrong, current_assignments is empty!")
     }
-
+    
+    setDT(current_assignments)
     setkey(current_assignments, GF, bamfile_transcripts)
     setkey(muts, GF, bamfile_transcripts)
 
