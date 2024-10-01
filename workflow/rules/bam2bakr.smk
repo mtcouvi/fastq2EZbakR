@@ -223,7 +223,7 @@ if not config["lowRAM"]:
                 "../scripts/bam2bakR/merge_features_and_muts.R"
             ),
             muttypes=config["mut_tracks"],
-            annotatoin=config["annotation"],
+            annotation=config["annotation"],
         log:
             "logs/merge_features_and_muts/{sample}.log",
         threads: 8
