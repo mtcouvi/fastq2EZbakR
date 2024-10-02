@@ -158,7 +158,14 @@ if(opt$frombam){
 
     current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
       dplyr::group_by(GF, bamfile_transcripts) %>%
-      dplyr::summarise(new_bft = paste(transcript_id, collapse="+"))
+      dplyr::summarise(new_bft = paste(transcript_id, collapse="+")) %>%
+      dplyr::bind_rows(
+        tibble(
+          GF = unique(muts$GF),
+          bamfile_transcripts = "__no_feature",
+          new_bft = "__no_feature"
+        )
+      )
 
     if(nrow(current_assignments) == 0){
       stop("Something went wrong, current_assignments is empty!")
