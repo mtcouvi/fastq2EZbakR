@@ -204,24 +204,34 @@ run_rsem: True
 # If PE = True, then "-p --countReadPairs" is also automatically set
 #
 # !!DO NOT REDUNDANTLY SPECIFY AUTOMATICALLY SPECIFIED PARAMETERS!!
+# Defaults suggested:
+# 1) Set -M for all cases. Non-primary multi-mapping reads are filtered
+# prior to running featureCounts, so we want to count all reads. There
+# seems to be a bug in featureCounts that can cause some primary, multi-mapping
+# reads getting unassigned. Setting -M avoids this problem.
+# 2) Set --nonOverlap to 0 for exon assignment. This is the key to exonic assignment,
+# ensuring that reads overlapping any non-exonic region are unassigned to tne xonic feature (XF).
+# Unfortunately, soft-clipping counts as non-assignment, so it is best to either turn off soft-clipping
+# in your aligner (which is done in the defaults for STAR and HISAT2 below) or increase the 
+# nonOverlap parameter to allow some leniency
 
 # Parameters for assignment of reads to genes
-fc_genes_extra: "--primary"
+fc_genes_extra: "-M"
 
 # Parameters for assignment of reads to exons
-fc_exons_extra: "--nonOverlap 0 --primary"
+fc_exons_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 --primary"
+fc_transcripts_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exonbins
-fc_exonbins_extra: "--primary"
+fc_exonbins_extra: "-M"
 
 # Parameters for assignment of reads to exon-exon junctions
-fc_eej_extra: "--primary"
+fc_eej_extra: "-M"
 
 # Parameters for assignment of reads to exon-intron junctions
-fc_eij_extra: "--primary"
+fc_eij_extra: "-M"
 
 
 ##### JUNCTION ANNOTATION PARAMETERS #####

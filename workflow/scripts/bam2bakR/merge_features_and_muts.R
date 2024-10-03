@@ -48,7 +48,9 @@ option_list <- list(
   make_option(c("-m", "--muttypes", type = "character"),
               help = "String of comma separated mutation types to keep in cBs."),
   make_option(c("-s", "--sample", type = "character"),
-              help = "Sample name")
+              help = "Sample name"),
+  make_option(c("--annotation", type = "character"),
+              help = "Path to annotation GTF file.")          
 )
 
 opt_parser <- OptionParser(option_list = option_list)
@@ -97,6 +99,98 @@ if(opt$genes){
   
   feature_vect <- c(feature_vect, "GF")
   
+}
+
+
+if(opt$frombam){
+
+  sample <- paste0("^", opt$sample, ".csv")
+  
+  transcripts_file <- list.files("./results/read_to_transcripts/",
+                              pattern = sample, full.names = TRUE)[1]
+  
+  transcripts <- fread(transcripts_file)
+  
+  colnames(transcripts) <- c("qname", "bamfile_transcripts")
+  
+  
+  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]  
+  
+  setkey(transcripts, qname)
+
+  muts <- transcripts[muts]
+
+  muts[, bamfile_transcripts := ifelse(is.na(bamfile_transcripts), "__no_feature", bamfile_transcripts)]
+
+
+  if(opt$genes){
+    ### Filter out incorrectly assigned isoforms
+    ### due to STAR assigning read to isoform on oppposite
+    ### strand.
+    ### Idea is that featureCount's gene assignment correctly
+    ### assigns the gene, so the annotation can be used to determine
+    ### the set of isoforms that are legit.
+    library(rtracklayer)
+    library(tidyr)
+    library(dplyr)
+
+    # Table of set of isoforms from each gene
+    gene2transcript <- rtracklayer::import(opt$annotation) %>% 
+      dplyr::as_tibble() %>%
+      dplyr::filter(type == "transcript") %>%
+      dplyr::select(gene_id, transcript_id) %>%
+      dplyr::distinct() %>%
+      dplyr::rename(GF = gene_id)
+
+    setDT(gene2transcript)
+    setkey(gene2transcript, GF, transcript_id)
+
+    # Unique set of bamfile_transcripts and GF combos
+    current_assignments <- muts %>%
+      dplyr::select(GF, bamfile_transcripts) %>%
+      dplyr::distinct() %>%
+      dplyr::mutate(transcript_id = bamfile_transcripts) %>% 
+      tidyr::separate_rows(transcript_id, sep = "\\+")
+
+
+    setDT(current_assignments)
+    setkey(current_assignments, GF, transcript_id)
+
+    current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
+      dplyr::group_by(GF, bamfile_transcripts) %>%
+      dplyr::summarise(new_bft = paste(transcript_id, collapse="+")) %>%
+      dplyr::bind_rows(
+        tibble(
+          GF = unique(muts$GF),
+          bamfile_transcripts = "__no_feature",
+          new_bft = "__no_feature"
+        )
+      )
+
+    if(nrow(current_assignments) == 0){
+      stop("Something went wrong, current_assignments is empty!")
+    }
+
+    setDT(current_assignments)
+    setkey(current_assignments, GF, bamfile_transcripts)
+    setkey(muts, GF, bamfile_transcripts)
+
+    muts <- muts[current_assignments, nomatch = NULL]
+
+    if(nrow(current_assignments) == 0){
+      stop("Something went wrong, muts is empty!")
+    }
+
+    muts[, bamfile_transcripts := new_bft]
+    muts[, new_bft := NULL]
+
+    setkey(muts, qname)
+
+  }
+
+  
+  feature_vect <- c(feature_vect, "bamfile_transcripts")
+
 }
 
 
@@ -185,31 +279,6 @@ if(opt$transcripts){
   feature_vect <- c(feature_vect, "transcripts")
 
   
-}
-
-if(opt$frombam){
-
-  sample <- paste0("^", opt$sample, ".csv")
-  
-  transcripts_file <- list.files("./results/read_to_transcripts/",
-                              pattern = sample, full.names = TRUE)[1]
-  
-  transcripts <- fread(transcripts_file)
-  
-  colnames(transcripts) <- c("qname", "bamfile_transcripts")
-  
-  
-  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]  
-  
-  setkey(transcripts, qname)
-
-  muts <- transcripts[muts]
-
-  muts[, bamfile_transcripts := ifelse(is.na(bamfile_transcripts), "__no_feature", bamfile_transcripts)]
-
-  
-  feature_vect <- c(feature_vect, "bamfile_transcripts")
-
 }
 
 
