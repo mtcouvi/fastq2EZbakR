@@ -61,10 +61,10 @@ if config["skip_trimming"] and is_gz:
         log:
             "logs/unzip/{sample}.log",
         conda:
-            "../envs/rapidgzip.yaml"
-        threads: 128  # see rapidgzip github for specs; doesn't start to plateau until 128 cores
+            "../envs/pigz.yaml"
+        threads: 1
         script:
-            "../scripts/preprocess/rapidgzip.py"
+            "../scripts/preprocess/pigz.py"
 
 
 # Run fastqc on trimmed fastqs
