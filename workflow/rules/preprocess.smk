@@ -61,7 +61,7 @@ if config["skip_trimming"] and is_gz:
         log:
             "logs/unzip/{sample}.log",
         conda:
-            "../envs/pigz.yaml"
+            "../envs/full.yaml"
         threads: 1
         script:
             "../scripts/preprocess/pigz.py"
