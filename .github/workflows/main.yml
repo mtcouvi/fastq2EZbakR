@@ -45,43 +45,43 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Test workflow (transcripts)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/transcript_nofastp.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (hisat2 no fastp)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/hisat2_skip_fastp.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (lowRAM)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/lowram_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (transcripts)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/transcript_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (bam2EZbakR)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/bam2bakR_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (mutpos)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
         args: "--configfile .test/configs/mutpos_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
     - name: Test workflow (hisat2)
-      uses: snakemake/snakemake-github-action@v1.25.1
+      uses: ezherman/snakemake-github-action@b6bd319468ad9a049d37058554ebcd52eca38c92
       with:
         directory: .test
         snakefile: workflow/Snakefile
