@@ -18,7 +18,7 @@ rule featurecounts_genes:
         strand=FC_STRAND,  # optional; strandness of the library (0: unstranded [default], 1: stranded, and 2: reversely stranded)
         extra=config["fc_genes_extra"] + FC_GENES_PARAMS,
     log:
-        "logs/featurecounts_gene/{sample}.log",
+        "logs/featurecounts_genes/{sample}.log",
     wrapper:
         "v3.0.2/bio/subread/featurecounts"
 

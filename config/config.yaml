@@ -15,6 +15,18 @@
 # paths to directories containing fastq files will be expected as input.
 bam2bakr: False
 
+# Download fastq files from SRA? If True, you don't need to specify paths to fastq files under samples.
+# In fact, samples will go completely unused in this case
+# NOTE: check if the fastq files you are downloading are all
+# paired end or single end, and make sure to set PE accordingly
+# below.
+download_fastqs: False
+
+# List of SRA accession codes to download fastq files from
+# Only relevant if download_fastqs is True
+sra_accessions: ["SRR24994162", "SRR24994161"]
+
+
 ## Paths to data to process
 # path to directory containing fastq files if bam2bakr is False
   # fastq files can be either gzipped or unzipped
@@ -192,24 +204,34 @@ run_rsem: True
 # If PE = True, then "-p --countReadPairs" is also automatically set
 #
 # !!DO NOT REDUNDANTLY SPECIFY AUTOMATICALLY SPECIFIED PARAMETERS!!
+# Defaults suggested:
+# 1) Set -M for all cases. Non-primary multi-mapping reads are filtered
+# prior to running featureCounts, so we want to count all reads. There
+# seems to be a bug in featureCounts that can cause some primary, multi-mapping
+# reads getting unassigned. Setting -M avoids this problem.
+# 2) Set --nonOverlap to 0 for exon assignment. This is the key to exonic assignment,
+# ensuring that reads overlapping any non-exonic region are unassigned to tne xonic feature (XF).
+# Unfortunately, soft-clipping counts as non-assignment, so it is best to either turn off soft-clipping
+# in your aligner (which is done in the defaults for STAR and HISAT2 below) or increase the 
+# nonOverlap parameter to allow some leniency
 
 # Parameters for assignment of reads to genes
-fc_genes_extra: "--primary"
+fc_genes_extra: "-M"
 
 # Parameters for assignment of reads to exons
-fc_exons_extra: "--nonOverlap 0 --primary"
+fc_exons_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 --primary"
+fc_transcripts_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exonbins
-fc_exonbins_extra: "--primary"
+fc_exonbins_extra: "-M"
 
 # Parameters for assignment of reads to exon-exon junctions
-fc_eej_extra: "--primary"
+fc_eej_extra: "-M"
 
 # Parameters for assignment of reads to exon-intron junctions
-fc_eij_extra: "--primary"
+fc_eij_extra: "-M"
 
 
 ##### JUNCTION ANNOTATION PARAMETERS #####
@@ -252,7 +274,7 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
   # --outSAMattributes will also be set and provided the tags specified in `star_sam_tags`, overwriting whatever is set here
   # Finally, --outSAMType will be force set to BAM SortedByCoordinate, overwriting whatever is set here
   # We suggest turning off soft-clipping to improve assignment of reads to exons
-star_align_params: "--alignEndsType Local"
+star_align_params: "--alignEndsType EndToEnd --outFilterType BySJout --outFilterMismatchNmax 20 --outFilterScoreMinOverLread 0.4 --outFilterMatchNminOverLread 0.4"
 
 
 
@@ -282,6 +304,13 @@ rsem_index_params: ""
 
 # Optional parameters to set for RSEM quantification
 rsem_quant_params: ""
+
+
+##### FASTERQDUMP PARAMETERS ######
+
+# Optional parameters to pass to fasterq_dump if sra_download = True
+fasterq_dump_extras: "--skip-technical"
+
 
 
 ##### RSEM+ parameters #####

@@ -223,6 +223,7 @@ if not config["lowRAM"]:
                 "../scripts/bam2bakR/merge_features_and_muts.R"
             ),
             muttypes=config["mut_tracks"],
+            annotation=config["annotation"],
         log:
             "logs/merge_features_and_muts/{sample}.log",
         threads: 8
@@ -234,7 +235,8 @@ if not config["lowRAM"]:
 
             {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
             -t {params.transcripts_included} --frombam {params.bamfiletranscripts_included} -o {output.output} -s {wildcards.sample} \
-            -j {params.eej_included} --starjunc {params.starjunc_included} --eij {params.eij_included} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
+            -j {params.eej_included} --starjunc {params.starjunc_included} --eij {params.eij_included} \
+            --annotation {params.annotation} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
             """
 
 

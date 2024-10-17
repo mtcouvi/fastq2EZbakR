@@ -22,6 +22,11 @@ if "run_rsem" not in config:
 if "skip_trimming" not in config:
     config["skip_trimming"] = False
 
+if "download_fastqs" not in config:
+    config["download_fastqs"] = False
+
+if "sra_accessions" not in config:
+    config["sra_accessions"] = []
 
 ##### setup report #####
 
@@ -44,6 +49,11 @@ include: "rules/common.smk"
 include: "rules/bam2bakr.smk"
 include: "rules/features.smk"
 include: "rules/lowram.smk"
+
+
+if config["download_fastqs"]:
+
+    include: "rules/sra.smk"
 
 
 if not config["bam2bakr"]:
