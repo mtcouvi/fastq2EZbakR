@@ -95,24 +95,10 @@ indices: data/indices/star_index
 strandedness: "reverse"
 
 
-# Augmentative analysis strategies
-  # RSEMp:
-    # Only compatible with STAR alignment.
-    # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
-  # Transcripts:
-    # Only compatible with STAR alignment
-    # Assign reads to set of isoforms with which they are consistent.
-strategies:
-    RSEMp: False
-    Transcripts: False
-
-
 # Features to assign reads to
   # genes = anywhere in an annotated gene body
   # exons = in exclusively exonic regions of a gene
-  # transcripts = set of transcripts with which read overlaps
-    # NOTE: Does not account for splice junctions the reads overlaps.
-    # Thus, Transcripts strategies should usually be preferred to this
+  # tec = set of transcripts with which read overlaps; TEC = transcript equivalence class
   # exonic_bins = exonic regions as defined in DEXSeq paper (Anders et al., 2012)
   # junctions = exon-exon junctions. Only compatible with STAR-based alignment
     # as STAR's unique jI and jM bam file tags are required
@@ -124,7 +110,7 @@ strategies:
 features:
     genes: True
     exons: True
-    transcripts: False
+    tec: False
     exonic_bins: False
     junctions: False
     eej: False
@@ -311,31 +297,6 @@ rsem_quant_params: ""
 # Optional parameters to pass to fasterq_dump if sra_download = True
 fasterq_dump_extras: "--skip-technical"
 
-
-
-##### RSEM+ parameters #####
-
-# New read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-pnews:
-    WT_1: 0.05 
-    WT_2: 0.05
-    WT_ctl: 0
-    KO_1: 0.05
-    KO_2: 0.05
-    KO_ctl: 0
-
-# Old read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-polds:
-    WT_1: 0.001
-    WT_2: 0.001
-    WT_ctl: 0
-    KO_1: 0.001
-    KO_2: 0.001
-    KO_ctl: 0
 
 
 

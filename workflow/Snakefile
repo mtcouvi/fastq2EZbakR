@@ -11,7 +11,7 @@ min_version("6.4.1")
 configfile: "config/config.yaml"
 
 
-##### Impute potentially missing config parameters #####
+##### Impute potentially missing config parameters for backwards compatibiltiy #####
 
 if "lowRAM" not in config:
     config["lowRAM"] = False
@@ -27,6 +27,18 @@ if "download_fastqs" not in config:
 
 if "sra_accessions" not in config:
     config["sra_accessions"] = []
+
+if "strategies" in config:
+    config["features"]["tec"] = config["strategies"]["Transcripts"]
+
+if "tec" not in config["features"]:
+    config["features"]["tec"] = False
+
+if "strategies" not in config:
+    config["strategies"] = {"RSEMp": False, "Transcripts": config["features"]["tec"]}
+
+if "transcripts" not in config["features"]:
+    config["features"]["transcripts"] = False
 
 ##### setup report #####
 

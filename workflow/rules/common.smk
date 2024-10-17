@@ -2,11 +2,6 @@ import glob
 import os
 
 
-### If RSEM plus is set, make sure that exons are quantified
-if config["strategies"]["RSEMp"]:
-    config["features"]["exons"] = True
-
-
 ### If assigning reads to junctions, need to keep jI and jM tags for now
 if config["features"]["junctions"]:
     config["remove_tags"] = False
@@ -93,8 +88,8 @@ if config["features"]["transcripts"]:
 if config["features"]["exonic_bins"]:
     keepcols.append("exon_bin")
 
-if config["strategies"]["Transcripts"]:
-    keepcols.append("bamfile_transcripts")
+if config["features"]["tec"]:
+    keepcols.append("TEC")
 
 if config["features"]["junctions"]:
     keepcols.append("junction_start")
@@ -456,7 +451,7 @@ def get_merge_input(wildcards):
             )
         )
 
-    if config["strategies"]["Transcripts"]:
+    if config["features"]["tec"]:
         MERGE_INPUT.extend(
             expand("results/read_to_transcripts/{SID}.csv", SID=wildcards.sample)
         )
@@ -573,9 +568,6 @@ def get_other_output():
         )
     )
 
-    if config["strategies"]["RSEMp"]:
-        target.append("results/transcript_fn/RSEM_plus.csv")
-
     if config["aligner"] == "star" and not config["bam2bakr"] and config["run_rsem"]:
         target.append(expand("results/rsem/{SID}.isoforms.results", SID=SAMP_NAMES))
 
@@ -652,8 +644,8 @@ if config["features"]["transcripts"]:
 if config["features"]["exonic_bins"]:
     colnames.append("exon_bin")
 
-if config["strategies"]["Transcripts"]:
-    colnames.append("bamfile_transcripts")
+if config["featres"]["tec"]:
+    colnames.append("TEC")
 
 
 if config["features"]["junctions"]:
@@ -779,7 +771,7 @@ def get_lowram_merge_input(wildcards):
             )
         )
 
-    if config["strategies"]["Transcripts"]:
+    if config["features"]["tec"]:
         MERGE_INPUT.extend(
             expand(
                 "results/sort_bamtranscript_by_qname/{SID}.csv", SID=wildcards.sample
