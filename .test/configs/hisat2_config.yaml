@@ -188,9 +188,6 @@ fc_genes_extra: "--primary"
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 --primary"
 
-# Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 --primary"
-
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: "--primary"
 
