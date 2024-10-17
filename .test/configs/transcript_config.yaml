@@ -72,32 +72,15 @@ indices: star_index
   # Used by HTSeq (see https://htseq.readthedocs.io/en/master/htseqcount.html for details)
 strandedness: "reverse"
 
-
-# Augmentative analysis strategies
-  # Transcripts:
-    # Only compatible with STAR alignment.
-    # Final cB will have a column named "transcripts" which will indicate the set of transcripts that each read is 
-    # compatible with. This can be used in conjunction with bakR to perform transcript-isoform specific kinetic parameter
-    # estimates.
-  # FlatStacks:
-    # Flatten annotation with DEXSeq and have a column in the final cB correspond to assignment of reads to exonic
-    # bins. Useful to identify certain isoform-specific effects.
-  # RSEM+:
-    # Onloy compatible with STAR alignment.
-    # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
-strategies:
-    RSEMp: True
-    Transcripts: True
-
 # Features to quantify
 features:
     genes: True
-    exons: False
-    transcripts: True
-    exonic_bins: False
+    exons: True
+    tec: True
+    exonic_bins: True
     junctions: True
-    eij: True
     eej: True
+    eij: True
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
