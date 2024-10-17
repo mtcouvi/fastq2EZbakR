@@ -28,7 +28,7 @@ All other output produced by fastq2EZbakR is documented [here](https://fastq2ezb
 
 fastq2EZbakR provides a number of unique functionalites not found in other established NR-seq data processing tools. These include:
 
-1. Flexible assignment of reads to [genomic features]([features.md](https://fastq2ezbakr.readthedocs.io/en/latest/features/)).
+1. Flexible assignment of reads to [genomic features](https://fastq2ezbakr.readthedocs.io/en/latest/features/).
 1. Quantification of any mutation type you are interested in. T-to-C mutation counting is the most common NR-seq application, but any combination of mutation types are fair game. 
 1. A [tidy](https://vita.had.co.nz/papers/tidy-data.pdf), easy to work with representation of your mutational data in the form of the aforementioned cB file.
 1. Optional site-specific mutation counting (as was used [here](https://acs.figshare.com/collections/Disulfide_Tethering_to_Map_Small_Molecule_Binding_Sites_Transcriptome-wide/7421963) for example). Has allowed fastq2EZbakR to support processing of non-NR-seq mutational probing RNA-seq datasets.
