@@ -11,10 +11,6 @@
 #
 ####### PARAMETERS YOU NEED TO SET #######
 
-# Run bam2bakR only? If true, will expect paths to bam files as input and alignment steps will be skipped. If false,
-# paths to directories containing fastq files will be expected as input.
-bam2bakr: False
-
 ## Paths to data to process
 # path to directory containing fastq files if bam2bakr is False
   # fastq files can be either gzipped or unzipped
@@ -76,32 +72,15 @@ indices: star_index
   # Used by HTSeq (see https://htseq.readthedocs.io/en/master/htseqcount.html for details)
 strandedness: "reverse"
 
-
-# Augmentative analysis strategies
-  # Transcripts:
-    # Only compatible with STAR alignment.
-    # Final cB will have a column named "transcripts" which will indicate the set of transcripts that each read is 
-    # compatible with. This can be used in conjunction with bakR to perform transcript-isoform specific kinetic parameter
-    # estimates.
-  # FlatStacks:
-    # Flatten annotation with DEXSeq and have a column in the final cB correspond to assignment of reads to exonic
-    # bins. Useful to identify certain isoform-specific effects.
-  # RSEM+:
-    # Onloy compatible with STAR alignment.
-    # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
-strategies:
-    RSEMp: True
-    Transcripts: True
-
 # Features to quantify
 features:
     genes: True
-    exons: False
-    transcripts: True
-    exonic_bins: False
+    exons: True
+    tec: True
+    exonic_bins: True
     junctions: True
-    eij: True
     eej: True
+    eij: True
 
 ####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
 
@@ -192,9 +171,6 @@ fc_genes_extra: "--primary"
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 --primary"
 
-# Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 --primary"
-
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: "--primary"
 
@@ -270,25 +246,6 @@ rsem_index_params: ""
 
 # Optional parameters to set for RSEM quantification
 rsem_quant_params: ""
-
-
-##### RSEM+ parameters #####
-
-# New read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-pnews:
-    WT_1: 0.05 
-    WT_2: 0.05
-    WT_ctl: 0
-
-# Old read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-polds:
-    WT_1: 0.001
-    WT_2: 0.001
-    WT_ctl: 0
 
 
 ##### SITE-SPECIFIC MUTATION CALLING PARAMETERS #####

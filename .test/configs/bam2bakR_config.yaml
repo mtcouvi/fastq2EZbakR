@@ -11,9 +11,6 @@
 #
 ####### PARAMETERS YOU NEED TO SET #######
 
-# Run bam2bakR only? If true, will expect paths to bam files as input and alignment steps will be skipped. If false,
-# paths to directories containing fastq files will be expected as input.
-bam2bakr: True
 
 ## Paths to data to process
 # path to directory containing fastq files if bam2bakr is False
@@ -191,9 +188,6 @@ fc_genes_extra: "--primary"
 
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 --primary"
-
-# Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 --primary"
 
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: "--primary"

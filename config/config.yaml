@@ -11,9 +11,6 @@
 #
 ####### PARAMETERS YOU NEED TO SET #######
 
-# Run bam2bakR only? If true, will expect paths to bam files as input and alignment steps will be skipped. If false,
-# paths to directories containing fastq files will be expected as input.
-bam2bakr: False
 
 # Download fastq files from SRA? If True, you don't need to specify paths to fastq files under samples.
 # In fact, samples will go completely unused in this case
@@ -95,24 +92,10 @@ indices: data/indices/star_index
 strandedness: "reverse"
 
 
-# Augmentative analysis strategies
-  # RSEMp:
-    # Only compatible with STAR alignment.
-    # Estimate kinetic parameters for transcript isoforms by combining RSEM quantification with bakR's statistical model.
-  # Transcripts:
-    # Only compatible with STAR alignment
-    # Assign reads to set of isoforms with which they are consistent.
-strategies:
-    RSEMp: False
-    Transcripts: False
-
-
 # Features to assign reads to
   # genes = anywhere in an annotated gene body
   # exons = in exclusively exonic regions of a gene
-  # transcripts = set of transcripts with which read overlaps
-    # NOTE: Does not account for splice junctions the reads overlaps.
-    # Thus, Transcripts strategies should usually be preferred to this
+  # tec = set of transcripts with which read overlaps; TEC = transcript equivalence class
   # exonic_bins = exonic regions as defined in DEXSeq paper (Anders et al., 2012)
   # junctions = exon-exon junctions. Only compatible with STAR-based alignment
     # as STAR's unique jI and jM bam file tags are required
@@ -124,14 +107,14 @@ strategies:
 features:
     genes: True
     exons: True
-    transcripts: False
+    tec: False
     exonic_bins: False
     junctions: False
     eej: False
     eij: False
 
 
-####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
+####### ADDITIONAL PARAMETERS TO TUNE PIPELINE FUNCTION AND THE VARIOUS TOOLS USED #######
 
 
 ##### PARAMETERS MOST WORTH DOUBLE CHECKING #####
@@ -220,9 +203,6 @@ fc_genes_extra: "-M"
 
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 -M"
-
-# Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: "-M"
@@ -313,31 +293,6 @@ fasterq_dump_extras: "--skip-technical"
 
 
 
-##### RSEM+ parameters #####
-
-# New read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-pnews:
-    WT_1: 0.05 
-    WT_2: 0.05
-    WT_ctl: 0
-    KO_1: 0.05
-    KO_2: 0.05
-    KO_ctl: 0
-
-# Old read mutation rates
-# If set to -1, then rates will be estimated by model
-# Set rate to 0 if -s4U sample
-polds:
-    WT_1: 0.001
-    WT_2: 0.001
-    WT_ctl: 0
-    KO_1: 0.001
-    KO_2: 0.001
-    KO_ctl: 0
-
-
 
 ##### SITE-SPECIFIC MUTATION CALLING PARAMETERS #####
 
@@ -349,7 +304,14 @@ max_pos_coverage: 10000000
 
 
 
+
+
+
+
+##############################
 ##### DEFUNCT PARAMETERS #####
+##############################
+# These currently do nothing, but might come back in future releases
 
 # Add a full-gene "transcript" to annotation used for STAR + RSEM to quantify pre-mRNA.
   # This is a nice way to "regress out" pre-mRNA abundance and to identify

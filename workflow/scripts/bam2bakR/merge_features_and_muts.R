@@ -111,16 +111,16 @@ if(opt$frombam){
   
   transcripts <- fread(transcripts_file)
   
-  colnames(transcripts) <- c("qname", "bamfile_transcripts")
+  colnames(transcripts) <- c("qname", "TEC")
   
   
-  transcripts <- transcripts[ , c("qname", "bamfile_transcripts")]  
+  transcripts <- transcripts[ , c("qname", "TEC")]  
   
   setkey(transcripts, qname)
 
   muts <- transcripts[muts]
 
-  muts[, bamfile_transcripts := ifelse(is.na(bamfile_transcripts), "__no_feature", bamfile_transcripts)]
+  muts[, TEC := ifelse(is.na(TEC), "__no_feature", TEC)]
 
 
   if(opt$genes){
@@ -145,11 +145,11 @@ if(opt$frombam){
     setDT(gene2transcript)
     setkey(gene2transcript, GF, transcript_id)
 
-    # Unique set of bamfile_transcripts and GF combos
+    # Unique set of TEC and GF combos
     current_assignments <- muts %>%
-      dplyr::select(GF, bamfile_transcripts) %>%
+      dplyr::select(GF, TEC) %>%
       dplyr::distinct() %>%
-      dplyr::mutate(transcript_id = bamfile_transcripts) %>% 
+      dplyr::mutate(transcript_id = TEC) %>% 
       tidyr::separate_rows(transcript_id, sep = "\\+")
 
 
@@ -157,12 +157,12 @@ if(opt$frombam){
     setkey(current_assignments, GF, transcript_id)
 
     current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
-      dplyr::group_by(GF, bamfile_transcripts) %>%
+      dplyr::group_by(GF, TEC) %>%
       dplyr::summarise(new_bft = paste(transcript_id, collapse="+")) %>%
       dplyr::bind_rows(
         tibble(
           GF = unique(muts$GF),
-          bamfile_transcripts = "__no_feature",
+          TEC = "__no_feature",
           new_bft = "__no_feature"
         )
       )
@@ -172,8 +172,8 @@ if(opt$frombam){
     }
 
     setDT(current_assignments)
-    setkey(current_assignments, GF, bamfile_transcripts)
-    setkey(muts, GF, bamfile_transcripts)
+    setkey(current_assignments, GF, TEC)
+    setkey(muts, GF, TEC)
 
     muts <- muts[current_assignments, nomatch = NULL]
 
@@ -181,7 +181,7 @@ if(opt$frombam){
       stop("Something went wrong, muts is empty!")
     }
 
-    muts[, bamfile_transcripts := new_bft]
+    muts[, TEC := new_bft]
     muts[, new_bft := NULL]
 
     setkey(muts, qname)
@@ -189,7 +189,7 @@ if(opt$frombam){
   }
 
   
-  feature_vect <- c(feature_vect, "bamfile_transcripts")
+  feature_vect <- c(feature_vect, "TEC")
 
 }
 
