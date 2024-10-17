@@ -11,9 +11,6 @@
 #
 ####### PARAMETERS YOU NEED TO SET #######
 
-# Run bam2bakR only? If true, will expect paths to bam files as input and alignment steps will be skipped. If false,
-# paths to directories containing fastq files will be expected as input.
-bam2bakr: False
 
 # Download fastq files from SRA? If True, you don't need to specify paths to fastq files under samples.
 # In fact, samples will go completely unused in this case

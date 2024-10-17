@@ -1,6 +1,9 @@
 import glob
 import os
 
+### Figure out if bam files or fastq files are provided
+config["bam2bakr"] = all(value.endswith(".bam") for value in config["samples"].values())
+
 
 ### If assigning reads to junctions, need to keep jI and jM tags for now
 if config["features"]["junctions"]:
