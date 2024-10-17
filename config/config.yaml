@@ -114,7 +114,7 @@ features:
     eij: False
 
 
-####### OPTIONAL PARAMETERS FOR EACH TOOL USED #######
+####### ADDITIONAL PARAMETERS TO TUNE PIPELINE FUNCTION AND THE VARIOUS TOOLS USED #######
 
 
 ##### PARAMETERS MOST WORTH DOUBLE CHECKING #####
@@ -199,13 +199,10 @@ run_rsem: True
 # nonOverlap parameter to allow some leniency
 
 # Parameters for assignment of reads to genes
-fc_genes_extra: "-M"
+fc_genes_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 -M"
-
-# Parameters for assignment of reads to transcripts
-fc_transcripts_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exonbins
 fc_exonbins_extra: "-M"
@@ -307,7 +304,14 @@ max_pos_coverage: 10000000
 
 
 
+
+
+
+
+##############################
 ##### DEFUNCT PARAMETERS #####
+##############################
+# These currently do nothing, but might come back in future releases
 
 # Add a full-gene "transcript" to annotation used for STAR + RSEM to quantify pre-mRNA.
   # This is a nice way to "regress out" pre-mRNA abundance and to identify

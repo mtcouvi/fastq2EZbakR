@@ -40,6 +40,9 @@ if "strategies" not in config:
 if "transcripts" not in config["features"]:
     config["features"]["transcripts"] = False
 
+if "fc_transcripts_extra" not in config:
+    config["fc_transcripts_extra"] = ""
+
 ##### setup report #####
 
 
