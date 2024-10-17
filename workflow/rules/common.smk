@@ -647,7 +647,7 @@ if config["features"]["transcripts"]:
 if config["features"]["exonic_bins"]:
     colnames.append("exon_bin")
 
-if config["featres"]["tec"]:
+if config["features"]["tec"]:
     colnames.append("TEC")
 
 
