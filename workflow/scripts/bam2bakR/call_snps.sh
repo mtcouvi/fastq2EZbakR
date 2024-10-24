@@ -23,7 +23,6 @@ output_dir=$5
 genome_fasta=$6
 
 
-touch "$output_dir"
 
 
 
