@@ -322,7 +322,7 @@ rule maketdf:
         normalize=config["normalize"],
     log:
         "logs/maketdf/{sample}.log",
-    threads: 20
+    threads: 10
     conda:
         "../envs/full.yaml"
     shell:
