@@ -13,8 +13,6 @@ unset control_samples[3]
 unset control_samples[4]
 unset control_samples[5]
 
-rm -f 0
-
 cpus=$1
 nsamps=$2
 output_txt=$3
@@ -73,3 +71,6 @@ else
     touch "$output_txt"
     touch "$output_vcf"
 fi
+
+
+rm -f 0
