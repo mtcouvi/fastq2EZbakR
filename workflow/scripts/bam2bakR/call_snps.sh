@@ -13,6 +13,7 @@ unset control_samples[3]
 unset control_samples[4]
 unset control_samples[5]
 
+rm -f 0
 
 cpus=$1
 nsamps=$2
