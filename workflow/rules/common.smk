@@ -571,6 +571,12 @@ def get_other_output():
         )
     )
 
+    # fastQC output
+    if not config["bam2bakr"]:
+        target.append(
+            expand("results/fastqc/{SID}_{read}.html", SID=SAMP_NAMES, read=READ_NAMES)
+        )
+
     if config["aligner"] == "star" and not config["bam2bakr"] and config["run_rsem"]:
         target.append(expand("results/rsem/{SID}.isoforms.results", SID=SAMP_NAMES))
 

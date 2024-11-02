@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# Cute trick to deal with fact that there is an uncertaint number of control sample
+# Cute trick to deal with fact that there is an uncertain number of control sample
     # control_samples becomes array with all args
     # remove args that I know aren't the actual control_samples
 control_samples=("$@")
@@ -12,18 +12,14 @@ unset control_samples[2]
 unset control_samples[3]
 unset control_samples[4]
 unset control_samples[5]
-unset control_samples[6]
-
 
 cpus=$1
 nsamps=$2
 output_txt=$3
 output_vcf=$4
-output_dir=$5
-genome_fasta=$6
+genome_fasta=$5
 
 
-touch "$output_dir"
 
 
 
@@ -75,3 +71,6 @@ else
     touch "$output_txt"
     touch "$output_vcf"
 fi
+
+
+rm -f 0
