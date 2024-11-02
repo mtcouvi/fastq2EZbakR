@@ -572,7 +572,7 @@ def get_other_output():
     )
 
     # fastQC output
-    if config["bam2bakr"]:
+    if not config["bam2bakr"]:
         target.append(
             expand("results/fastqc/{SID}_{read}.html", SID=SAMP_NAMES, read=READ_NAMES)
         )
