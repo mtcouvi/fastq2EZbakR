@@ -63,7 +63,7 @@ option_list <- list(
   make_option(c("--cUPoutput", type = "character"),
               help = "Path to cUP output; same as full output with some columns averaged out."),
   make_option(c("--Arrowoutput", type = "character"),
-              help = "Path to arrow parquet file output; same as full output with some columns averaged out."),
+              help = "Path to arrow parquet file output; same as full output with some columns averaged out.")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
