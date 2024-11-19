@@ -553,12 +553,29 @@ else:
 
 ### Target rule input
 
+# Need to specify one of final_output to be True
+if not any(config["final_output"].values()):
+    raise ValueError("One of final_output values must be True!")
 
 def get_other_output():
     target = []
 
-    # cB file always gets made
-    target.append("results/cB/cB.csv.gz")
+    if(config["final_output"]["cB"]):
+
+        target.append("results/cB/cB.csv.gz")
+
+    if(config["final_output"]["cUP"]):
+
+        target.append("results/cUP/cUP.csv.gz")
+
+    if(config["final_output"]["arrow"]):
+
+        target.append(
+            expand(
+                "results/arrow_dataset/sample={sample}/part-0.parquet",
+                sample = SAMP_NAMES
+            )
+        )
 
     # Tracks always get made
     target.append(
@@ -713,6 +730,21 @@ else:
         sample=SAMP_NAMES,
     )
 
+
+### Input for makecUP
+
+if config["lowRAM"]:
+    CUPINPUT = expand(
+        "results/lowram_summarise/{sample}_cB.csv",
+        sample=SAMP_NAMES,
+    )
+
+
+else:
+    CUPINPUT = expand(
+        "results/merge_features_and_muts/{sample}_cUP.csv",
+        sample=SAMP_NAMES,
+    )
 
 ### RSEM plus input
 
