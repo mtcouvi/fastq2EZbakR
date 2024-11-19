@@ -417,6 +417,11 @@ if(opt$makecB){
   write_csv(muts,
             file = opt$cBoutput)
 
+}else{
+
+  write_csv(tibble(),
+            file = opt$cBoutput)
+
 }
 
 if(opt$makecUP){
@@ -434,12 +439,24 @@ if(opt$makecUP){
   write_csv(cUP,
             file = opt$cUPoutput)
 
+}else{
+
+  write_csv(tibble(),
+            file = opt$cUPoutput)
+
 }
+
 
 if(opt$makeArrow){
 
   library(arrow)
   write_parquet(muts,
+                opt$Arrowoutput)
+
+}else{
+
+  library(arrow)
+  write_parquet(tibble(),
                 opt$Arrowoutput)
 
 }
