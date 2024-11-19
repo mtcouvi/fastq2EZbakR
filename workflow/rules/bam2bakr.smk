@@ -299,6 +299,38 @@ rule makecB:
         """
 
 
+rule makecUP:
+    input:
+        cUPins=CUPINPUT,
+    output:
+        cUP="results/cUP/cUP.csv.gz",
+    log:
+        "logs/makecUP/makecUP.log",
+    threads: 8
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        ### GOAL: Concatenate but make sure that headers get removed before concatenation.
+
+        head -n 1 {input.cUPins[0]} > temp_header.txt
+        
+        # Prepare an empty, gzipped file for the output
+        : > {output.cUP}
+        
+        # Compress the header and add to the output file
+        pigz -c temp_header.txt >> {output.cUP}
+        
+        # Iterate over all files, decompress, skip headers, and append to the output file
+        for file in {input.cUPins}; do
+            tail -n +2 ${{file}} | pigz -c >> {output.cUP}
+        done
+        
+        # Cleanup the temporary header file
+        rm temp_header.txt
+        """
+
+
 # Make color-coded tracks
 rule maketdf:
     input:

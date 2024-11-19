@@ -172,6 +172,23 @@ mutpos: False
 run_rsem: True
 
 
+# What final output do you want pipeline to create?
+  # cB = standard cB file tracking number of mutations and number of mutable reference nucleotides in each read.
+  # cUP = remove the mutable reference nucleotide count and instead compute the average of this value for reads
+  #         with the same mutational content. This is orders of magnitude more compressed than a cB file (typically
+  #         around 100x smaller), and is still compatible with EZbakR. Downside is the slight information loss that
+  #         this compression leads to.
+  # arrow = Partitioned database of parquet files, in the format necessary to pass to EZbakR.
+  # 
+  # At least one of these should be set to True.
+  # If lowRAM == False, any combination of these can be set to True (including all True).
+  # If lowRAM == True, cB and cUP can not both be true.
+final_output:
+  cB: True
+  cUP: False
+  arrow: False
+
+
 ####### OPTIONAL PARAMETERS FOR THE VARIOUS TOOLS AND SCRIPTS USED #######
 
 ##### FEATURECOUNTS PARAMETERS #####
