@@ -114,16 +114,13 @@ features:
     eij: False
 
 
-####### ADDITIONAL PARAMETERS TO TUNE PIPELINE FUNCTION AND THE VARIOUS TOOLS USED #######
-
-
-##### PARAMETERS MOST WORTH DOUBLE CHECKING #####
+####### PARAMETERS THAT TUNE ASPECTS OF PIPELINE BEHAVIOR, BUT WITH LIKELY REASONABLE DEFAULTS #######
 
 # Types of mutations to make tracks for otherwise
   # Comma separated string of mutation type
   # Examples:
     # "TC"
-      # count T-to-C mutations
+      # counts T-to-C mutations
     # "TC,GA"
       # counts T-to-C and G-to-A mutations
 mut_tracks: "TC"
@@ -132,29 +129,25 @@ mut_tracks: "TC"
 # Normalize sequencing tracks?
 normalize: True
 
+
 # String common to spike-in gene_ids in annotation gtf
   # If you have no spike-ins, then this should be "\"\"", i.e., an empty string ("")
+  # Used for normalization of tracks. Thus, only relevant if normalize == True
 spikename: "\"\""
 
 
-# Skip adapter trimming? If True, will skip fastp step
+# Skip adapter trimming? 
+  # If True, will skip fastp step
 skip_trimming: False
 
 
-# Adapters to pass to fastp 
-  # Not strictly necessary as fastp can autodetect. Autodetection is more accurate for paired-end data
-  # For paired-end data with widely used Illumina TruSeq adapters, this could be: 
-  # "--adapter_sequence AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
-fastp_adapters: ""
-
-
 # Path to flattened annotation 
-# Will be created if not already present
-# Only relevant if assigning reads to exonic_bins
+  # Will be created if not already present
+  # Only relevant if assigning reads to exonic_bins
 flat_annotation: "data/annotation/flat.gtf"
 
 
-# Minimum base quality to call mutation
+# Minimum base quality required to call mutation
 minqual: 40
 
 
@@ -168,17 +161,20 @@ WSL: False
 lowRAM: False
 
 
-# Track site-specific mutational content
+# Track site-specific mutational content?
   # Not currently compatible with lowRAM = True
 mutpos: False
 
 
-# Use RSEM to quantify transcript isoform abundances
+# Use RSEM to quantify transcript isoform abundances?
   # Only relevant if aligner = 'star' and fastq files are
   # provided as input
 run_rsem: True
 
-##### OTHER FEATURECOUNTS PARAMETERS #####
+
+####### OPTIONAL PARAMETERS FOR THE VARIOUS TOOLS AND SCRIPTS USED #######
+
+##### FEATURECOUNTS PARAMETERS #####
 # Parameters automatically specified:
   # Genes: -R -f -g gene_id -t transcript
   # Exons: -R -g gene_id -J
@@ -214,20 +210,18 @@ fc_eej_extra: "-M"
 fc_eij_extra: "-M"
 
 
-##### JUNCTION ANNOTATION PARAMETERS #####
-
-# Currently no adjustable parameters for this, but eventually there
-# will be.
-junction_annotation_params: ""
-
-
-
-##### OTHER FASTP PARAMETERS #####
+##### FASTP PARAMETERS #####
   # See https://github.com/OpenGene/fastp for details
+
+# Adapters to pass to fastp 
+  # Not strictly necessary as fastp can autodetect adapters. Autodetection is more accurate for paired-end data though.
+  # For paired-end data with widely used Illumina TruSeq adapters, this could be: 
+  # "--adapter_sequence AGATCGGAAGAGCACACGTCTGAACTCCAGTCA --adapter_sequence_r2 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+fastp_adapters: ""
+
 
 # Optional parameters to set for fastp
 fastp_parameters: "" 
-
 
 
 ##### FASTQC PARAMETERS #####
@@ -303,6 +297,12 @@ min_pos_coverage: 1
 max_pos_coverage: 10000000
 
 
+
+##### JUNCTION ANNOTATION PARAMETERS #####
+
+# Currently no adjustable parameters for this, but eventually there
+# will be.
+junction_annotation_params: ""
 
 
 
