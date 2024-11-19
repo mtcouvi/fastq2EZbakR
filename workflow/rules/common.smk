@@ -557,23 +557,21 @@ else:
 if not any(config["final_output"].values()):
     raise ValueError("One of final_output values must be True!")
 
+
 def get_other_output():
     target = []
 
-    if(config["final_output"]["cB"]):
-
+    if config["final_output"]["cB"]:
         target.append("results/cB/cB.csv.gz")
 
-    if(config["final_output"]["cUP"]):
-
+    if config["final_output"]["cUP"]:
         target.append("results/cUP/cUP.csv.gz")
 
-    if(config["final_output"]["arrow"]):
-
+    if config["final_output"]["arrow"]:
         target.append(
             expand(
                 "results/arrow_dataset/sample={sample}/part-0.parquet",
-                sample = SAMP_NAMES
+                sample=SAMP_NAMES,
             )
         )
 

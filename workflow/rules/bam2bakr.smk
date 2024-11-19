@@ -212,8 +212,8 @@ if not config["lowRAM"]:
         output:
             output="results/merge_features_and_muts/{sample}_counts.csv.gz",
             cBout=temp("results/merge_features_and_muts/{sample}_cB.csv"),
-            cUPout = temp("results/merge_features_and_muts/{sample}_cUP.csv"),
-            Arrowout = "results/arrow_dataset/sample={sample}/part-0.parquet"
+            cUPout=temp("results/merge_features_and_muts/{sample}_cUP.csv"),
+            Arrowout="results/arrow_dataset/sample={sample}/part-0.parquet",
         params:
             genes_included=config["features"]["genes"],
             exons_included=config["features"]["exons"],
@@ -228,9 +228,9 @@ if not config["lowRAM"]:
             ),
             muttypes=config["mut_tracks"],
             annotation=config["annotation"],
-            makecB = config["final_output"]["cB"],
-            makecUP = config["final_output"]["cUP"],
-            makeArrow = config["final_output"]["arrow"],
+            makecB=config["final_output"]["cB"],
+            makecUP=config["final_output"]["cUP"],
+            makeArrow=config["final_output"]["arrow"],
         log:
             "logs/merge_features_and_muts/{sample}.log",
         threads: 8
