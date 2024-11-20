@@ -7,6 +7,10 @@
 library(optparse)
 library(data.table)
 library(readr)
+library(rtracklayer)
+library(tidyr)
+library(dplyr)
+library(arrow)
 
 # Process parameters -----------------------------------------------------------
 
@@ -143,9 +147,6 @@ if(opt$frombam){
     ### Idea is that featureCount's gene assignment correctly
     ### assigns the gene, so the annotation can be used to determine
     ### the set of isoforms that are legit.
-    library(rtracklayer)
-    library(tidyr)
-    library(dplyr)
 
     # Table of set of isoforms from each gene
     gene2transcript <- rtracklayer::import(opt$annotation) %>% 
@@ -449,13 +450,11 @@ if(opt$makecUP){
 
 if(opt$makeArrow){
 
-  library(arrow)
   write_parquet(muts,
                 opt$Arrowoutput)
 
 }else{
 
-  library(arrow)
   write_parquet(tibble(),
                 opt$Arrowoutput)
 
