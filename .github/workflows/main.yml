@@ -103,4 +103,4 @@ jobs:
       with:
         directory: .test
         snakefile: workflow/Snakefile
-        args: "--configfile .test/configs/nocB_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache --delete-all-output"
+        args: "--configfile .test/configs/nocB_config.yaml --use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
