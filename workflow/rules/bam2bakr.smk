@@ -323,13 +323,13 @@ rule makecUP:
         """
         ### GOAL: Concatenate but make sure that headers get removed before concatenation.
 
-        head -n 1 {input.cUPins[0]} > temp_header.txt
+        head -n 1 {input.cUPins[0]} > temp_cUP_header.txt
         
         # Prepare an empty, gzipped file for the output
         : > {output.cUP}
         
         # Compress the header and add to the output file
-        pigz -c temp_header.txt >> {output.cUP}
+        pigz -c temp_cUP_header.txt >> {output.cUP}
         
         # Iterate over all files, decompress, skip headers, and append to the output file
         for file in {input.cUPins}; do
@@ -337,7 +337,7 @@ rule makecUP:
         done
         
         # Cleanup the temporary header file
-        rm temp_header.txt
+        rm temp_cUP_header.txt
         """
 
 
