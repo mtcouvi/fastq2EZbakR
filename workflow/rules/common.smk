@@ -559,14 +559,13 @@ if not any(config["final_output"].values()):
 
 # lowRAM can only work with a single type of output
 if config["lowRAM"]:
-
     if sum(config["final_output"].values()) > 1:
-
-        raise ValueError("If lowRAM = True, then can only specify a single final_output option as True!")
+        raise ValueError(
+            "If lowRAM = True, then can only specify a single final_output option as True!"
+        )
 
     if config["final_output"]["cUP"]:
         raise ValueError("lowRAM = True is not currently compatible with cUP output!")
-
 
 
 def get_other_output():
@@ -579,9 +578,7 @@ def get_other_output():
         target.append("results/cUP/cUP.csv.gz")
 
     if config["final_output"]["arrow"]:
-
         if config["lowRAM"]:
-
             target.append(
                 expand(
                     "results/arrow_dataset/sample={sample}/part-0.csv",
@@ -590,7 +587,6 @@ def get_other_output():
             )
 
         else:
-
             target.append(
                 expand(
                     "results/arrow_dataset/sample={sample}/part-0.parquet",
