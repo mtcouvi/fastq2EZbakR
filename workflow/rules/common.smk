@@ -487,7 +487,7 @@ def get_merge_input(wildcards):
 if config["strandedness"] == "reverse":
     FC_STRAND = 2
 
-elif config["strandedness"] == "yes":
+elif config["strandedness"] == "yes" or config["strandedness"] == "forward":
     FC_STRAND = 1
 
 else:
