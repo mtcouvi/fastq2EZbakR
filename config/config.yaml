@@ -85,6 +85,7 @@ indices: data/indices/star_index
 
 # Strandedness
   # set to "reverse", "yes", or "no"
+  # Instead of "yes", can now use "forward" as well (both will have the same result)
   # reverse means that read 2 represents 5' to 3' sequence of original RNA (read 1 thus represents its reverse complement)
   # yes means that read 1 represents 5' to 3' sequence of original RNA
   # no means unstranded
