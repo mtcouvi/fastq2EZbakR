@@ -22,7 +22,7 @@ if config["PE"]:
             "logs/fastp/{sample}.log",
         params:
             adapters=config["fastp_adapters"],
-            extra="",
+            extra=config["fastp_parameters"],
         threads: 8
         wrapper:
             "v2.2.1/bio/fastp"
@@ -42,7 +42,7 @@ else:
             "logs/fastp/{sample}.log",
         params:
             adapters=config["fastp_adapters"],
-            extra="",
+            extra=config["fastp_parameters"],
         threads: 8
         wrapper:
             "v2.2.1/bio/fastp"
