@@ -487,7 +487,7 @@ def get_merge_input(wildcards):
 if config["strandedness"] == "reverse":
     FC_STRAND = 2
 
-elif config["strandedness"] == "yes":
+elif config["strandedness"] == "yes" or config["strandedness"] == "forward":
     FC_STRAND = 1
 
 else:
@@ -553,12 +553,46 @@ else:
 
 ### Target rule input
 
+# Need to specify one of final_output to be True
+if not any(config["final_output"].values()):
+    raise ValueError("One of final_output values must be True!")
+
+# lowRAM can only work with a single type of output
+if config["lowRAM"]:
+    if sum(config["final_output"].values()) > 1:
+        raise ValueError(
+            "If lowRAM = True, then can only specify a single final_output option as True!"
+        )
+
+    if config["final_output"]["cUP"]:
+        raise ValueError("lowRAM = True is not currently compatible with cUP output!")
+
 
 def get_other_output():
     target = []
 
-    # cB file always gets made
-    target.append("results/cB/cB.csv.gz")
+    if config["final_output"]["cB"]:
+        target.append("results/cB/cB.csv.gz")
+
+    if config["final_output"]["cUP"]:
+        target.append("results/cUP/cUP.csv.gz")
+
+    if config["final_output"]["arrow"]:
+        if config["lowRAM"]:
+            target.append(
+                expand(
+                    "results/arrow_dataset/sample={sample}/part-0.csv",
+                    sample=SAMP_NAMES,
+                )
+            )
+
+        else:
+            target.append(
+                expand(
+                    "results/arrow_dataset/sample={sample}/part-0.parquet",
+                    sample=SAMP_NAMES,
+                )
+            )
 
     # Tracks always get made
     target.append(
@@ -713,6 +747,21 @@ else:
         sample=SAMP_NAMES,
     )
 
+
+### Input for makecUP
+
+if config["lowRAM"]:
+    CUPINPUT = expand(
+        "results/lowram_summarise/{sample}_cB.csv",
+        sample=SAMP_NAMES,
+    )
+
+
+else:
+    CUPINPUT = expand(
+        "results/merge_features_and_muts/{sample}_cUP.csv",
+        sample=SAMP_NAMES,
+    )
 
 ### RSEM plus input
 

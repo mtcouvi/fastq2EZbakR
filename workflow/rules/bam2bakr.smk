@@ -203,12 +203,17 @@ rule cnt_muts:
 if not config["lowRAM"]:
 
     # Merge mutation counts with feature assignment
+    # Bit of a cheap hack here where I didn't want to deal with dynamically
+    # deciding the output, so I just create all files by default, with the ones
+    # not requested by the user being temporary empty files.
     rule merge_features_and_muts:
         input:
             get_merge_input,
         output:
             output="results/merge_features_and_muts/{sample}_counts.csv.gz",
             cBout=temp("results/merge_features_and_muts/{sample}_cB.csv"),
+            cUPout=temp("results/merge_features_and_muts/{sample}_cUP.csv"),
+            Arrowout="results/arrow_dataset/sample={sample}/part-0.parquet",
         params:
             genes_included=config["features"]["genes"],
             exons_included=config["features"]["exons"],
@@ -223,6 +228,9 @@ if not config["lowRAM"]:
             ),
             muttypes=config["mut_tracks"],
             annotation=config["annotation"],
+            makecB=config["final_output"]["cB"],
+            makecUP=config["final_output"]["cUP"],
+            makeArrow=config["final_output"]["arrow"],
         log:
             "logs/merge_features_and_muts/{sample}.log",
         threads: 8
@@ -235,7 +243,9 @@ if not config["lowRAM"]:
             {params.rscript} -g {params.genes_included} -e {params.exons_included} -b {params.exonbins_included} \
             -t {params.transcripts_included} --frombam {params.bamfiletranscripts_included} -o {output.output} -s {wildcards.sample} \
             -j {params.eej_included} --starjunc {params.starjunc_included} --eij {params.eij_included} \
-            --annotation {params.annotation} -c {output.cBout} -m {params.muttypes} 1> {log} 2>&1
+            --annotation {params.annotation} -c {output.cBout} -m {params.muttypes} \
+            --makecB {params.makecB} --makecUP {params.makecUP} --makeArrow {params.makeArrow} \
+            --cUPout {output.cUPout} --Arrowout {output.Arrowout} 1> {log} 2>&1
             """
 
 
@@ -296,6 +306,38 @@ rule makecB:
         
         # Cleanup the temporary header file
         rm temp_header.txt
+        """
+
+
+rule makecUP:
+    input:
+        cUPins=CUPINPUT,
+    output:
+        cUP="results/cUP/cUP.csv.gz",
+    log:
+        "logs/makecUP/makecUP.log",
+    threads: 8
+    conda:
+        "../envs/full.yaml"
+    shell:
+        """
+        ### GOAL: Concatenate but make sure that headers get removed before concatenation.
+
+        head -n 1 {input.cUPins[0]} > temp_cUP_header.txt
+        
+        # Prepare an empty, gzipped file for the output
+        : > {output.cUP}
+        
+        # Compress the header and add to the output file
+        pigz -c temp_cUP_header.txt >> {output.cUP}
+        
+        # Iterate over all files, decompress, skip headers, and append to the output file
+        for file in {input.cUPins}; do
+            tail -n +2 ${{file}} | pigz -c >> {output.cUP}
+        done
+        
+        # Cleanup the temporary header file
+        rm temp_cUP_header.txt
         """
 
 

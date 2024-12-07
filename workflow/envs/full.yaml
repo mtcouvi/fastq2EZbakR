@@ -29,3 +29,4 @@ dependencies:
   - bioconductor-rtracklayer
   - r-r.utils
   - r-data.table
+  - r-arrow

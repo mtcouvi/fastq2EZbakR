@@ -7,6 +7,10 @@
 library(optparse)
 library(data.table)
 library(readr)
+library(rtracklayer)
+library(tidyr)
+library(dplyr)
+library(arrow)
 
 # Process parameters -----------------------------------------------------------
 
@@ -50,7 +54,20 @@ option_list <- list(
   make_option(c("-s", "--sample", type = "character"),
               help = "Sample name"),
   make_option(c("--annotation", type = "character"),
-              help = "Path to annotation GTF file.")          
+              help = "Path to annotation GTF file."),
+  make_option(c("--makecB", "logical"),
+              default = "FALSE",
+              help = "Whether to create a summarized cB file as output."),
+  make_option(c("--makecUP", "logical"),
+              default = "FALSE",
+              help = "Whether to create a summarized cUP file as output."),
+  make_option(c("--makeArrow", "logical"),
+              default = "FALSE",
+              help = "Whether to create a summarized arrow parquet file as output."),
+  make_option(c("--cUPoutput", type = "character"),
+              help = "Path to cUP output; same as full output with some columns averaged out."),
+  make_option(c("--Arrowoutput", type = "character"),
+              help = "Path to arrow parquet file output; same as full output with some columns averaged out.")
 )
 
 opt_parser <- OptionParser(option_list = option_list)
@@ -130,9 +147,6 @@ if(opt$frombam){
     ### Idea is that featureCount's gene assignment correctly
     ### assigns the gene, so the annotation can be used to determine
     ### the set of isoforms that are legit.
-    library(rtracklayer)
-    library(tidyr)
-    library(dplyr)
 
     # Table of set of isoforms from each gene
     gene2transcript <- rtracklayer::import(opt$annotation) %>% 
@@ -399,5 +413,50 @@ print(cols_to_keep)
 muts <- muts[, .(n = .N), by = cols_to_keep]
 
 
-write_csv(muts,
-          file = opt$cBoutput)
+if(opt$makecB){
+
+  write_csv(muts,
+            file = opt$cBoutput)
+
+}else{
+
+  write_csv(tibble(),
+            file = opt$cBoutput)
+
+}
+
+if(opt$makecUP){
+
+  # Thankfully, already solved this problem in EZbakR, so just copying that solution
+  cols_to_group_pois <- c("sample", "rname", feature_vect, muts_to_keep, "sj")
+  cols_to_avg <- bases_to_keep
+
+  cUP <- muts[, c(lapply(.SD, function(x) sum(x*n)/sum(n) ),
+                     .(n = sum(n))),
+                 by = cols_to_group_pois, .SDcols = cols_to_avg]
+
+
+
+  write_csv(cUP,
+            file = opt$cUPoutput)
+
+}else{
+
+  write_csv(tibble(),
+            file = opt$cUPoutput)
+
+}
+
+
+if(opt$makeArrow){
+
+  write_parquet(muts,
+                opt$Arrowoutput)
+
+}else{
+
+  write_parquet(tibble(),
+                opt$Arrowoutput)
+
+}
+

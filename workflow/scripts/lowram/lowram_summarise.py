@@ -15,7 +15,7 @@ with open(snakemake.log[0], "w") as f:
     cols_to_sum = snakemake.params.get("cols_to_sum")
     output_table = snakemake.output
     sample = snakemake.wildcards.sample
-
+    
     ### Parse cols_to_sum
 
     cols_to_sum = cols_to_sum.split(',')

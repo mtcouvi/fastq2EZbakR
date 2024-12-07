@@ -43,6 +43,9 @@ if "transcripts" not in config["features"]:
 if "fc_transcripts_extra" not in config:
     config["fc_transcripts_extra"] = ""
 
+if "final_output" not in config:
+    config["final_output"] = {"cB": True, "cUP": False, "arrow": False}
+
 ##### setup report #####
 
 

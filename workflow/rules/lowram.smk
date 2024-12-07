@@ -34,7 +34,7 @@ rule sort_mutcounts_by_qname:
 
         head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -S 10% --parallel={threads} -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort --parallel={threads} -k1 -V >> {output.sortout}
         """
 
 
@@ -50,7 +50,7 @@ rule sort_fcgene_by_qname:
         "logs/sort_fcgene_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -66,7 +66,7 @@ rule sort_fcexon_by_qname:
         "logs/sort_fcexon_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -88,7 +88,7 @@ rule sort_junction_by_qname:
 
         head -n 1 {output.decomp} > {output.sortout}
         
-        tail -n +2 {output.decomp} | sort -S 10% --parallel={threads} -k1 -V >> {output.sortout}
+        tail -n +2 {output.decomp} | sort  --parallel={threads} -k1 -V >> {output.sortout}
         """
 
 
@@ -104,7 +104,7 @@ rule sort_fcee_by_qname:
         "logs/sort_fcee_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -120,7 +120,7 @@ rule sort_fcei_by_qname:
         "logs/sort_fcei_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -136,7 +136,7 @@ rule sort_fctranscript_by_qname:
         "logs/sort_fctranscript_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -152,7 +152,7 @@ rule sort_fcexonbin_by_qname:
         "logs/sort_fcexonbin_by_qname/{sample}.log",
     shell:
         """
-        sort -S 10% --parallel={threads} -k1 -V {input} > {output}
+        sort --parallel={threads} -k1 -V {input} > {output}
         """
 
 
@@ -171,7 +171,7 @@ rule sort_bamtranscript_by_qname:
         ### GOAL: Sort but preserve header
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort -S 10% --parallel={threads} -k1 -V >> {output}
+        tail -n +2 {input} | sort --parallel={threads} -k1 -V >> {output}
         """
 
 
@@ -218,24 +218,43 @@ rule sort_merged_files:
         """
         head -n 1 {input} > {output}
         
-        tail -n +2 {input} | sort -t, -S 10% --parallel={threads} {params.sortparams} >> {output}
+        tail -n +2 {input} | sort -t, --parallel={threads} {params.sortparams} >> {output}
         """
 
 
 ### SUMMARISE MERGED FILES
 
 
-rule lowram_summarise:
-    input:
-        "results/sort_merged_files/{sample}.csv",
-    output:
-        temp("results/lowram_summarise/{sample}.csv"),
-    params:
-        cols_to_sum=COLS_TO_SUM,
-    threads: 1
-    conda:
-        "../envs/full.yaml"
-    log:
-        "logs/lowram_summarise/{sample}.log",
-    script:
-        "../scripts/lowram/lowram_summarise.py"
+if config["final_output"]["arrow"]:
+
+    rule lowram_summarise:
+        input:
+            "results/sort_merged_files/{sample}.csv",
+        output:
+            "results/arrow_dataset/sample={sample}/part-0.csv",
+        params:
+            cols_to_sum=COLS_TO_SUM,
+        threads: 1
+        conda:
+            "../envs/full.yaml"
+        log:
+            "logs/lowram_summarise/{sample}.log",
+        script:
+            "../scripts/lowram/lowram_summarise.py"
+
+else:
+
+    rule lowram_summarise:
+        input:
+            "results/sort_merged_files/{sample}.csv",
+        output:
+            temp("results/lowram_summarise/{sample}.csv"),
+        params:
+            cols_to_sum=COLS_TO_SUM,
+        threads: 1
+        conda:
+            "../envs/full.yaml"
+        log:
+            "logs/lowram_summarise/{sample}.log",
+        script:
+            "../scripts/lowram/lowram_summarise.py"
