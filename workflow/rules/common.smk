@@ -731,7 +731,7 @@ COLS_TO_SUM = ",".join(cols_to_summarize)
 
 if config["lowRAM"]:
 
-    if config["arrow"]:
+    if config["final_output"]["arrow"]:
 
         CBINPUT = expand(
             "results/arrow_dataset/sample={sample}/part-0.csv",
