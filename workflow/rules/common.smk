@@ -559,11 +559,6 @@ if not any(config["final_output"].values()):
 
 # lowRAM can only work with a single type of output
 if config["lowRAM"]:
-    if sum(config["final_output"].values()) > 1:
-        raise ValueError(
-            "If lowRAM = True, then can only specify a single final_output option as True!"
-        )
-
     if config["final_output"]["cUP"]:
         raise ValueError("lowRAM = True is not currently compatible with cUP output!")
 
@@ -735,10 +730,20 @@ COLS_TO_SUM = ",".join(cols_to_summarize)
 ### Input for makecB
 
 if config["lowRAM"]:
-    CBINPUT = expand(
-        "results/lowram_summarise/{sample}.csv",
-        sample=SAMP_NAMES,
-    )
+
+    if config["arrow"]:
+
+        CBINPUT = expand(
+            "results/arrow_dataset/sample={sample}/part-0.csv",
+            sample=SAMP_NAMES,
+        )
+
+    else:
+
+        CBINPUT = expand(
+            "results/lowram_summarise/{sample}.csv",
+            sample=SAMP_NAMES,
+        )
 
 
 else:

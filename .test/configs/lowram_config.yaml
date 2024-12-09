@@ -177,6 +177,11 @@ WSL: False
 remove_tags: True
 
 
+final_output:
+  cB: True
+  cUP: False
+  arrow: True
+
 ##### OTHER FEATURECOUNTS PARAMETERS #####
 # Parameters automatically specified:
   # Genes: -R -f -g gene_id -t transcript
