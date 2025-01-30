@@ -23,34 +23,50 @@ genome_fasta=$5
 
 
 
-if [ $nsamps > 0 ] 
+if [[ "$nsamps" -gt 0 ]] 
 then
     # Loop through control samples:
+        declare -a bam_list=()
+
         for cs in ${control_samples[@]}; do
             name=$(echo "$cs" | cut -d '/' -f 3 | rev | cut -c8- | rev)
+
+            sorted="./results/snps/"$name"_sort.bam"
+
             samtools sort -@ "$cpus" -o ./results/snps/"$name"_sort.bam "$cs"
             samtools index -@ "$cpus" ./results/snps/"$name"_sort.bam
             #bcftools mpileup --threads "$cpus" -f "$genome_fasta" ./results/snps/"$name"_sort.bam | bcftools call --threads "$cpus" -mv > ./results/snps/snp-"$name".vcf
+
+            bam_list+=( "$sorted" )
+
         done
 
         #cat ./results/snps/*.vcf > $output_vcf
         #rm ./results/snps/snp-*
 
-        for cs in ${control_samples[@]}; do
-            NAMES+=($(echo "$cs" | cut -d '/' -f 3 | rev | cut -c8- | rev))
-        done
+        echo "${bam_list[@]}" | tr ' ' '\n' > ./results/snps/bam.list
+
+        # for cs in ${control_samples[@]}; do
+        #     NAMES+=($(echo "$cs" | cut -d '/' -f 3 | rev | cut -c8- | rev))
+        # done
 
     # Parallelize SNPs calling. Each chromosome in each .bam file is processed as separate job
         # Note: This approach does not give the same snp.txt result. In 2199712 SNPs there were 16 different.
         # {1} : path to fasta file
         # {2} : samtools view -H ${control_samples[0]}_sort.bam | awk ' $1 == "@SQ" {split($2,a,":"); print a[2]}' : Extracts chromosome names from .bam file header
         # {3} : ${control_samples[@]/%/_sort.bam}                                                    : Appends "_sort.bam" to the end of control names and prints
-        parallel -j "$cpus" "bcftools mpileup -f {1} \
-                                                   -r {2} {3} \
-                                | bcftools call -mv" ::: $genome_fasta \
-                                                      ::: $(samtools view -H ./results/snps/${NAMES[0]}_sort.bam \
-                                                                    | awk ' $1 == "@SQ" {split($2,a,":"); print a[2]}') \
-                                                      ::: ./results/snps/*_sort.bam > $output_vcf
+        # parallel -j "$cpus" "bcftools mpileup -f {1} \
+        #                                            -r {2} {3} \
+        #                         | bcftools call -mv" ::: $genome_fasta \
+        #                                               ::: $(samtools view -H ./results/snps/${NAMES[0]}_sort.bam \
+        #                                                             | awk ' $1 == "@SQ" {split($2,a,":"); print a[2]}') \
+        #                                               ::: ./results/snps/*_sort.bam > $output_vcf
+
+        bcftools mpileup --threads "$cpus" \
+                         -f "$genome_fasta" \
+                         -b ./results/snps/bam.list \
+                         -Ou \
+        | bcftools call --threads "$cpus" -mv -Oz -o $output_vcf
 
 
         # Note: Easier and also fast option would be:  bcftools mpileup --threads $cpus -f $genome_fasta "$cs"_sort.bam | bcftools call --threads $cpus-mv > snp-"$cs".vcf
