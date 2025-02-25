@@ -5,8 +5,6 @@
     # control_samples becomes array with all args
     # remove args that I know aren't the actual control_samples
 
-shift 7
-
 cpus=$1
 nsamps=$2
 output_txt=$3
@@ -15,6 +13,7 @@ mpileup_options=$5
 call_options=$6
 genome_fasta=$7
 
+shift 7
 
 control_samples=("$@")
 
