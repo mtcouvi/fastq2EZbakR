@@ -13,7 +13,6 @@ unset control_samples[3]
 unset control_samples[4]
 unset control_samples[5]
 unset control_samples[6]
-unset control_samples[7]
 
 cpus=$1
 nsamps=$2
