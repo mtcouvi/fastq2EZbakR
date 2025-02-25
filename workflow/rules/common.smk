@@ -42,24 +42,48 @@ else:
     READ_NAMES = ["r1"]
 
 
-# Get input fastq files for first step
+# Define the function to get input FASTQ files
+# Suggested in this issue by ld32: https://github.com/isaacvock/fastq2EZbakR/issues/23
 def get_input_fastqs(wildcards):
-    if config["download_fastqs"]:
-        if config["PE"]:
-            SRA_READS = ["_1.fastq", "_2.fastq"]
+    print(f"Resolving input for sample: {wildcards.sample}")
 
+    if config.get("download_fastqs", True):
+        print("Download fastqs: Yes")
+        if config.get("PE", False):
+            SRA_READS = ["_1.fastq", "_2.fastq"]
+            print(f"Sample {wildcards.sample} is paired-end.")
         else:
             SRA_READS = [".fastq"]
+            print(f"Sample {wildcards.sample} is single-end.")
 
-        return expand(
-            "results/download_fastq/{SAMPLE}{READ}",
-            SAMPLE=wildcards.sample,
-            READ=SRA_READS,
-        )
+        paths = [
+            f"results/download_fastq/{wildcards.sample} {read}" for read in SRA_READS
+        ]
+        print(f"Paths: {paths}")
+        return paths
 
     else:
-        fastq_path = config["samples"][wildcards.sample]
-        fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
+        print("Download fastqs: No")
+        fastq_path = config["samples"].get(wildcards.sample, None)
+        if fastq_path is None:
+            raise ValueError(f"No path found for sample {wildcards.sample}")
+        print(f"path is: {fastq_path}")
+        current_directory = os.getcwd()
+        print("Current Working Directory:", current_directory)
+        all_files = os.listdir(fastq_path)
+        print(f"All files in directory: {all_files}")
+
+        fastq_files = []
+
+        # List all entries in the directory and store full paths in the list
+        for entry in os.listdir(fastq_path):
+            full_path = os.path.join(fastq_path, entry)
+            fastq_files.append(full_path)
+
+        # Filter files to only include those that end with .fastq or .fastq.gz
+        # fastq_files = [f"data/fastq/{wildcards.sample}/{wildcards.sample}.{n}.fastq.gz" for n in ("1", "2")] #sorted([os.path.join(directory, f) for f in all_files if f.endswith('.fastq') or f.endswith('.fastq.gz')])
+        # fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
+        print(f"Found files: {fastq_files}")
         return fastq_files
 
 
@@ -730,16 +754,13 @@ COLS_TO_SUM = ",".join(cols_to_summarize)
 ### Input for makecB
 
 if config["lowRAM"]:
-
     if config["final_output"]["arrow"]:
-
         CBINPUT = expand(
             "results/arrow_dataset/sample={sample}/part-0.csv",
             sample=SAMP_NAMES,
         )
 
     else:
-
         CBINPUT = expand(
             "results/lowram_summarise/{sample}.csv",
             sample=SAMP_NAMES,
