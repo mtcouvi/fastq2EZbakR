@@ -13,7 +13,7 @@ mpileup_options="$5"
 call_options="$6"
 genome_fasta=$7
 
-shift 7
+shift 8
 
 control_samples=("$@")
 
