@@ -12,12 +12,17 @@ unset control_samples[2]
 unset control_samples[3]
 unset control_samples[4]
 unset control_samples[5]
+unset control_samples[6]
+unset control_samples[7]
 
 cpus=$1
 nsamps=$2
 output_txt=$3
 output_vcf=$4
-genome_fasta=$5
+mpileup_options=$5
+call_options=$6
+genome_fasta=$7
+
 
 
 
@@ -65,8 +70,8 @@ then
         bcftools mpileup --threads "$cpus" \
                          -f "$genome_fasta" \
                          -b ./results/snps/bam.list \
-                         -Ou \
-        | bcftools call --threads "$cpus" -mv -Oz -o $output_vcf
+                         -Ou "$mpileup_options" \
+        | bcftools call --threads "$cpus" "$call_options" -mv -Oz -o $output_vcf
 
 
         # Note: Easier and also fast option would be:  bcftools mpileup --threads $cpus -f $genome_fasta "$cs"_sort.bam | bcftools call --threads $cpus-mv > snp-"$cs".vcf

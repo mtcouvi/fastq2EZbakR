@@ -239,6 +239,9 @@ star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
 star_align_params: "--outFilterType BySJout"
 
 
+bcftools_call_params: "-p 0.075"
+bcftools_mpileup_params: "-d 100"
+
 
 ##### HISAT2 PARAMETERS #####
 

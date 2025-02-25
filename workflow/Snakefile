@@ -46,6 +46,12 @@ if "fc_transcripts_extra" not in config:
 if "final_output" not in config:
     config["final_output"] = {"cB": True, "cUP": False, "arrow": False}
 
+if "bcftools_call_params" not in config:
+    config["bcftools_call_params"] = ""
+
+if "bcftools_mpileup_params" not in config:
+    config["bcftools_mpileup_params"] = ""
+
 ##### setup report #####
 
 

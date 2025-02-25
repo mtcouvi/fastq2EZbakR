@@ -270,6 +270,14 @@ star_align_params: "--alignEndsType EndToEnd --outFilterType BySJout --outFilter
 
 
 
+##### BCFTOOLS PARAMETERS #####
+
+# Optional parameters to pass to `bcftools mpileup`
+bcftools_mpileup_params: ""
+
+# Optional parameters to pass to `bcftools call`
+bcftools_call_params: ""
+
 ##### HISAT2 PARAMETERS #####
 
 # Optional parameters to set for hisat2 indexing
