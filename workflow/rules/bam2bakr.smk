@@ -152,8 +152,8 @@ rule call_snps:
     params:
         nctl=nctl,
         shellscript=workflow.source_path("../scripts/bam2bakR/call_snps.sh"),
-        call_params=config["bcftools_call_params"],
-        mpileup_params=config["bcftools_mpileup_params"],
+        call_params=config.get("bcftools_call_params", ""),
+        mpileup_params=config.get("bcftools_mpileup_params", ""),
     output:
         "results/snps/snp.txt",
         "results/snps/snp.vcf",
@@ -165,7 +165,7 @@ rule call_snps:
     shell:
         """
         chmod +x {params.shellscript}
-        {params.shellscript} {threads} {params.nctl} {output} {params.mpileup_params} {params.call_params} {input} 1> {log} 2>&1
+        {params.shellscript} {threads} {params.nctl} {output} "{params.mpileup_params}" "{params.call_params}" {input} 1> {log} 2>&1
         """
 
 

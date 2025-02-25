@@ -4,15 +4,8 @@
 # Cute trick to deal with fact that there is an uncertain number of control sample
     # control_samples becomes array with all args
     # remove args that I know aren't the actual control_samples
-control_samples=("$@")
 
-unset control_samples[0]
-unset control_samples[1]
-unset control_samples[2]
-unset control_samples[3]
-unset control_samples[4]
-unset control_samples[5]
-unset control_samples[6]
+shift 7
 
 cpus=$1
 nsamps=$2
@@ -23,6 +16,7 @@ call_options=$6
 genome_fasta=$7
 
 
+control_samples=("$@")
 
 
 
@@ -69,8 +63,8 @@ then
         bcftools mpileup --threads "$cpus" \
                          -f "$genome_fasta" \
                          -b ./results/snps/bam.list \
-                         -Ou \
-        | bcftools call --threads "$cpus" -mv -Oz -o $output_vcf
+                         -Ou "$mpileup_options" \
+        | bcftools call --threads "$cpus" "$call_options" -mv -Oz -o $output_vcf
 
 
         # Note: Easier and also fast option would be:  bcftools mpileup --threads $cpus -f $genome_fasta "$cs"_sort.bam | bcftools call --threads $cpus-mv > snp-"$cs".vcf
