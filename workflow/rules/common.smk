@@ -730,16 +730,13 @@ COLS_TO_SUM = ",".join(cols_to_summarize)
 ### Input for makecB
 
 if config["lowRAM"]:
-
     if config["final_output"]["arrow"]:
-
         CBINPUT = expand(
             "results/arrow_dataset/sample={sample}/part-0.csv",
             sample=SAMP_NAMES,
         )
 
     else:
-
         CBINPUT = expand(
             "results/lowram_summarise/{sample}.csv",
             sample=SAMP_NAMES,
