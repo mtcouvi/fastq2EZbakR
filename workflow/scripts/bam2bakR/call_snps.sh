@@ -70,8 +70,8 @@ then
         bcftools mpileup --threads "$cpus" \
                          -f "$genome_fasta" \
                          -b ./results/snps/bam.list \
-                         -Ou "$mpileup_options" \
-        | bcftools call --threads "$cpus" "$call_options" -mv -Oz -o $output_vcf
+                         -Ou \
+        | bcftools call --threads "$cpus" -mv -Oz -o $output_vcf
 
 
         # Note: Easier and also fast option would be:  bcftools mpileup --threads $cpus -f $genome_fasta "$cs"_sort.bam | bcftools call --threads $cpus-mv > snp-"$cs".vcf
