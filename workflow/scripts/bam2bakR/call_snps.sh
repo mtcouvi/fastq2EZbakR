@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euo pipefail
 
 # Cute trick to deal with fact that there is an uncertain number of control sample
     # control_samples becomes array with all args
@@ -9,8 +9,8 @@ cpus=$1
 nsamps=$2
 output_txt=$3
 output_vcf=$4
-mpileup_options=$5
-call_options=$6
+mpileup_options="$5"
+call_options="$6"
 genome_fasta=$7
 
 shift 7
@@ -62,8 +62,9 @@ then
         bcftools mpileup --threads "$cpus" \
                          -f "$genome_fasta" \
                          -b ./results/snps/bam.list \
+                         $mpileup_options \
                          -Ou \
-        | bcftools call --threads "$cpus" -mv -Oz -o $output_vcf
+        | bcftools call --threads "$cpus" $call_options -mv -Oz -o $output_vcf
 
 
         # Note: Easier and also fast option would be:  bcftools mpileup --threads $cpus -f $genome_fasta "$cs"_sort.bam | bcftools call --threads $cpus-mv > snp-"$cs".vcf
