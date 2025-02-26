@@ -60,7 +60,7 @@ def get_input_fastqs(wildcards):
             f"results/download_fastq/{wildcards.sample} {read}" for read in SRA_READS
         ]
         print(f"Paths: {paths}")
-        return paths
+        return sorted(paths)
 
     else:
         print("Download fastqs: No")
@@ -84,7 +84,7 @@ def get_input_fastqs(wildcards):
         # fastq_files = [f"data/fastq/{wildcards.sample}/{wildcards.sample}.{n}.fastq.gz" for n in ("1", "2")] #sorted([os.path.join(directory, f) for f in all_files if f.endswith('.fastq') or f.endswith('.fastq.gz')])
         # fastq_files = sorted(glob.glob(f"{fastq_path}/*.fastq*"))
         print(f"Found files: {fastq_files}")
-        return fastq_files
+        return sorted(fastq_files)
 
 
 # Check if fastq files are gzipped
