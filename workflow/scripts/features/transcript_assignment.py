@@ -66,8 +66,21 @@ for r in samfile:
     # If still on the particular read
     elif queryname == r.query_name:
 
-        # Add transcript to set of transcripts
-        transcripts.add(str(r.reference_name))
+        # Check to see if RSEM bam file is provided
+        # and thus if probability of assignment
+        # can be used
+        if not r.has_tag("ZW"):
+
+            if r.get_tag("ZW") != 0:
+
+                # Add transcript to set of transcripts
+                transcripts.add(str(r.reference_name))
+
+
+        else:
+
+            # Add transcript to set of transcripts
+            transcripts.add(str(r.reference_name))
 
     # If on to the next read
     else:
