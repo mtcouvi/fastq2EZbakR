@@ -69,7 +69,7 @@ for r in samfile:
         # Check to see if RSEM bam file is provided
         # and thus if probability of assignment
         # can be used
-        if not r.has_tag("ZW"):
+        if r.has_tag("ZW"):
 
             if r.get_tag("ZW") != 0:
 
