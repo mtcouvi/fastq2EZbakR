@@ -21,6 +21,9 @@ samples:
     WT_2: data/WT2
     WT_ctl: data/WTctl
 
+
+run_rsem: False
+
 ## example of what samples will look like for fastq input
 # samples:
 #   WT_1: data/fastq/WT_1
