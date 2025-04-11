@@ -90,20 +90,39 @@ rule featurecounts_exonbins:
         "v3.0.2/bio/subread/featurecounts"
 
 
-# Get the set of isoforms a read maps to from the transcriptome bam
-# TO-DO: No reason this can't be split up and multi-threaded
-rule read_to_transcripts:
-    input:
-        bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
-    output:
-        table=temp("results/read_to_transcripts/{sample}.csv"),
-    log:
-        "logs/read_to_transcripts/{sample}.log",
-    conda:
-        "../envs/full.yaml"
-    threads: 1
-    script:
-        "../scripts/features/transcript_assignment.py"
+if config.get("run_rsem", True):
+
+    # Get the set of isoforms a read maps to from the transcriptome bam
+    # TO-DO: No reason this can't be split up and multi-threaded
+    rule read_to_transcripts:
+        input:
+            bam="results/rsem/{sample}.transcript.bam",
+        output:
+            table=temp("results/read_to_transcripts/{sample}.csv"),
+        log:
+            "logs/read_to_transcripts/{sample}.log",
+        conda:
+            "../envs/full.yaml"
+        threads: 1
+        script:
+            "../scripts/features/transcript_assignment.py"
+
+else:
+
+    # Get the set of isoforms a read maps to from the transcriptome bam
+    # TO-DO: No reason this can't be split up and multi-threaded
+    rule read_to_transcripts:
+        input:
+            bam="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+        output:
+            table=temp("results/read_to_transcripts/{sample}.csv"),
+        log:
+            "logs/read_to_transcripts/{sample}.log",
+        conda:
+            "../envs/full.yaml"
+        threads: 1
+        script:
+            "../scripts/features/transcript_assignment.py"
 
 
 # Get set of junctions a read overlaps

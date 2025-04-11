@@ -140,67 +140,68 @@ if(opt$frombam){
   muts[, TEC := ifelse(is.na(TEC), "__no_feature", TEC)]
 
 
-  if(opt$genes){
-    ### Filter out incorrectly assigned isoforms
-    ### due to STAR assigning read to isoform on oppposite
-    ### strand.
-    ### Idea is that featureCount's gene assignment correctly
-    ### assigns the gene, so the annotation can be used to determine
-    ### the set of isoforms that are legit.
+  ##### Better to just use RSEM's bam file if I can to filter out 0 probability isoforms
+  # if(opt$genes){
+  #   ### Filter out incorrectly assigned isoforms
+  #   ### due to STAR assigning read to isoform on oppposite
+  #   ### strand.
+  #   ### Idea is that featureCount's gene assignment correctly
+  #   ### assigns the gene, so the annotation can be used to determine
+  #   ### the set of isoforms that are legit.
 
-    # Table of set of isoforms from each gene
-    gene2transcript <- rtracklayer::import(opt$annotation) %>% 
-      dplyr::as_tibble() %>%
-      dplyr::filter(type == "transcript") %>%
-      dplyr::select(gene_id, transcript_id) %>%
-      dplyr::distinct() %>%
-      dplyr::rename(GF = gene_id)
+  #   # Table of set of isoforms from each gene
+  #   gene2transcript <- rtracklayer::import(opt$annotation) %>% 
+  #     dplyr::as_tibble() %>%
+  #     dplyr::filter(type == "transcript") %>%
+  #     dplyr::select(gene_id, transcript_id) %>%
+  #     dplyr::distinct() %>%
+  #     dplyr::rename(GF = gene_id)
 
-    setDT(gene2transcript)
-    setkey(gene2transcript, GF, transcript_id)
+  #   setDT(gene2transcript)
+  #   setkey(gene2transcript, GF, transcript_id)
 
-    # Unique set of TEC and GF combos
-    current_assignments <- muts %>%
-      dplyr::select(GF, TEC) %>%
-      dplyr::distinct() %>%
-      dplyr::mutate(transcript_id = TEC) %>% 
-      tidyr::separate_rows(transcript_id, sep = "\\+")
+  #   # Unique set of TEC and GF combos
+  #   current_assignments <- muts %>%
+  #     dplyr::select(GF, TEC) %>%
+  #     dplyr::distinct() %>%
+  #     dplyr::mutate(transcript_id = TEC) %>% 
+  #     tidyr::separate_rows(transcript_id, sep = "\\+")
 
 
-    setDT(current_assignments)
-    setkey(current_assignments, GF, transcript_id)
+  #   setDT(current_assignments)
+  #   setkey(current_assignments, GF, transcript_id)
 
-    current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
-      dplyr::group_by(GF, TEC) %>%
-      dplyr::summarise(new_bft = paste(transcript_id, collapse="+")) %>%
-      dplyr::bind_rows(
-        tibble(
-          GF = unique(muts$GF),
-          TEC = "__no_feature",
-          new_bft = "__no_feature"
-        )
-      )
+  #   current_assignments <- current_assignments[gene2transcript, nomatch = NULL] %>%
+  #     dplyr::group_by(GF, TEC) %>%
+  #     dplyr::summarise(new_bft = paste(transcript_id, collapse="+")) %>%
+  #     dplyr::bind_rows(
+  #       tibble(
+  #         GF = unique(muts$GF),
+  #         TEC = "__no_feature",
+  #         new_bft = "__no_feature"
+  #       )
+  #     )
 
-    if(nrow(current_assignments) == 0){
-      stop("Something went wrong, current_assignments is empty!")
-    }
+  #   if(nrow(current_assignments) == 0){
+  #     stop("Something went wrong, current_assignments is empty!")
+  #   }
 
-    setDT(current_assignments)
-    setkey(current_assignments, GF, TEC)
-    setkey(muts, GF, TEC)
+  #   setDT(current_assignments)
+  #   setkey(current_assignments, GF, TEC)
+  #   setkey(muts, GF, TEC)
 
-    muts <- muts[current_assignments, nomatch = NULL]
+  #   muts <- muts[current_assignments, nomatch = NULL]
 
-    if(nrow(current_assignments) == 0){
-      stop("Something went wrong, muts is empty!")
-    }
+  #   if(nrow(current_assignments) == 0){
+  #     stop("Something went wrong, muts is empty!")
+  #   }
 
-    muts[, TEC := new_bft]
-    muts[, new_bft := NULL]
+  #   muts[, TEC := new_bft]
+  #   muts[, new_bft := NULL]
 
-    setkey(muts, qname)
+  #   setkey(muts, qname)
 
-  }
+  # }
 
   
   feature_vect <- c(feature_vect, "TEC")
