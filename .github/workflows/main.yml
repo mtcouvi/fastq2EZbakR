@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
-      - isoforms
   pull_request:
     branches_ignore: []
 
