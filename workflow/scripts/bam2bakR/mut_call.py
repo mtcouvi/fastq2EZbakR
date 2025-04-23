@@ -27,8 +27,8 @@ parser.add_argument('--mutType', default='TC', type=str,
                     help='Type of mutation to record (default: TC)')
 parser.add_argument('--reads', default='PE', type=str, choices=['PE', 'SE'],
                     help='Type of mutation to record (default: PE)')
-parser.add_argument('--minDist', default=5, type=int, metavar = '<int>',
-                    help='Base distance from read-end filter (default: 5)')
+parser.add_argument('--minDist', default=-1, type=int, metavar = '<int>',
+                    help='Base distance from read-end filter (default: -1)')
 parser.add_argument('--minQual', default=40, type=int, metavar = '<int>',
                     help='Base minimal quality filter (default: 40)')
 parser.add_argument('--tracks', action='store_true', # Automatically stored as default = FALSE
