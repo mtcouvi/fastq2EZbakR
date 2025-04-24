@@ -21,6 +21,9 @@ samples:
     WT_2: data/WT2
     WT_ctl: data/WTctl
 
+
+run_rsem: False
+
 ## example of what samples will look like for fastq input
 # samples:
 #   WT_1: data/fastq/WT_1
@@ -207,7 +210,7 @@ star_index_params: "--sjdbOverhang 99"
 
 
 # SAM tags to add to alignment
-star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM", "jI", "jM"]
+star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
 
 
 # Optional parameters to set for star align

@@ -50,14 +50,14 @@ def get_input_fastqs(wildcards):
     if config.get("download_fastqs", True):
         print("Download fastqs: Yes")
         if config.get("PE", False):
-            SRA_READS = ["_1.fastq", "_2.fastq"]
+            SRA_READS = ["1.fastq", "2.fastq"]
             print(f"Sample {wildcards.sample} is paired-end.")
         else:
             SRA_READS = [".fastq"]
             print(f"Sample {wildcards.sample} is single-end.")
 
         paths = [
-            f"results/download_fastq/{wildcards.sample} {read}" for read in SRA_READS
+            f"results/download_fastq/{wildcards.sample}_{read}" for read in SRA_READS
         ]
         print(f"Paths: {sorted(paths)}")
         return sorted(paths)
@@ -276,13 +276,13 @@ args = STAR_PARAMS.split()
 # nM = Number of mismatches
 
 if config["features"]["junctions"]:
-    tags = config["star_sam_tags"]
+    tags = list(config["star_sam_tags"])
 
     if "jI" not in tags:
-        tags + ["jI"]
+        tags = tags + ["jI"]
 
     if "jM" not in tags:
-        tags + ["jM"]
+        tags = tags + ["jM"]
 
     sam_attributes = set(tags)
 
