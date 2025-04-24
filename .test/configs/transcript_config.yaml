@@ -210,7 +210,7 @@ star_index_params: "--sjdbOverhang 99"
 
 
 # SAM tags to add to alignment
-star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM", "jI", "jM"]
+star_sam_tags: ["NH", "HI", "AS", "NM", "MD", "nM"]
 
 
 # Optional parameters to set for star align

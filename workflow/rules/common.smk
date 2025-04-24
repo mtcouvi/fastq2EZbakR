@@ -276,13 +276,13 @@ args = STAR_PARAMS.split()
 # nM = Number of mismatches
 
 if config["features"]["junctions"]:
-    tags = config["star_sam_tags"]
+    tags = list(config["star_sam_tags"])
 
     if "jI" not in tags:
-        tags + ["jI"]
+        tags = tags + ["jI"]
 
     if "jM" not in tags:
-        tags + ["jM"]
+        tags = tags + ["jM"]
 
     sam_attributes = set(tags)
 
