@@ -213,7 +213,7 @@ final_output:
 # nonOverlap parameter to allow some leniency
 
 # Parameters for assignment of reads to genes
-fc_genes_extra: "-M"
+fc_genes_extra: "--nonOverlap 0 -M"
 
 # Parameters for assignment of reads to exons
 fc_exons_extra: "--nonOverlap 0 -M"
