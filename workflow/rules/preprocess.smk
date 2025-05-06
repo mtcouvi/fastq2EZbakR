@@ -30,10 +30,10 @@ if config["PE"]:
     if config["do_hardclipping"]:
         rule fastp_hardclip:
             input:
-                sample=
+                sample=lambda wildcards:
                     [
-                        "results/trimmed/{sample}_nohardclip.1.fastq",
-                        "results/trimmed/{sample}_nohardclip.2.fastq",
+                        f"results/trimmed/{wildcards.sample}_nohardclip.1.fastq",
+                        f"results/trimmed/{wildcards.sample}_nohardclip.2.fastq"
                     ]
             output:
                 trimmed=temp(
