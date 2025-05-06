@@ -260,7 +260,8 @@ fastp_adapters: ""
 # Optional parameters to set for fastp
 fastp_parameters: "" 
 # Optional parameters to set for hard-clipping, which is the second fastp run # Added in _MTC version
-fastp_hardclip_parameters: "" # --trim_tail1 6 --trim_front1 3 --trim_front2 6 --trim_tail2 3 -A
+# For example: --trim_tail1 6 --trim_front1 3 --trim_front2 6 --trim_tail2 3 -A
+fastp_hardclip_parameters: "" 
 
 
 ##### FASTQC PARAMETERS #####
