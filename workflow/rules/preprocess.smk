@@ -8,13 +8,13 @@ if config["PE"]:
         output:
             trimmed=temp(
                 [
-                    "results/trimmed/{sample}_nohardclip.1.fastq",
-                    "results/trimmed/{sample}_nohardclip.2.fastq",
+                    "results/trimmed/{sample}.1.fastq",
+                    "results/trimmed/{sample}.2.fastq",
                 ]
             ),
             # Unpaired reads separately
-            unpaired1=temp("results/trimmed/{sample}_nohardclip.u1.fastq"),
-            unpaired2=temp("results/trimmed/{sample}_nohardclip.u2.fastq"),
+            unpaired1=temp("results/trimmed/{sample}.u1.fastq"),
+            unpaired2=temp("results/trimmed/{sample}.u2.fastq"),
             failed=temp("results/trimmed/{sample}.failed.fastq"),
             html="results/reports/{sample}.html",
             json="results/reports/{sample}.json",
@@ -25,21 +25,20 @@ if config["PE"]:
             extra=config["fastp_parameters"],
         threads: 8
         wrapper:
-            "v2.2.1/bio/fastp"
-    # Trim ends after removing adapters # Added in _MTC version
+            "v2.2.1/bio/fastp"    # Trim ends after removing adapters # Added in _MTC version
     if config["do_hardclipping"]:
         rule fastp_hardclip:
             input:
-                sample=lambda wildcards:
+                sample=
                     [
-                        f"results/trimmed/{wildcards.sample}_nohardclip.1.fastq",
-                        f"results/trimmed/{wildcards.sample}_nohardclip.2.fastq"
+                        "results/trimmed/{sample}.1.fastq",
+                        "results/trimmed/{sample}.2.fastq",
                     ]
             output:
                 trimmed=temp(
                     [
-                        "results/trimmed/{sample}.1.fastq",
-                        "results/trimmed/{sample}.2.fastq",
+                        "results/trimmed/{sample}_hardclip.1.fastq",
+                        "results/trimmed/{sample}_hardclip.2.fastq",
                     ]
                 ),
                 # Unpaired reads separately
@@ -56,6 +55,18 @@ if config["PE"]:
             wrapper:
                 "v2.2.1/bio/fastp"
 
+        rule rename_fastq:
+            input:
+                "results/trimmed/{sample}_hardclip.1.fastq",
+                "results/trimmed/{sample}_hardclip.2.fastq"
+            output:
+                "results/trimmed/{sample}.1.fastq",
+                "results/trimmed/{sample}.2.fastq"
+            shell:
+                """
+                mv {input[0]} {output[0]}  # Rename first file
+                mv {input[1]} {output[1]}  # Rename second file
+                """
 else:
 
     # Trim with fastp
