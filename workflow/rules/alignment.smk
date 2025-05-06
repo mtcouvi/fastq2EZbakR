@@ -207,7 +207,7 @@ if config["aligner"] == "hisat2":
 ##### REMOVE READ SETS FROM MAIN .bam OUTPUT # Added in _MTC 
 ######################################################################################
 
-if config["modify_bam"] == "yes":
+if config["snp_strategy"] == "yes":
     rule rename_file:
         input:
             "results/align/{sample}.bam"
@@ -219,7 +219,7 @@ if config["modify_bam"] == "yes":
 
     rule modify_bam:
         input: 
-            bam="results/align/{sample}_full.bam"
+            bam="results/align/{sample}_full.bam",
             bed=config["path_to_removal_bed"]
         output: "results/align/{sample}.bam"
         log:
