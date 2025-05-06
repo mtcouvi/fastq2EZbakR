@@ -8,13 +8,13 @@ if config["PE"]:
         output:
             trimmed=temp(
                 [
-                    "results/trimmed/{sample}.1.fastq",
-                    "results/trimmed/{sample}.2.fastq",
+                    "results/trimmed/{sample}_nohardclip.1.fastq",
+                    "results/trimmed/{sample}_nohardclip.2.fastq",
                 ]
             ),
             # Unpaired reads separately
-            unpaired1=temp("results/trimmed/{sample}.u1.fastq"),
-            unpaired2=temp("results/trimmed/{sample}.u2.fastq"),
+            unpaired1=temp("results/trimmed/{sample}_nohardclip.u1.fastq"),
+            unpaired2=temp("results/trimmed/{sample}_nohardclip.u2.fastq"),
             failed=temp("results/trimmed/{sample}.failed.fastq"),
             html="results/reports/{sample}.html",
             json="results/reports/{sample}.json",
@@ -23,6 +23,33 @@ if config["PE"]:
         params:
             adapters=config["fastp_adapters"],
             extra=config["fastp_parameters"],
+        threads: 8
+        wrapper:
+            "v2.2.1/bio/fastp"
+    # Trim ends after removing adapters # Added in _MTC version
+    rule fastp_hardclip:
+        input:
+            sample=[
+                    "results/trimmed/{sample}_nohardclip.1.fastq",
+                    "results/trimmed/{sample}_nohardclip.2.fastq",
+                	]
+        output:
+            trimmed=temp(
+                [
+                    "results/trimmed/{sample}.1.fastq",
+                    "results/trimmed/{sample}.2.fastq",
+                ]
+            ),
+            # Unpaired reads separately
+            unpaired1=temp("results/trimmed/{sample}_hardclip.u1.fastq"),
+            unpaired2=temp("results/trimmed/{sample}_hardclip.u2.fastq"),
+            failed=temp("results/trimmed/{sample}_hardclip.failed.fastq"),
+            html="results/reports/{sample}_hardclip.html",
+            json="results/reports/{sample}_hardclip.json",
+        log:
+            "logs/fastp/{sample}_hardclip.log",
+        params:
+            extra=config["fastp_hardclip_parameters"],
         threads: 8
         wrapper:
             "v2.2.1/bio/fastp"

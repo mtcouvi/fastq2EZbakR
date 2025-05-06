@@ -200,3 +200,31 @@ if config["aligner"] == "hisat2":
         threads: 20
         wrapper:
             "v2.6.0/bio/hisat2/align"
+            
+            
+            
+######################################################################################
+##### REMOVE READ SETS FROM MAIN .bam OUTPUT # Added in _MTC 
+######################################################################################
+
+if config["modify_bam"] == "yes":
+    rule rename_file:
+        input:
+            "results/align/{sample}.bam"
+        output:
+            "results/align/{sample}_full.bam"
+        shell:
+            "mv {input} {output}"
+
+
+    rule modify_bam:
+        input: 
+            bam="results/align/{sample}_full.bam"
+            bed=config["path_to_removal_bed"]
+        output: "results/align/{sample}.bam"
+        log:
+            "logs/align/{sample}_modifybam.log"
+        shell:
+            """
+            samtools view -h -L {input.bed} -U {output.bam} {input.bam} > /dev/null
+            """
