@@ -7,8 +7,7 @@ if config["PE"]:
             input:
                 sample=get_input_fastqs,
             output:
-                trimmed=temp(
-                    [
+                trimmed=temp([
                         "results/trimmed/{sample}_noclip.1.fastq",
                         "results/trimmed/{sample}_noclip.2.fastq",
                     ]
@@ -31,14 +30,12 @@ if config["PE"]:
         # Trim ends after removing adapters # Added in _MTC version
         rule fastp_hardclip:
             input:
-                sample=
-                    [
+                sample=[
                         "results/trimmed/{sample}_noclip.1.fastq",
                         "results/trimmed/{sample}_noclip.2.fastq",
                     ]
             output:
-                trimmed=temp(
-                    [
+                trimmed=temp([
                         "results/trimmed/{sample}.1.fastq",
                         "results/trimmed/{sample}.2.fastq",
                     ]
@@ -63,8 +60,7 @@ if config["PE"]:
             input:
                 sample=get_input_fastqs,
             output:
-                trimmed=temp(
-                    [
+                trimmed=temp([
                         "results/trimmed/{sample}.1.fastq",
                         "results/trimmed/{sample}.2.fastq",
                     ]
