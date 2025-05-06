@@ -67,6 +67,12 @@ annotation: data/annotation/genome.gtf
     # 1) star
     # 2) hisat2
 aligner: "star"
+# Modify output .bam to remove read sets? (e.g. mito reads, PolIII, etc) # Added in _MTC version
+  # Options are:
+    # 1) yes
+    # 2) no
+modify_bam: "no"
+path_to_removal_bed: data/annotation/removal.bed
 
 
 # Path to directory containing indices
@@ -240,6 +246,8 @@ fastp_adapters: ""
 
 # Optional parameters to set for fastp
 fastp_parameters: "" 
+# Optional parameters to set for hard-clipping, which is the second fastp run # Added in _MTC version
+fastp_hardclip_parameters: "" # --trim_tail1 6 --trim_front1 3 --trim_front2 6 --trim_tail2 3 -A
 
 
 ##### FASTQC PARAMETERS #####
