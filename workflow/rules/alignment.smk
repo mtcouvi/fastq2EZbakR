@@ -55,14 +55,14 @@ if config["aligner"] == "star":
                 fq2=get_fastq_r2,
                 index=config["indices"],
             output:
-                aln="results/align/fullbam/{sample}.bam",
-                sj="results/align/{sample}-SJ.out.tab",
-                log="results/align/{sample}-Log.out",
+                aln="results/alfullbam/{sample}.bam",
+                sj="results/alfullbam/{sample}-SJ.out.tab",
+                log="results/alfullbam/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
                 log_final="results/align/{sample}-Log.final.out",
                 aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
             log:
-                "logs/align/{sample}_star.log",
+                "logs/alfullbam/{sample}_star.log",
             params:
                 reads_per_gene=lambda wc: "GeneCounts" in config["star_align_params"],
                 chim_junc=lambda wc: "--chimOutType Junctions"
@@ -84,7 +84,7 @@ if config["aligner"] == "star":
                 fq1=get_fastq_r1,
                 index=config["indices"],
             output:
-                aln="results/align/fullbam/{sample}.bam",
+                aln="results/alfullbam/{sample}.bam",
                 sj="results/align/{sample}-SJ.out.tab",
                 log="results/align/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
@@ -191,7 +191,7 @@ if config["aligner"] == "hisat2":
             reads=get_hisat2_reads,
             idx=config["indices"],
         output:
-            "results/align/fullbam/{sample}.bam",
+            "results/alfullbam/{sample}.bam",
         log:
             "logs/align/{sample}_hisat2.log",
         params:
@@ -203,7 +203,7 @@ if config["aligner"] == "hisat2":
 if config["modify_bam"] == "no":
     rule rename_file:
         input:
-            "results/align/fullbam/{sample}.bam"
+            "results/alfullbam/{sample}.bam"
         output:
             "results/align/{sample}.bam"
         shell:
@@ -218,7 +218,7 @@ if config["modify_bam"] == "no":
 if config["modify_bam"] == "yes":
     rule modify_bam:
         input: 
-            bam="results/align/fullbam/{sample}.bam",
+            bam="results/alfullbam/{sample}.bam",
             bed=config["path_to_removal_bed"]
         output: 
             bam="results/align/{sample}.bam"
