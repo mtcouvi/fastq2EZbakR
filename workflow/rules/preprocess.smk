@@ -31,8 +31,8 @@ if config["PE"]:
         rule fastp_hardclip:
             input:
                 sample=[
-                        "results/trimmed/trimnoclip/{sample}.1.fastq",
-                        "results/trimmed/trimnoclip/{sample}.2.fastq",
+                        "results/trimnoclip/{sample}.1.fastq",
+                        "results/trimnoclip/{sample}.2.fastq",
                     ]
             output:
                 trimmed=temp([
