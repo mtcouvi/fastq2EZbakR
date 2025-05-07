@@ -106,7 +106,6 @@ if config["aligner"] == "star":
             script:
                 "../scripts/alignment/star-align.py"
 
-    if 
 
 ######################################################################################
 ##### ALIGNMENT WITH HISAT2
