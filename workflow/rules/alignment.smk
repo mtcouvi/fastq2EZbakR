@@ -60,7 +60,7 @@ if config["aligner"] == "star":
                 log="results/alfullbam/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
                 log_final="results/align/{sample}-Log.final.out",
-                aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+                aln_tx="results/alfullbam/{sample}-Aligned.toTranscriptome.out.bam",
             log:
                 "logs/alfullbam/{sample}_star.log",
             params:
@@ -85,11 +85,11 @@ if config["aligner"] == "star":
                 index=config["indices"],
             output:
                 aln="results/alfullbam/{sample}.bam",
-                sj="results/align/{sample}-SJ.out.tab",
-                log="results/align/{sample}-Log.out",
-                log_progress="results/align/{sample}-Log.progress.out",
-                log_final="results/align/{sample}-Log.final.out",
-                aln_tx="results/align/{sample}-Aligned.toTranscriptome.out.bam",
+                sj="results/alfullbam/{sample}-SJ.out.tab",
+                log="results/alfullbam/{sample}-Log.out",
+                log_progress="results/alfullbam/{sample}-Log.progress.out",
+                log_final="results/alfullbam/{sample}-Log.final.out",
+                aln_tx="results/alfullbam/{sample}-Aligned.toTranscriptome.out.bam",
             log:
                 "logs/align/{sample}_star.log",
             params:
