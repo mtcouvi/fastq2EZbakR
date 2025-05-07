@@ -55,7 +55,7 @@ if config["aligner"] == "star":
                 fq2=get_fastq_r2,
                 index=config["indices"],
             output:
-                aln="results/align/{sample}_full.bam",
+                aln="results/align/fullbam/{sample}.bam",
                 sj="results/align/{sample}-SJ.out.tab",
                 log="results/align/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
@@ -84,7 +84,7 @@ if config["aligner"] == "star":
                 fq1=get_fastq_r1,
                 index=config["indices"],
             output:
-                aln="results/align/{sample}.bam",
+                aln="results/align/fullbam/{sample}.bam",
                 sj="results/align/{sample}-SJ.out.tab",
                 log="results/align/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
@@ -191,7 +191,7 @@ if config["aligner"] == "hisat2":
             reads=get_hisat2_reads,
             idx=config["indices"],
         output:
-            "results/align/{sample}_full.bam",
+            "results/align/fullbam/{sample}.bam",
         log:
             "logs/align/{sample}_hisat2.log",
         params:
@@ -203,7 +203,7 @@ if config["aligner"] == "hisat2":
 if config["modify_bam"] == "no":
     rule rename_file:
         input:
-            "results/align/{sample}_full.bam"
+            "results/align/fullbam/{sample}.bam"
         output:
             "results/align/{sample}.bam"
         shell:
@@ -218,7 +218,7 @@ if config["modify_bam"] == "no":
 if config["modify_bam"] == "yes":
     rule modify_bam:
         input: 
-            bam="results/align/{sample}_full.bam",
+            bam="results/align/fullbam/{sample}.bam",
             bed=config["path_to_removal_bed"]
         output: 
             bam="results/align/{sample}.bam"
