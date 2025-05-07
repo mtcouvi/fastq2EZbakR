@@ -8,18 +8,18 @@ if config["PE"]:
                 sample=get_input_fastqs,
             output:
                 trimmed=temp([
-                        "results/trimmed/noclip/{sample}_noclip.1.fastq",
-                        "results/trimmed/noclip/{sample}_noclip.2.fastq",
+                        "results/trimmed/noclip/{sample}.1.fastq",
+                        "results/trimmed/noclip/{sample}.2.fastq",
                     ]
                 ),
                 # Unpaired reads separately
-                unpaired1=temp("results/trimmed/noclip/{sample}_noclip.u1.fastq"),
-                unpaired2=temp("results/trimmed/noclip/{sample}_noclip.u2.fastq"),
-                failed=temp("results/trimmed/noclip/{sample}_noclip.failed.fastq"),
-                html="results/reports/{sample}_noclip.html",
-                json="results/reports/{sample}_noclip.json",
+                unpaired1=temp("results/trimmed/noclip/{sample}.u1.fastq"),
+                unpaired2=temp("results/trimmed/noclip/{sample}.u2.fastq"),
+                failed=temp("results/trimmed/noclip/{sample}.failed.fastq"),
+                html="results/reports/noclip/{sample}.html",
+                json="results/reports/noclip/{sample}.json",
             log:
-                "logs/fastp/{sample}_noclip.log",
+                "logs/fastp/noclip/{sample}.log",
             params:
                 adapters=config["fastp_adapters"],
                 extra=config["fastp_parameters"],
@@ -31,8 +31,8 @@ if config["PE"]:
         rule fastp_hardclip:
             input:
                 sample=[
-                        "results/trimmed/noclip/{sample}_noclip.1.fastq",
-                        "results/trimmed/noclip/{sample}_noclip.2.fastq",
+                        "results/trimmed/noclip/{sample}.1.fastq",
+                        "results/trimmed/noclip/{sample}.2.fastq",
                     ]
             output:
                 trimmed=temp([
