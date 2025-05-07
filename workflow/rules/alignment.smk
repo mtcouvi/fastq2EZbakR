@@ -215,6 +215,7 @@ if config["modify_bam"] == "no":
 ######################################################################################
 
 
+if config["modify_bam"] == "yes":
     rule modify_bam:
         input: 
             bam="results/align/{sample}_full.bam",
