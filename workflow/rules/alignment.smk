@@ -55,7 +55,7 @@ if config["aligner"] == "star":
                 fq2=get_fastq_r2,
                 index=config["indices"],
             output:
-                aln="results/align/{sample}.bam",
+                aln="results/align/{sample}_full.bam",
                 sj="results/align/{sample}-SJ.out.tab",
                 log="results/align/{sample}-Log.out",
                 log_progress="results/align/{sample}-Log.progress.out",
@@ -106,6 +106,7 @@ if config["aligner"] == "star":
             script:
                 "../scripts/alignment/star-align.py"
 
+    if 
 
 ######################################################################################
 ##### ALIGNMENT WITH HISAT2
@@ -192,7 +193,7 @@ if config["aligner"] == "hisat2":
             reads=get_hisat2_reads,
             idx=config["indices"],
         output:
-            "results/align/{sample}.bam",
+            "results/align/{sample}_full.bam",
         log:
             "logs/align/{sample}_hisat2.log",
         params:
@@ -201,20 +202,19 @@ if config["aligner"] == "hisat2":
         wrapper:
             "v2.6.0/bio/hisat2/align"
             
-            
+if config["modify_bam"] == "no":
+    rule rename_file:
+        input:
+            "results/align/{sample}_full.bam"
+        output:
+            "results/align/{sample}.bam"
+        shell:
+            "mv {input} {output}"
+      
             
 ######################################################################################
 ##### REMOVE READ SETS FROM MAIN .bam OUTPUT # Added in _MTC 
 ######################################################################################
-
-if config["modify_bam"] == "yes":
-    rule rename_file:
-        input:
-            "results/align/{sample}.bam"
-        output:
-            "results/align/{sample}_full.bam"
-        shell:
-            "mv {input} {output}"
 
 
     rule modify_bam:
