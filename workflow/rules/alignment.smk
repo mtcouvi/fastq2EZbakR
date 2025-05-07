@@ -221,7 +221,8 @@ if config["modify_bam"] == "yes":
         input: 
             bam="results/align/{sample}_full.bam",
             bed=config["path_to_removal_bed"]
-        output: "results/align/{sample}.bam"
+        output: 
+            bam="results/align/{sample}.bam"
         log:
             "logs/align/{sample}_modifybam.log"
         shell:
