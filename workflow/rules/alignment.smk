@@ -224,6 +224,8 @@ if config["modify_bam"] == "yes":
             bam="results/align/{sample}.bam"
         log:
             "logs/align/{sample}_modifybam.log"
+        conda:
+            "../envs/full.yaml"
         shell:
             """
             samtools view -h -L {input.bed} -U {output.bam} {input.bam} > /dev/null
