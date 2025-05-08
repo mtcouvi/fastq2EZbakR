@@ -177,7 +177,7 @@ else:
             expand("results/sf_reads/{ctl}.s.bam", ctl=CTL_NAMES),
         params:
             nctl=nctl,
-            shellscript=workflow.source_path("../scripts/bam2bakR/call_snps_bycounts.sh"),
+            shellscript="../scripts/bam2bakR/call_snps_bycounts.sh",
             mincounts=config["snp_threshold"]
         output:
             "results/snps/snp.txt"
