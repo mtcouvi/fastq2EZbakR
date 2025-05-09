@@ -45,7 +45,7 @@ then
                          -b ./results/snps/bam.list \
                          -a AD,DP \
                          -Ou \
-        | bcftools view --threads "$cpus" -i 'FORMAT/AD[0:1]>=${snp_counts}' -o ./results/snps/Min${snp_counts}_sites.vcf
+        | bcftools view --threads "$cpus" -i "FORMAT/AD[0:1]>=$snp_counts" -o ./results/snps/Min${snp_counts}_sites.vcf
 
 
 		# Make snp.txt
