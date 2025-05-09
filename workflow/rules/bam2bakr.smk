@@ -180,7 +180,8 @@ else:
             shellscript=workflow.source_path("../scripts/bam2bakR/call_snps_bycounts.sh"),
             mincounts=config["snp_threshold"]
         output:
-            "results/snps/snp.txt"
+            "results/snps/snp.txt",
+            "results/snps/snp.vcf",
         log:
             "logs/call_snps/ctl_samps.log",
         threads: 20
