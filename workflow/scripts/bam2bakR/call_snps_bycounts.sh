@@ -12,7 +12,7 @@ output_txt=$4
 snp_counts=$5
 genome_fasta=$6
 
-shift 8
+shift 7
 
 control_samples=("$@")
 
