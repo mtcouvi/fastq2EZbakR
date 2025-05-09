@@ -8,8 +8,9 @@ set -euo pipefail
 cpus=$1
 nsamps=$2
 output_txt=$3
-snp_counts=$4
-genome_fasta=$5
+output_txt=$4
+snp_counts=$5
+genome_fasta=$6
 
 shift 8
 
@@ -44,12 +45,12 @@ then
                          -b ./results/snps/bam.list \
                          -a AD,DP \
                          -Ou \
-        | bcftools view --threads "$cpus" -i 'FORMAT/AD[0:1]>=${snp_counts}' -o Min${snp_counts}_sites.vcf
+        | bcftools view --threads "$cpus" -i 'FORMAT/AD[0:1]>=${snp_counts}' -o ./results/snps/Min${snp_counts}_sites.vcf
 
 
 		# Make snp.txt
-		grep -v 'INDEL' Min${snp_counts}_sites.vcf > Min${snp_counts}_sites_noINDEL.vcf
-		awk '{if($1 !~ /^#/){split($5,alt,","); print $4 ":" alt[1] ":" $1 ":" $2}}' Min${snp_counts}_sites_noINDEL.vcf | sort | uniq > $output_txt
+		grep -v 'INDEL' ./results/snps/Min${snp_counts}_sites.vcf > $output_vcf
+		awk '{if($1 !~ /^#/){split($5,alt,","); print $4 ":" alt[1] ":" $1 ":" $2}}' $output_vcf | sort | uniq > $output_txt
         
         echo '* SNPs called and snp.txt generated'
 
