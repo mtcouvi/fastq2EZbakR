@@ -8,7 +8,7 @@ set -euo pipefail
 cpus=$1
 nsamps=$2
 output_txt=$3
-output_txt=$4
+output_vcf=$4
 snp_counts=$5
 genome_fasta=$6
 
