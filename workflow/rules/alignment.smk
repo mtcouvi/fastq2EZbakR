@@ -205,7 +205,7 @@ if config["modify_bam"] == "no":
         input:
             "results/alfullbam/{sample}.bam"
         output:
-            "results/align/{sample}.bam"
+            "results/alignwithdups/{sample}.bam"
         shell:
             "mv {input} {output}"
       
@@ -221,12 +221,39 @@ if config["modify_bam"] == "yes":
             bam="results/alfullbam/{sample}.bam",
             bed=config["path_to_removal_bed"]
         output: 
-            bam="results/align/{sample}.bam"
+            bam="results/alignwithdups/{sample}.bam"
         log:
-            "logs/align/{sample}_modifybam.log"
+            "logs/alignwithdups/{sample}_modifybam.log"
         conda:
             "../envs/full.yaml"
         shell:
             """
             samtools view -h -L {input.bed} -U {output.bam} {input.bam} > /dev/null
             """
+
+######################################################################################
+##### REMOVE PCR duplicates # Added in _MTC 
+######################################################################################
+
+
+if config["remove_duplicates_with_UMI"] == "yes":
+    rule remove_duplicates:
+        input:
+            input_bam="results/alignwithdups/{sample}.bam",
+        output:
+            output_bam="results/align/{sample}.bam",
+        log:
+            "logs/align/{sample}_duplicate_removal.log"
+        conda:
+            "../envs/full.yaml"
+        script:
+            "../scripts/bam2bakR/removePCRdupsFromBAM.py"
+
+if config["remove_duplicates_with_UMI"] == "no":
+    rule rename_file2:
+        input:
+            "results/alignwithdups/{sample}.bam"
+        output:
+            "results/align/{sample}.bam"
+        shell:
+            "mv {input} {output}"
