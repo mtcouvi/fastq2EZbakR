@@ -14,7 +14,7 @@ Skip lines where target id (tid) is <0
 Update Sept 2018 - Mary Couvillion:
 add CIGAR string to UMI                      
 """
-import sys, pysam, os, numpy, re
+import sys, pysam
 
 input_bam = snakemake.input.input_bam
 output_bam = snakemake.output.output_bam
