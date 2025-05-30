@@ -247,7 +247,7 @@ if config["remove_duplicates_with_UMI"] == "yes":
         conda:
             "../envs/full.yaml"
         script:
-            "../scripts/bam2bakR/removePCRdupsFromBAM_paired.py"
+            "../scripts/bam2bakR/removePCRdupsFromBAM.py"
 
 if config["remove_duplicates_with_UMI"] == "no":
     rule rename_file2:
