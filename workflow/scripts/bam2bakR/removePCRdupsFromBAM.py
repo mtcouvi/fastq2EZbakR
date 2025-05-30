@@ -46,7 +46,7 @@ for read in iBAM:
         start = read.reference_end
         std='neg'
 
-    key = str(chrom)+"_"+str(start)+"_"+str(std)+"_"+str(mb)+"_"+cigar+"_"+flag
+    key = str(chrom)+"_"+str(start)+"_"+str(std)+"_"+str(mb)+"_"+str(cigar)+"_"+str(flag)
     
     # output 1 read per molecular barcode
     if key not in MB:
