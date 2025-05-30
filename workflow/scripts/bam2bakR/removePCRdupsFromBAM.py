@@ -12,7 +12,9 @@ will print; if the barcode and position has been seen previously, it will not pr
 Update April 25, 2017  - Mary Couvillion:
 Skip lines where target id (tid) is <0
 Update Sept 2018 - Mary Couvillion:
-add CIGAR string to UMI                      
+add CIGAR string to UMI
+Update May 2025 - Mary Couvillion:
+add flag to UMI to make sure both reads of paired end are kept even if they have the same coordinates and CIGAR                 
 """
 import sys, pysam
 
@@ -32,6 +34,7 @@ for read in iBAM:
     if read.tid >= 0:
         chrom = iBAM.getrname(read.tid)
         cigar = read.cigarstring
+        flag = read.flag
         
     # selecting the 5' position for pos strand
     if not read.is_reverse:
@@ -43,7 +46,7 @@ for read in iBAM:
         start = read.reference_end
         std='neg'
 
-    key = str(chrom)+"_"+str(start)+"_"+str(std)+"_"+str(mb)+"_"+cigar
+    key = str(chrom)+"_"+str(start)+"_"+str(std)+"_"+str(mb)+"_"+cigar+"_"+flag
     
     # output 1 read per molecular barcode
     if key not in MB:
