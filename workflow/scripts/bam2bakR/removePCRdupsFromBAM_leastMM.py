@@ -1,73 +1,76 @@
 #!/usr/bin/env python
 """
 
-Date : March 18, 2016
 
-Author : Heather Landry
+Author : chatGPT and M. Couvillion
 
-Remove reads in bam file resulting from PCR duplicates. This script records all barcodes and coordinates
-at a specific position. For every bam line, if the barcode and coordinate has not been seen previously, it
-will print; if the barcode and position has been seen previously, it will not print to a new file.
-                                        
-Update April 25, 2017  - Mary Couvillion:
-Skip lines where target id (tid) is <0
-Update Sept 2018 - Mary Couvillion:
-add CIGAR string to UMI
-Update May 2025 - Mary Couvillion:
-add flag to UMI to make sure both reads of paired end are kept even if they have the same coordinates and CIGAR                 
+Remove reads in bam file resulting from PCR duplicates and keep the one with fewest mismatches (which are presumably sequencing errors
 """
 import sys, pysam
 
 input_bam = snakemake.input.input_bam
 output_bam = snakemake.output.output_bam
 
-iBAM = pysam.Samfile(input_bam, 'rb')
-oBAM = pysam.Samfile(output_bam, 'wb', template=iBAM)
-
-MB = dict()
+iBAM = pysam.AlignmentFile(input_bam, 'rb')
+oBAM = pysam.AlignmentFile(output_bam, 'wb', template=iBAM)
 
 pysam.index(input_bam)
 
-# read through starting bam file
-for read in iBAM:
-    mb = read.qname.split('_MolecularBarcode:')[1]
-    if read.tid < 0:
+MB = dict()
+
+
+def flush_MB(MB, oBAM):
+    for _, (_, read) in MB.items():
+        oBAM.write(read)
+
+
+for read in iBAM.fetch(until_eof=True):
+    if read.is_unmapped:
         continue
+
     try:
         mb = read.query_name.split('_MolecularBarcode:')[1]
     except IndexError:
         continue
 
-    if read.tid >= 0:
-        chrom = iBAM.getrname(read.tid)
-        cigar = read.cigarstring
-        flag = read.flag
-        
-    # selecting the 5' position for pos strand
+    chrom = iBAM.get_reference_name(read.reference_id)
+
+    # Flush cache when chromosome changes
+    if chrom != current_chrom:
+        flush_MB(MB, oBAM)
+        MB.clear()
+        current_chrom = chrom
+
+    # Strand + position
     if not read.is_reverse:
         start = read.reference_start
-        std='pos'
-    
-    # selecting the 5' position for neg strand
-    if  read.is_reverse:
+        std = 'pos'
+    else:
         start = read.reference_end
-        std='neg'
+        std = 'neg'
 
-    key = str(chrom)+"_"+str(start)+"_"+str(std)+"_"+str(mb)+"_"+str(cigar)+"_"+str(flag)
-    # Use NM tag (edit distance) or mapping quality, or AS:i: etc.
-    value = read.get_tag("NM")  # could also use read.mapping_quality, read.get_tag("AS"), etc.
-    
-    # Keep only read with minimum value
+    cigar = read.cigarstring
+    flag = read.flag
+
+    key = f"{chrom}_{start}_{std}_{mb}_{cigar}_{flag}"
+    try:
+        value = read.get_tag("NM")
+    except KeyError:
+        continue
+
     if key not in MB or value < MB[key][0]:
         MB[key] = (value, read)
 
-# Write out only best reads
-for _, (_, read) in MB.items():
-    oBAM.write(read)
+    # Optional: Flush reads if MB gets too big
+    if len(MB) > 1_000_000:
+        flush_MB(MB, oBAM)
+        MB.clear()
 
-
+# Final flush
+flush_MB(MB, oBAM)
 iBAM.close()
 oBAM.close()
 
+        
 # module load dev/python/2.7.10
 
