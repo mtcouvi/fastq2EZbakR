@@ -26,6 +26,8 @@ oBAM = pysam.Samfile(output_bam, 'wb', template=iBAM)
 
 MB = dict()
 
+pysam.index(iBAM)
+
 # read through starting bam file
 for read in iBAM:
     mb = read.qname.split('_MolecularBarcode:')[1]
