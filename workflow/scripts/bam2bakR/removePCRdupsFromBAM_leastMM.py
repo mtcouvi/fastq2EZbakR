@@ -16,6 +16,8 @@ oBAM = pysam.AlignmentFile(output_bam, 'wb', template=iBAM)
 
 pysam.index(input_bam)
 
+current_chrom = None
+last_pos = None
 MB = dict()
 
 
