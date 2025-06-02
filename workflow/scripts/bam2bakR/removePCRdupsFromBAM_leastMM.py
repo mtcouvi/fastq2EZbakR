@@ -56,7 +56,7 @@ for read in iBAM:
     value = read.get_tag("NM")  # could also use read.mapping_quality, read.get_tag("AS"), etc.
     
     # Keep only read with minimum value
-    if key not in MT or value < MB[key][0]:
+    if key not in MB or value < MB[key][0]:
         MB[key] = (value, read)
 
 # Write out only best reads
