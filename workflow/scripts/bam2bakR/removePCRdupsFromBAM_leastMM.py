@@ -26,7 +26,7 @@ oBAM = pysam.Samfile(output_bam, 'wb', template=iBAM)
 
 MB = dict()
 
-pysam.index(iBAM)
+pysam.index(input_bam)
 
 # read through starting bam file
 for read in iBAM:
