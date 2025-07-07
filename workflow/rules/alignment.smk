@@ -236,7 +236,7 @@ if config["modify_bam"] == "yes":
 ######################################################################################
 
 
-if config["remove_duplicates_with_UMI"] == "yes":
+if config["remove_duplicates_with_UMI"] == "leastMM":
     rule remove_duplicates:
         input:
             input_bam="results/alignwithdups/{sample}.bam",
@@ -248,6 +248,19 @@ if config["remove_duplicates_with_UMI"] == "yes":
             "../envs/full.yaml"
         script:
             "../scripts/bam2bakR/removePCRdupsFromBAM_leastMM.py"
+
+if config["remove_duplicates_with_UMI"] == "longest":
+    rule remove_duplicates:
+        input:
+            input_bam="results/alignwithdups/{sample}.bam",
+        output:
+            output_bam="results/align/{sample}.bam",
+        log:
+            "logs/align/{sample}_duplicate_removal.log"
+        conda:
+            "../envs/full.yaml"
+        script:
+            "../scripts/bam2bakR/removePCRdupsFromBAM_longest.py"
 
 if config["remove_duplicates_with_UMI"] == "no":
     rule rename_file2:
