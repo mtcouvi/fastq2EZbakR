@@ -73,7 +73,12 @@ aligner: "star"
     # 2) no
 modify_bam: "no"
 path_to_removal_bed: data/annotation/removal.bed
-remove_duplicates_with_UMI: "yes"
+# Remove duplicates?
+  # Options are:
+    # 1) leastMM
+    # 2) longest (to be used with GEM sc 5' kit)
+    # 3) no
+remove_duplicates_with_UMI: "yes" 
 
 # Path to directory containing indices
   # Indices will be built automatically if not present
