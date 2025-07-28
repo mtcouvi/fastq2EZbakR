@@ -59,14 +59,14 @@ cU = {}
 firstReadName = ''
 muts = {'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
 DNAcode={'A': 'T', 'C': 'G', 'T': 'A', 'G': 'C', 'N': 'N', 'a': 't', 'c': 'g', 't': 'a', 'g': 'c', 'n': 'n'}  # DNA code for comp and revcomp transformation
-header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'FR', 'sj', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
+header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'FR', 'sj', 'cellbc', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
 
 # For counting mutations at individual positions
 if args.mutPos:
     header.extend(['gmutloc', 'tp'])
 
 
-r_info = [''] + 4*[0] + 3*['']
+r_info = [''] + 4*[0] + 4*[''] # MTC 3 to 4 to hold place for cell barcode
 dovetail = []
 MDstore = {}
 
@@ -115,11 +115,18 @@ samfile = pysam.AlignmentFile(args.bam, 'rb')
 
 print('Start: ' + str(datetime.datetime.now()))
 for r in samfile:
+    # Added by MTC to store cell barcode info
+    if read.has_tag("CB"):  
+        cellbarcode = read.get_tag("CB")
+    else:
+        cellbarcode = read.get_tag("MD")
+
+
 
     # Initialize + acquire info: First read only
     if firstReadName != r.query_name:
         muts={'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
-        r_info = [''] + 4*[0] + 3*['']
+        4*[''] # MTC 3 to 4 to hold place for cell barcode
         dovetail = []
         MDstore = {}
         gmutloc = []
@@ -127,7 +134,7 @@ for r in samfile:
 
         r_info[0] = r.query_name            # Read name
         r_info[5] = r.reference_name        # Chromosome name
-
+        r_info[9] = cellbarcode             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
 
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
