@@ -116,10 +116,10 @@ samfile = pysam.AlignmentFile(args.bam, 'rb')
 print('Start: ' + str(datetime.datetime.now()))
 for r in samfile:
     # Added by MTC to store cell barcode info
-    if read.has_tag("CB"):  
-        cellbarcode = read.get_tag("CB")
+    if r.has_tag("CB"):  
+        cellbarcode = r.get_tag("CB")
     else:
-        cellbarcode = read.get_tag("MD")
+        cellbarcode = r.get_tag("MD")
 
 
 
