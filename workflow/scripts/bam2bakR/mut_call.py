@@ -134,7 +134,7 @@ for r in samfile:
 
         r_info[0] = r.query_name            # Read name
         r_info[5] = r.reference_name        # Chromosome name
-        r_info[9] = cellbarcode             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
+        r_info[8] = cellbarcode             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
 
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
