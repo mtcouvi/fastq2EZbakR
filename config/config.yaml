@@ -78,7 +78,7 @@ path_to_removal_bed: data/annotation/removal.bed
     # 1) leastMM
     # 2) longest (to be used with GEM sc 5' kit)
     # 3) no
-remove_duplicates_with_UMI: "yes" 
+remove_duplicates_with_UMI: "longest" 
 
 # Path to directory containing indices
   # Indices will be built automatically if not present
