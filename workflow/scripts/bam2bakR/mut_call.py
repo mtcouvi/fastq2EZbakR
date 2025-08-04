@@ -112,18 +112,20 @@ wr.writerow(header)
 
 # Set .bam file for reading
 samfile = pysam.AlignmentFile(args.bam, 'rb')
-first_read = next(samfile)
-has_CB = "CB" in dict(first_read.tags)
-samfile.reset()
+get_tag = pysam.AlignedSegment.get_tag  # Local binding for speed
 
 
 print('Start: ' + str(datetime.datetime.now()))
 for r in samfile:
+
+    cb = None
     # Added by MTC to store cell barcode info
-    if has_CB:
-        cellbarcode = r.get_tag("CB")
-    else:
-        cellbarcode = "NO_BARCODE"
+    try:
+        cb = get_tag(r, "CB")  # Try to get CB tag
+    except KeyError:
+        cb = "NO_BARCODE"
+        
+    cellbarcode = cb
 
     # Initialize + acquire info: First read only
     if firstReadName != r.query_name:
