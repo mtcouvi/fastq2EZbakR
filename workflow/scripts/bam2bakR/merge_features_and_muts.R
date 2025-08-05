@@ -429,7 +429,7 @@ if(opt$makecB){
 if(opt$makecUP){
 
   # Thankfully, already solved this problem in EZbakR, so just copying that solution
-  cols_to_group_pois <- c("sample", "rname", feature_vect, muts_to_keep, "sj")
+  cols_to_group_pois <- c("sample", "rname", feature_vect, muts_to_keep, "sj", "cellbc") # cellbc added by MTC
   cols_to_avg <- bases_to_keep
 
   cUP <- muts[, c(lapply(.SD, function(x) sum(x*n)/sum(n) ),
