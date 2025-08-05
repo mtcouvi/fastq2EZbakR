@@ -118,27 +118,29 @@ get_tag = pysam.AlignedSegment.get_tag  # Local binding for speed
 print('Start: ' + str(datetime.datetime.now()))
 for r in samfile:
 
-    cb = None
+    # Initialize + acquire info: First read only
+    if firstReadName != r.query_name:
+        muts={'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
+        r_info = [''] + 4*[0] + 4*[''] # MTC 3 to 4 to hold place for cell barcode        dovetail = []
+        MDstore = {}
+        gmutloc = []
+        tp = []
+        
+
+
+        r_info[0] = r.query_name            # Read name
+        r_info[5] = r.reference_name        # Chromosome name
+        
+        
     # Added by MTC to store cell barcode info
+    # Always update cell barcode (both first and second read)
+    cb = None
     try:
         cb = get_tag(r, "CB")  # Try to get CB tag
     except KeyError:
         cb = "NO_BARCODE"
         
-    cellbarcode = cb
-
-    # Initialize + acquire info: First read only
-    if firstReadName != r.query_name:
-        muts={'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
-        4*[''] # MTC 3 to 4 to hold place for cell barcode
-        dovetail = []
-        MDstore = {}
-        gmutloc = []
-        tp = []
-
-        r_info[0] = r.query_name            # Read name
-        r_info[5] = r.reference_name        # Chromosome name
-        r_info[8] = cellbarcode             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
+    r_info[8] = cb             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
 
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
