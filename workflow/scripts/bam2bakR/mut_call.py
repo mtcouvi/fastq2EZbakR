@@ -59,14 +59,14 @@ cU = {}
 firstReadName = ''
 muts = {'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
 DNAcode={'A': 'T', 'C': 'G', 'T': 'A', 'G': 'C', 'N': 'N', 'a': 't', 'c': 'g', 't': 'a', 'g': 'c', 'n': 'n'}  # DNA code for comp and revcomp transformation
-header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'FR', 'sj', 'cellbc', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
+header = ['qname', 'nA', 'nC', 'nT', 'nG', 'rname', 'FR', 'sj', 'RE','cellbc', 'TA', 'CA', 'GA', 'NA', 'AT', 'CT', 'GT', 'NT', 'AC', 'TC', 'GC', 'NC', 'AG', 'TG', 'CG', 'NG', 'AN', 'TN', 'CN', 'GN', 'NN']
 
 # For counting mutations at individual positions
 if args.mutPos:
     header.extend(['gmutloc', 'tp'])
 
 
-r_info = [''] + 4*[0] + 4*[''] # MTC 3 to 4 to hold place for cell barcode
+r_info = [''] + 4*[0] + 5*[''] # MTC 3 to 4 to hold place for cell barcode, then 4 to 5 to hold place for RE
 dovetail = []
 MDstore = {}
 
@@ -132,15 +132,22 @@ for r in samfile:
         r_info[5] = r.reference_name        # Chromosome name
         
         
-    # Added by MTC to store cell barcode info
-    # Always update cell barcode (both first and second read)
+    # Added by MTC to store cell barcode & RE info
+    # Always update RE & cell barcode (both first and second read)
     cb = None
     try:
         cb = get_tag(r, "CB")  # Try to get CB tag
     except KeyError:
         cb = "NO_BARCODE"
+
+    re = None
+    try:
+        re = get_tag(r, "RE")  # Try to get CB tag
+    except KeyError:
+        re = "-"
         
-    r_info[8] = cb             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
+    r_info[9] = cb             # 10X barcode (or MD tag if it is not 10x data) Added by MTC
+    r_info[8] = re             # 10X tag to assign exon, intron or intergeneic. Added by MTC
 
     # Gather alignmet information + Resolve dovetailing: Both reads
     if ('I' not in r.cigarstring) and ('D' not in r.cigarstring):       # Any read without insertions/deletions
