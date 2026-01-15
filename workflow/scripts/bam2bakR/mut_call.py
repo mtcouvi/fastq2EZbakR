@@ -121,7 +121,7 @@ for r in samfile:
     # Initialize + acquire info: First read only
     if firstReadName != r.query_name:
         muts={'TA': 0, 'CA': 0, 'GA': 0, 'NA': 0, 'AT': 0, 'CT': 0, 'GT': 0, 'NT': 0, 'AC': 0, 'TC': 0, 'GC': 0, 'NC': 0, 'AG': 0, 'TG': 0, 'CG': 0, 'NG': 0, 'AN': 0, 'TN': 0, 'CN': 0, 'GN': 0, 'NN': 0}
-        r_info = [''] + 4*[0] + 4*[''] # MTC 3 to 4 to hold place for cell barcode        dovetail = []
+        r_info = [''] + 4*[0] + 5*[''] # MTC 3 to 4 to hold place for cell barcode and 4 to 5 for RE       dovetail = []
         MDstore = {}
         gmutloc = []
         tp = []
