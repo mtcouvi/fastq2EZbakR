@@ -77,8 +77,9 @@ path_to_removal_bed: data/annotation/removal.bed
   # Options are:
     # 1) leastMM
     # 2) longest (to be used with GEM sc 5' kit)
-    # 3) no
-remove_duplicates_with_UMI: "longest" 
+    # 3) meanqual (keep read with highest mean base quality)
+    # 4) no
+remove_duplicates_with_UMI: "longest"
 
 # Path to directory containing indices
   # Indices will be built automatically if not present
