@@ -262,6 +262,19 @@ if config["remove_duplicates_with_UMI"] == "longest":
         script:
             "../scripts/bam2bakR/removePCRdupsFromBAM_longest.py"
 
+if config["remove_duplicates_with_UMI"] == "meanqual":
+    rule remove_duplicates:
+        input:
+            input_bam="results/alignwithdups/{sample}.bam",
+        output:
+            output_bam="results/align/{sample}.bam",
+        log:
+            "logs/align/{sample}_duplicate_removal.log"
+        conda:
+            "../envs/full.yaml"
+        script:
+            "../scripts/bam2bakR/removePCRdupsFromBAM_meanqual.py"
+
 if config["remove_duplicates_with_UMI"] == "no":
     rule rename_file2:
         input:
